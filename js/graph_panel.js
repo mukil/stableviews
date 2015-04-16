@@ -153,25 +153,35 @@ define(function (require) {
 
     }
 
+    function set_page_title (title) {
+        d3.select('title').text(title)
+        d3.select('h1.title').text(title)
+    }
+
     function show_topicmap (topicmap) {
         if (typeof svg_panel === "undefined")
             init_panel()
 
         if (typeof topicmap !== "undefined") {
-            // clear_map_panel()
-            if (topicmap.topics.length > 0) {
+            if (typeof topicmap.topics !== "undefined") {
                 map_topic = topicmap
                 all_nodes = topicmap.topics
                 all_edges = topicmap.assocs
+                set_page_title(map_topic.info.value)
                 // ### view_state = "topicmap_show"
             } else {
-                console.log("WARN: No topics in topicmap...")
+                throw Error ("Could not load topicmap for ID ", topicmap)
             }
-        } else {
-            throw Error ("Could not load topicmap for ID ", topicmap)
         }
         render_network()
         fire_rendered_topicmap()
+    }
+
+    function clear_map_panel () {
+        if (typeof svg_panel !== "undefined") {
+            svg_panel = undefined
+            d3.select('#map-panel svg').remove()
+        }
     }
 
     function listen_to (event_name, handler) {
@@ -207,6 +217,8 @@ define(function (require) {
     return {
         init: init_panel,
         show_topicmap: show_topicmap,
+        show_title: set_page_title,
+        clear_panel: clear_map_panel,
         listen_to: listen_to
     }
 

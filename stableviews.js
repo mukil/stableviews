@@ -45,6 +45,43 @@ require(['common'], function (common) {
 
         })
 
+        // --- Setup command line input area
+
+        d3.select('#todoinput').on('keypress', function() {
+
+            if (d3.event.keyCode === 13 && d3.event.target.value.length > 2) {
+
+                var user_input = d3.event.target.value
+                // ##### here is where the magic starts: our first command "open" maps to "show topicmap"
+                if (user_input.startsWith("open")) {
+                    var index = parseInt(user_input.split(" ")[1]) - 1
+                    if (index > topicmaps.length)
+                       throw Error ("Could not load topicmap " + index + " with just " + topicmaps.length + " loaded")
+                    selected_topicmap = topicmaps[index]
+                    load_selected_topicmap()
+
+                } else if (user_input.startsWith("?")) {
+
+                    var idx = user_input.split(" ")[1]
+                    // depends on dm4-little-helpers module installed
+                    restclient.getTopicSuggestions(idx.trim(), function (items) {
+
+                        console.log("clq: ", items)
+                        suggestions = items
+
+                    }, null, false)
+
+                }
+
+                // clear command line
+                d3.event.target.value = ''
+            }
+
+        })
+
+        // --- Focus command line on startup
+        document.getElementById('todoinput').focus()
+
         // -- Login View
 
         function render_login_dialog () {
@@ -55,6 +92,18 @@ require(['common'], function (common) {
                     window.location.reload()
                 }, common.debug)
             } **/
+        }
+
+        function load_selected_topicmap () {
+
+            controller.load_topicmap (selected_topicmap.id, function (result) {
+
+                graph_panel.clear_panel()
+
+                selected_topicmap = result
+                graph_panel.show_topicmap(selected_topicmap)
+
+            })
         }
 
         return {}
