@@ -106,6 +106,9 @@ define(['d3'], function (d3, require) {
         fetchTopicmapById: function (topicmapId, handle, fail, debug) {
             fetch('/topicmap/' + topicmapId, handle, fail, true, debug)
         },
+        fetchTopicById: function (topicId, handle, fail, debug) {
+            fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
+        },
         getTopicSuggestions: function (query, handle, fail, debug) {
             fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug)
         },

@@ -1,17 +1,15 @@
 
-Codename: stableviews ui
-########################
+### Codename: stableviews ui
 
 An alternate, command-line controllable presentation layer for _Topicmaps_ authored with DeepaMehta 4.
 
-Features:
-
+Features include:
  * Load a Topicmap via `open <name>`
  * Free placement and panning (allowing to interact with the loaded topic map without persistence)
- * Full text search across the complete databse with selection between all results to reveal/load a hidden topic into the loaded _Topicmap_.
- * Hide and show command for a) all associations and b) for each _type_.
+ * Full text search across the complete databse with selection between all results to reveal/load a hidden topic into the loaded _Topicmap_ - (not yet implemented)
+ * Hide and show command for a) all associations and b) for each _type_ - (not yet implemented)
 
-The aim is, as always, that this stays/becomes an easy extendable codebase for developers and that it is maximal customizable for designers.
+The aim is (as always) that this becomes an easy extendable codebase for developers and that it is maximal customizable for designers.
 
 Writing back and persisting the re-arrangements, as well as writing changes in view configuration for single topics, persisting a more complex view state or being able to create simple note topics is all "future is unknown" stuff.
 
@@ -31,16 +29,16 @@ Similar to the original dm4-webclient module this codebase aims at:
  * target bigger-screen devices: no smaller then tablet-sized screens will be targeted
 
 
-Inspiration
-###########
+### Inspiration
+
+The _Topicmaps UI_ by Jörg Richter (@jri).
 
 With this interface we draw upon the knowledge on humans  _visual_ and _spatial memory_. Furthermore we think that an item "is" or "is best described" through the relations to other items, its relation it is "seen" (or understood) in. To be able do meaningful research with this cognitive tool we believe that this user interface needs to allow users of _free placement_ and needs to provide _stable geometries_.
 
 
-Challenges
-##########
+### Challenges
 
-Again, at best, we are able to address the following, more general challenges for such UI:
+At best, we are able to address the following, more general challenges for such UI:
 
  * comparison: e.g. allow to compare details of any two given topics
  * multi select: allow to select and trigger commands on a set of elements
@@ -50,8 +48,7 @@ Again, at best, we are able to address the following, more general challenges fo
  * tiled-windows: enable users to tile screen space wherever possible
 
 
-Description of difference
-#########################
+### Description of difference
 
 The difference and focus of UI research in this code repository regarding the dm4-webclient is:
 
@@ -75,7 +72,17 @@ The difference and focus of UI research in this code repository regarding the dm
 * Provide infrastructure to personalize client-side renderings on per user and domain base<br/>
   in terms of: color-palette active, gui-theme loaded and preferred rendering settings (map, tree)
 
+* Operate with per-user configuration of all presentations settings (color scheme, fonts, shapes, etc.)
+
 * Tiling areas in a map? How would you imagine?<br/>
+
+### Installation
+
+You need to download and run the [DMX distro](http://www.digitalmemex.com) of @jri/deepamehta4 and **Install** this app via /dmx the repository manager.
+
+Note: Not yet functional.
+
+### Addendum
 
 I am curious and still want to get to know more about the limits of visual sense-making. To be able to get there i would like to develop this GUI in a highly connective and collaborative way. I herewith seek for your help in making this possible. Please help to think through some of the details and please think about contributing anything from sketches, requirements or wishes up to code or styles.
 

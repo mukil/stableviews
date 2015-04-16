@@ -158,6 +158,15 @@ define(function (require) {
         d3.select('h1.title').text(title)
     }
 
+    function set_page_description (text) {
+        if (text === "") {
+            d3.select('.text').classed('show', false)
+            return
+        }
+        d3.select('.text').classed('show', true)
+        d3.select('.text.show').html(text)
+    }
+
     function show_topicmap (topicmap) {
         if (typeof svg_panel === "undefined")
             init_panel()
@@ -217,7 +226,8 @@ define(function (require) {
     return {
         init: init_panel,
         show_topicmap: show_topicmap,
-        show_title: set_page_title,
+        set_title: set_page_title,
+        set_description: set_page_description,
         clear_panel: clear_map_panel,
         listen_to: listen_to
     }

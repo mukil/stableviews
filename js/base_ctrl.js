@@ -18,6 +18,11 @@ define(['rest_client'], function (restClient, require) {
             restc.fetchTopicmapById(id, function (result) {
                 handler(result)
             }, null, null)
+        },
+        load_topic: function (id, handler) {
+            restc.fetchTopicById(id, function (result) {
+                handler(result)
+            }, null, null)  
         }
         
     }

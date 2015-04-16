@@ -15,6 +15,18 @@ require(['common'], function (common) {
 
         graph_panel.listen_to('selection', function (e) {
             if (common.debug) console.log(" > selection ", e.detail)
+            controller.load_topic(e.detail.id, function (topic) {
+                selected_topic = topic
+                graph_panel.set_title(topic.value)
+                if (common.debug) console.log(" > Loaded Topic ", topic)
+                if (selected_topic.type_uri === "dm4.notes.note") {
+                    console.log("set text...")
+                    graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                } else {
+                    console.log("clearing text")
+                    graph_panel.set_description('')
+                }
+            })
         })
 
         graph_panel.listen_to('multi_selection', function (e) {
