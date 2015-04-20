@@ -16,7 +16,7 @@ define(function (require) {
     var node_offset_x   = 20
     var node_offset_y   = 10
 
-    var zoom_control          = undefined
+    var zoom_control    = undefined
 
     var svg_graph, vis, link, node = undefined
 
@@ -72,6 +72,7 @@ define(function (require) {
     
         link = vis.append("g").attr("class", "links").selectAll("line")
             .data(all_edges).enter().append("line")
+            .attr("data-type-uri", function (d) { return d.type_uri })
             .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'].value })
             .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'].value })
             .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'].value })
@@ -79,6 +80,8 @@ define(function (require) {
 
         node = vis.append("g").attr("class", "topics").selectAll("rect")
             .data(all_nodes).enter().append("rect")
+            .attr("data-type-uri", function (d) { return d.type_uri })
+            .attr("data-type-label", function (d) { return d.value })
             .attr("width", 50).attr("height", 20)
             .attr("rx", 5).attr("ry", 5)
             .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'].value - node_offset_x })
@@ -164,7 +167,7 @@ define(function (require) {
             return
         }
         d3.select('.text').classed('show', true)
-        d3.select('.text.show').html(text)
+            .html(text)
     }
 
     function show_topicmap (topicmap) {
@@ -186,10 +189,22 @@ define(function (require) {
         fire_rendered_topicmap()
     }
 
+    function hide_Assocs () { // messing up the method signatures frankenstyle_Camel
+        // console.log("> hiding associations")
+        // all_edges, link = undefined
+        // console.log(all_edges, link) // ## i thougt d3 manipulates the dom when i remove the data ...
+        // d3.selectAll("links").classed("hide", true)
+        d3.selectAll("line").classed("hide", true)
+    }
+
+    function show_Assocs () { // messing up the method signatures frankenstyle_Camel
+        d3.selectAll("line").classed("hide", false)
+    }
+
     function clear_map_panel () {
         if (typeof svg_panel !== "undefined") {
             svg_panel = undefined
-            d3.select('#map-panel svg').remove()
+            d3.select('#map-panel svg').remove() // ## fix: should not clear our text-area
         }
     }
 
@@ -229,7 +244,9 @@ define(function (require) {
         set_title: set_page_title,
         set_description: set_page_description,
         clear_panel: clear_map_panel,
-        listen_to: listen_to
+        listen_to: listen_to,
+        hide_assocs: hide_Assocs,
+        show_assocs: show_Assocs
     }
 
 })

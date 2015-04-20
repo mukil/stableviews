@@ -15,15 +15,16 @@ require(['common'], function (common) {
 
         graph_panel.listen_to('selection', function (e) {
             if (common.debug) console.log(" > selection ", e.detail)
+
             controller.load_topic(e.detail.id, function (topic) {
+
                 selected_topic = topic
                 graph_panel.set_title(topic.value)
                 if (common.debug) console.log(" > Loaded Topic ", topic)
+
                 if (selected_topic.type_uri === "dm4.notes.note") {
-                    console.log("set text...")
                     graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
                 } else {
-                    console.log("clearing text")
                     graph_panel.set_description('')
                 }
             })
@@ -48,8 +49,8 @@ require(['common'], function (common) {
             selected_topicmap = topicmaps[0]
 
             // 1.2) ..
-            controller.load_topicmap (selected_topicmap.id, function (result) {
-
+            controller.load_topicmap(selected_topicmap.id, function (result) {
+                //
                 selected_topicmap = result
                 graph_panel.show_topicmap(selected_topicmap)
 
@@ -63,14 +64,26 @@ require(['common'], function (common) {
 
             if (d3.event.keyCode === 13 && d3.event.target.value.length > 2) {
 
-                var user_input = d3.event.target.value
+                var user_input = d3.event.target.value.trim()
                 // ##### here is where the magic starts: our first command "open" maps to "show topicmap"
                 if (user_input.startsWith("open")) {
                     var index = parseInt(user_input.split(" ")[1]) - 1
                     if (index > topicmaps.length)
                        throw Error ("Could not load topicmap " + index + " with just " + topicmaps.length + " loaded")
+                    // ### clear in graph panel title
+                    selected_topic = undefined
+                    graph_panel.set_description('')
+                    // select, load and render new one
                     selected_topicmap = topicmaps[index]
                     load_selected_topicmap()
+
+                } else if (user_input.startsWith("hide")) {
+
+                    if (user_input.indexOf("assocs") != -1 ) graph_panel.hide_assocs()
+
+                } else if (user_input.startsWith("show")) {
+
+                    if (user_input.indexOf("assocs") != -1 ) graph_panel.show_assocs()
 
                 } else if (user_input.startsWith("?")) {
 
@@ -78,7 +91,6 @@ require(['common'], function (common) {
                     // depends on dm4-little-helpers module installed
                     restclient.getTopicSuggestions(idx.trim(), function (items) {
 
-                        console.log("clq: ", items)
                         suggestions = items
 
                     }, null, false)
@@ -121,8 +133,5 @@ require(['common'], function (common) {
         return {}
 
     })
-
-    // console.log(stable)
-    // stable.show_topicmap(1)
 
 })
