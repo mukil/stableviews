@@ -33,7 +33,7 @@ body {
 
 .container {
     position: relative;
-    background-color: #e8e8e2;
+    background-color: rgb(83, 71, 65);
     margin-top: -20px;
     padding: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
