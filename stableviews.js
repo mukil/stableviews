@@ -4,24 +4,36 @@ require(['common'], function (common) {
 
     require(['graph_panel', 'stableviews_ctrl'], function (graph_panel, controller) {
 
-        var username = undefined            // 
+        // authenticated staff only stuff
+        var username = undefined            //
+        var workspaces = undefined          //
+
+        // topic map and selection stuff
         var topicmaps = undefined           //
         var selected_topicmap = undefined   //
         var selected_topic = undefined      //
-        var suggestions = undefined         //
+        var multi_selection = []            //
+
+        // command line related stuff
+        var search_results = []             // latest search results of customa auto-completion method
+        var topic_commands = []             // basic set of commands for a given topic
+        var reverse_search = []             // list of recently executed commands (non-persistent)
 
         // 0) ..
         graph_panel.init()
+
+        // ### Currently, yll these listeners get cleared out with map-panel when switching topicmap
 
         graph_panel.listen_to('selection', function (e) {
             if (common.debug) console.log(" > selection ", e.detail)
 
             controller.load_topic(e.detail.id, function (topic) {
-
+                // update client side model (as a param for commands)
                 selected_topic = topic
+                multi_selection = []
+                graph_panel.highlight_topic(selected_topic.id)
+                // render
                 graph_panel.set_title(topic.value)
-                if (common.debug) console.log(" > Loaded Topic ", topic)
-
                 if (selected_topic.type_uri === "dm4.notes.note") {
                     graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
                 } else {
@@ -31,6 +43,8 @@ require(['common'], function (common) {
         })
 
         graph_panel.listen_to('multi_selection', function (e) {
+            // update client side model (as a param for commands)
+            multi_selection = e.detail
             if (common.debug) console.log(" > multi_selection ", e.detail)
         })
 
@@ -59,6 +73,7 @@ require(['common'], function (common) {
         })
 
         // --- Setup command line input area
+        // --- ### setup gui for autocompletion
 
         d3.select('#todoinput').on('keypress', function() {
 
@@ -70,7 +85,6 @@ require(['common'], function (common) {
                     var index = parseInt(user_input.split(" ")[1]) - 1
                     if (index > topicmaps.length)
                        throw Error ("Could not load topicmap " + index + " with just " + topicmaps.length + " loaded")
-                    // ### clear in graph panel title
                     selected_topic = undefined
                     graph_panel.set_description('')
                     // select, load and render new one
@@ -85,13 +99,21 @@ require(['common'], function (common) {
 
                     if (user_input.indexOf("assocs") != -1 ) graph_panel.show_assocs()
 
+                } else if (user_input.startsWith("group")) {
+                    // ### create associations of type X between all selected notes
+                    for (var idx in multi_selection) {
+                        if (multi_selection[idx].id !== "") {
+                            console.log(" group > ", multi_selection[idx].id)
+                        }
+                    }
+
                 } else if (user_input.startsWith("?")) {
 
                     var idx = user_input.split(" ")[1]
                     // depends on dm4-little-helpers module installed
                     restclient.getTopicSuggestions(idx.trim(), function (items) {
 
-                        suggestions = items
+                        search_results = items
 
                     }, null, false)
 

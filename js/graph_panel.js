@@ -1,14 +1,14 @@
 
 define(function (require) {
 
-    var controller      = require('../filerepo/dmx/stableviews/js/stableviews_ctrl.js')
+    var controller      = require('js/stableviews_ctrl.js')
     var common          = require('common')
 
     var view_state      = ""
     var svg_panel       = undefined
 
     var width           = window.innerWidth - 400,
-        height          = window.innerHeight - 150,
+        height          = window.innerHeight - 130,
         shiftKey, ctrlKey
 
     var map_topic, all_nodes, all_edges = undefined
@@ -28,7 +28,6 @@ define(function (require) {
     function init_panel () {
 
         svg_panel = d3.select("#map-panel")
-            .attr("tabindex", 2)
             .on("keydown", key_down)
             .on("keyup", key_up)
             .each(function() { this.focus() })
@@ -36,6 +35,7 @@ define(function (require) {
                 .attr("width", width)
                 .attr("height", height)
 
+        // ### enable moving of selected topics via arrow-keys
         function key_down () {
             shiftKey = d3.event.shiftKey || d3.event.metaKey
             ctrlKey = d3.event.ctrlKey
@@ -72,6 +72,7 @@ define(function (require) {
     
         link = vis.append("g").attr("class", "links").selectAll("line")
             .data(all_edges).enter().append("line")
+            .attr("id", function (d) { return d.id })
             .attr("data-type-uri", function (d) { return d.type_uri })
             .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'].value })
             .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'].value })
@@ -80,8 +81,10 @@ define(function (require) {
 
         node = vis.append("g").attr("class", "topics").selectAll("rect")
             .data(all_nodes).enter().append("rect")
+            .attr("id", function (d) { return d.id })
             .attr("data-type-uri", function (d) { return d.type_uri })
             .attr("data-type-label", function (d) { return d.value })
+            .attr("tabindex", 100)
             .attr("width", 50).attr("height", 20)
             .attr("rx", 5).attr("ry", 5)
             .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'].value - node_offset_x })
@@ -170,6 +173,11 @@ define(function (require) {
             .html(text)
     }
 
+    function pop_visual_by_topic_id (id) {
+        console.log(" > pop node radius for topic ", id)
+        // var el = d3.select("#" + id).classed('show', true)
+    }
+
     function show_topicmap (topicmap) {
         if (typeof svg_panel === "undefined")
             init_panel()
@@ -243,6 +251,7 @@ define(function (require) {
         show_topicmap: show_topicmap,
         set_title: set_page_title,
         set_description: set_page_description,
+        highlight_topic: pop_visual_by_topic_id,
         clear_panel: clear_map_panel,
         listen_to: listen_to,
         hide_assocs: hide_Assocs,

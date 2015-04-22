@@ -2,7 +2,7 @@
 /** Stableviews Page Design Definition */
 
 body {
-    background-color: rgb(83, 71, 65);
+    background-color: #A3B745;
     padding: 0px; margin: 0px;
     font-family: sans-serif;
     margin-left: 10%;
@@ -13,7 +13,7 @@ body {
 
 .container {
     position: relative;
-    background-color: #f5e9d9;
+    background-color: #fff;
     padding: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
 }
@@ -25,7 +25,7 @@ body {
 
 #map-panel {
     display: block;
-    background-color: #f5e9d9;
+    background-color: #fff;
     color: #fff;
     width: 100%;
     position: relative;
@@ -63,14 +63,12 @@ footer {
 }
 
 .title {
-    font-weight: 200;
+    font-weight: 400;
     text-align: center;
-    border-bottom: 1px solid #353535;
     padding-top: 20px;
     padding-bottom: 10px;
-    margin-left: 100px;
-    margin-right: 100px;
-    text-transform: uppercase;
+    margin-left: 30px;
+    margin-right: 30px;
     color: #353535;
     min-height: 40px;
 }
@@ -83,7 +81,6 @@ footer {
     font-size: 1.4em;
     font-weight: 200;
     padding: 10px;
-    background-color: #f5e9d9;
 }
 
 div .textblock {
@@ -101,23 +98,24 @@ div .textblock {
 }
 
 .topics rect {
-    fill: #e8e8e2;
-    stroke: #0071bc;
+    fill: #fff;
+    stroke: #A3B745;
     stroke-width: 3;
 }
 
 .topics rect.selected {
-    stroke: #c1272d;
+    stroke: #adadad;
 }
 
 .links line {
-    stroke: #a9a9a9;
+    stroke: #adadad;
     stroke-width: 3;
 }
 
 div.show {
     display: block;
     z-index: 1001;
+    background: #fff;
 }
 
 .hide {
@@ -130,10 +128,4 @@ line.show {
 
 div.show-inline {
     display: inline-block;
-}
-
-.brush .extent {
-    fill-opacity: .1;
-    stroke: #fff;
-    shape-rendering: crispEdges;
 }

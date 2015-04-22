@@ -2,9 +2,9 @@
 // Require config (common) to all ..
 
 require.config({
-    baseUrl: "/filerepo/dmx/stableviews/js/",
+    baseUrl: "/app/stableviews/js/",
     paths: {
-      d3: "/filerepo/dmx/stableviews/assets/vendor/d3.min"
+      d3: "/app/stableviews/assets/vendor/d3.min"
     },
     shim: {
         'd3': {
