@@ -3,11 +3,14 @@
 
 An alternate, command-line controllable presentation layer for _Topicmaps_ authored with DeepaMehta 4.
 
-Features include:
+Current features include:
  * Load a Topicmap via `open <name>`
  * Free placement and panning (allowing to interact with the loaded topic map without persistence)
+ * Multiple selection of topics using the `SHIFT` key with (offering event handling for the controller)
+ * Zooming in and out of the presented network (graph panel)
+ * `hide` and `show assocs` command for toggling the display of all associations
+ * `hide` and `show assocs` command for toggling the display of all topics of a certain  _type_ - (not yet implemented)
  * Full text search across the complete databse with selection between all results to reveal/load a hidden topic into the loaded _Topicmap_ - (not yet implemented)
- * Hide and show command for a) all associations and b) for each _type_ - (not yet implemented)
 
 The aim is (as always) that this becomes an easy extendable codebase for developers and that it is maximal customizable for designers.
 
