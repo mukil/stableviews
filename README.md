@@ -3,11 +3,14 @@
 
 An alternate, command-line controllable presentation layer for _Topicmaps_ authored with DeepaMehta 4.
 
-Features include:
+Current features include:
  * Load a Topicmap via `open <name>`
  * Free placement and panning (allowing to interact with the loaded topic map without persistence)
+ * Multiple selection of topics using the `SHIFT` key with (offering event handling for the controller)
+ * Zooming in and out of the presented network (graph panel)
+ * `hide` and `show assocs` command for toggling the display of all associations
+ * `hide` and `show assocs` command for toggling the display of all topics of a certain  _type_ - (not yet implemented)
  * Full text search across the complete databse with selection between all results to reveal/load a hidden topic into the loaded _Topicmap_ - (not yet implemented)
- * Hide and show command for a) all associations and b) for each _type_ - (not yet implemented)
 
 The aim is (as always) that this becomes an easy extendable codebase for developers and that it is maximal customizable for designers.
 
@@ -21,11 +24,11 @@ Ideal, differing from the more general approach of the dm4-webclient, this prese
 For a more detailed explanation see section "Details on differences" further down.
 
 Similar to the original dm4-webclient module this codebase aims at:
- * load & edit maps: load stable_views for users of any known dm/x platform (focusing on free placement)
+ * DONE - load & edit maps: load stable_views for users of any known dm/x platform (focusing on free placement)
  * presentation & action: let users search, visualize _and_ explore elements of their personal graph-data database
- * modular architecture: in terms of the JavaScript AMD definition (e.g. requirejs.org)
+ * DONE - modular architecture: in terms of the JavaScript AMD definition (e.g. requirejs.org)
  * become extendable: allow for JavaScript plugins to take over rendering
- * stay cusomizable: allow designers for as much CSS customizations as possible
+ * OK - stay cusomizable: allow designers for as much CSS customizations as possible
  * target bigger-screen devices: no smaller then tablet-sized screens will be targeted
 
 
@@ -41,10 +44,10 @@ With this interface we draw upon the knowledge on humans  _visual_ and _spatial 
 At best, we are able to address the following, more general challenges for such UI:
 
  * comparison: e.g. allow to compare details of any two given topics
- * multi select: allow to select and trigger commands on a set of elements
+ * ACCOMPLISHED - multi select: allow to select and trigger commands on a set of elements
  * query-ui: allow for iterative refinement of "Search Results", e.g. in forms of "Search Buckets"
- * command line: text based interaction to control the ui (search and reveal topics in maps, filter in maps, search and load maps, "mail jri")
- * themes: allow to switch between many CSS definitions
+ * IN PROGRESS - command line: text based interaction to control the ui (search and reveal topics in maps, filter in maps, search and load maps, "mail jri")
+ * MANUALLY DO'ABLE - themes: allow to switch between many CSS definitions
  * tiled-windows: enable users to tile screen space wherever possible
 
 
