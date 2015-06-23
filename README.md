@@ -78,9 +78,7 @@ The difference and focus of UI research in this code repository regarding the dm
 
 ### Installation
 
-You need to download and run the [DMX distro](http://www.digitalmemex.com) of @jri/deepamehta4 and **Install** this app via /dmx the repository manager.
-
-Note: Not yet functional.
+After cloning, packaging and installing this DeepaMehta 4 bundle you need to browse `/de.mikromedia.stableviews` on your DeepaMehta 4 installation to start loading your existing topicmaps into this interface via the `open <Nr>`-commands.
 
 ### Addendum
 
