@@ -3,9 +3,10 @@ define(['d3'], function (d3, require) {
 
     function restClient () {}
 
-    function fetch(resource, callback, failure, json, debug) {
+    function fetch(resource, callback, failure, json, debug, no_workspace) {
         var response_type = "text/plain"
         if (json) response_type = "application/json"
+        if (no_workspace) resource = resource + "&no_workspace_assignment=true"
         var xhr = d3.xhr(resource, response_type)
             xhr.get()
             xhr.on('load', function (response) {
@@ -110,17 +111,18 @@ define(['d3'], function (d3, require) {
             fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
         },
         getTopicSuggestions: function (query, handle, fail, debug) {
-            fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug)
+            fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug, false)
         },
-        postTwo: function (topicId, payload, handle, fail, debug) {
+        postPayload: function (topicId, payload, handle, fail, debug) {
             post('/test/' + topicId, payload, handle, fail, false, debug)
         },
-        doMarkThree: function (topicId, callback, fail) {
+        doMarkTopic: function (topicId, callback, fail) {
             mark('/test/' + topicId + "/seen", callback, fail)
         },
         startSession: function (id, handle, debug) {
             authenticate(id, "", handle, false, debug)
         }
+
     }
 
     return restClient

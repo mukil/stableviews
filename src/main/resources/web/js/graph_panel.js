@@ -7,8 +7,8 @@ define(function (require) {
     var view_state      = ""
     var svg_panel       = undefined
 
-    var width           = window.innerWidth - 400,
-        height          = window.innerHeight - 130,
+    var width           = window.innerWidth - (window.innerWidth / 5),
+        height          = window.innerHeight - (window.innerHeight / 3) - 100,
         shiftKey, ctrlKey
 
     var map_topic, all_nodes, all_edges = undefined
@@ -174,7 +174,7 @@ define(function (require) {
     }
 
     function pop_visual_by_topic_id (id) {
-        console.log(" NYE > pop node radius for topic ", id)
+        console.log(" NYI: pop node radius for topic ", id)
         // var el = d3.select("#" + id).classed('show', true)
     }
 

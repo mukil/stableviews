@@ -11,6 +11,17 @@ body {
 
 /** Areas */
 
+.user-dialog {
+    position: fixed;
+    left    : 0px;
+    bottom: 35px;
+    width: 10%;
+    background-color: #fff;
+    color: rgb(83, 71, 65);
+    padding: 10px; padding-left: 0px;
+    text-align: center;
+}
+
 .container {
     position: relative;
     background-color: #fff;

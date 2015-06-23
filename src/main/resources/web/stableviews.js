@@ -10,12 +10,12 @@ require(['common'], function (common) {
 
         // topic map and selection stuff
         var topicmaps = undefined           //
-        var selected_topicmap = undefined   //
+        var selected_topicmap = undefined   // with all its topics and assocs, currently also directly used for autocompletion
         var selected_topic = undefined      //
         var multi_selection = []            //
 
         // command line related stuff
-        var search_results = []             // latest search results of customa auto-completion method
+        var search_results = []             // latest search results // ### expand this to set to just contain unique elements
         var topic_commands = []             // basic set of commands for a given topic
         var reverse_search = []             // list of recently executed commands (non-persistent)
 
@@ -56,6 +56,19 @@ require(['common'], function (common) {
             if (common.debug) console.log(" > topicmap transformed ", e.detail)
         })
 
+        // 0) ..
+        controller.get_username(function (response) {
+
+            var user_screen = d3.select('.user-dialog')
+            if (response === "") {
+                console.log("User is not logged in..")
+                user_screen.text("Hello Visitor!")
+            } else {
+                console.log("User is logged in..")
+                user_screen.text("Hello " + response + "!")
+            }
+        })
+
         // 1) ..
         controller.load_all_topicmaps ( function (response) {
 
@@ -74,6 +87,7 @@ require(['common'], function (common) {
 
         // --- Setup command line input area
         // --- ### setup gui for autocompletion
+        // --- ### make this a web-component
 
         d3.select('#todoinput').on('keypress', function() {
 
@@ -109,20 +123,57 @@ require(['common'], function (common) {
 
                 } else if (user_input.startsWith("?")) {
 
+                    search_result = []
                     var idx = user_input.split(" ")[1]
                     if (typeof idx === "undefined") idx = idx[0]
                     // depends on dm4-little-helpers module installed
                     controller.search_topics(idx.trim(), function (items) {
                         
-                        search_results = items
-                        console.log("> suggestions for " + idx +" are ", search_results)
+                        search_results = items // store latest search results globally
+                        console.log("> search results for " + idx +" are ", search_results)
+                        render_search_results()
 
                     }, null, false)
 
+                } else {
+                    // clear command line
+                    d3.event.target.value = ''
                 }
 
-                // clear command line
-                d3.event.target.value = ''
+            } else {
+                search_results = []
+                if (d3.event.target.value.length >= 2) {
+                    // ### render some suggestion
+                    var user_input = d3.event.target.value.trim()
+                    for (var t in selected_topicmap.topics) {
+                        var topic_name = selected_topicmap.topics[t].value.toLowerCase()
+                        var topic_type = selected_topicmap.topics[t].type_uri.toLowerCase()
+                        if (topic_name.indexOf(user_input) !== -1) {
+                            // console.log("> add topic " + topic_name, topic_id, topic_type)
+                            search_results.push({
+                                topic: selected_topicmap.topics[t],
+                                workspace: {value : "This map"}
+                            })
+                        }
+                    }
+                    for (var t in selected_topicmap.assocs) {
+                        var assoc_name = selected_topicmap.assocs[t].value.toLowerCase()
+                        var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
+                        if (assoc_name.indexOf(user_input) !== -1) {
+                            // console.log("> assoc " + assoc_name)
+                            search_results.push({
+                                topic: selected_topicmap.assocs[t],
+                                workspace: {value : "This map"}
+                            })
+                        }
+                    }
+                    /** controller.search_topics(idx.trim(), function (items) {
+                        console.log("> append fulltext search results for " + idx +" are ", search_results)
+                        search_results.push(items)
+                        render_search_results()
+                    }, null, false) **/
+                }
+                render_search_results()
             }
 
         })
@@ -140,6 +191,19 @@ require(['common'], function (common) {
                     window.location.reload()
                 }, common.debug)
             } **/
+        }
+
+        function render_search_results () {
+            // show container
+            d3.select('.search-results').attr("style", "display: block")
+            // (re-) populate list
+            d3.select('.search-result-list').selectAll('li').remove()
+            var results_list = d3.select('.search-result-list')
+            for (var idx in search_results) {
+                var result = search_results[idx]
+                results_list.append('li').append('a').attr('href', "#").html('<em>&ldquo;' +result.topic.value + '&rdquo;</em> Context: ' + result.workspace.value + ' ('+result.topic.type_uri + ')')
+            }
+            if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
         }
 
         function load_selected_topicmap () {

@@ -28,6 +28,11 @@ define(['rest_client'], function (restClient, require) {
             restc.getTopicSuggestions(query, handler, function (e){
                 console.warn("restc.getTopicSuggestuins ", e)
             }, false)
+        },
+        get_username: function (handler) {
+            return restc.fetchUsername(function (response){
+                handler(response)
+            })
         }
         
     }
