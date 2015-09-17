@@ -8,6 +8,7 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/ionicons.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/infokitchen-main.css">
 
         <script
@@ -17,10 +18,18 @@
     </head>
     <body>
 
-        <div class="container">
+        <div class="page container">
 
             <h1 class="title">working title</h1>
             <div class="text">Hello D3 Graph</div>
+            <div class="toolbar">
+                <ul>
+                    <li><a href="javascript:show_more()">Show more</a></li>
+                    <li><a href="javascript:do_associate()">Associate</a></li>
+                    <li><a href="javascript:do_edit()">Edit</a></li>
+                    <li><a href="javascript:do_hide()">Hide</a></li>
+                </ul>
+            </div>
             <div id="map-panel" tabindex="3"></div>
 
         </div> <!-- /.container -->

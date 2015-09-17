@@ -2,7 +2,7 @@
 // Load common code that includes config, then load the app logic for this page.
 require(['common'], function (common) {
 
-    require(['graph_panel', 'stableviews_ctrl'], function (graph_panel, controller) {
+    require(['graph_panel', 'stableviews_ctrl', 'labels_en'], function (graph_panel, controller, en) {
 
         // authenticated staff only stuff
         var username = undefined            //
@@ -34,6 +34,8 @@ require(['common'], function (common) {
                 graph_panel.highlight_topic(selected_topic.id)
                 // render
                 graph_panel.set_title(topic.value)
+                graph_panel.set_page_type(
+                        topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
                 if (selected_topic.type_uri === "dm4.notes.note") {
                     graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
                 } else {
@@ -57,15 +59,12 @@ require(['common'], function (common) {
         })
 
         // 0) ..
-        controller.get_username(function (response) {
-
+        controller.get_username(function (xhr) {
             var user_screen = d3.select('.user-dialog')
-            if (response === "") {
-                console.log("User is not logged in..")
+            if (xhr.response=== "") {
                 user_screen.text("Hello Visitor!")
             } else {
-                console.log("User is logged in..")
-                user_screen.text("Hello " + response + "!")
+                user_screen.text("Hello " + xhr.response + "!")
             }
         })
 
@@ -107,11 +106,11 @@ require(['common'], function (common) {
 
                 } else if (user_input.startsWith("hide")) {
 
-                    if (user_input.indexOf("assocs") != -1 ) graph_panel.hide_assocs()
+                    if (user_input.indexOf("assocs") !== -1 ) graph_panel.hide_assocs()
 
                 } else if (user_input.startsWith("show")) {
 
-                    if (user_input.indexOf("assocs") != -1 ) graph_panel.show_assocs()
+                    if (user_input.indexOf("assocs") !== -1 ) graph_panel.show_assocs()
 
                 } else if (user_input.startsWith("group")) {
                     // ### create associations of type X between all selected notes
@@ -141,13 +140,13 @@ require(['common'], function (common) {
                 }
 
             } else {
+                // ### render some suggestion, search through names of stuff in this map
                 search_results = []
                 if (d3.event.target.value.length >= 2) {
-                    // ### render some suggestion
                     var user_input = d3.event.target.value.trim()
                     for (var t in selected_topicmap.topics) {
                         var topic_name = selected_topicmap.topics[t].value.toLowerCase()
-                        var topic_type = selected_topicmap.topics[t].type_uri.toLowerCase()
+                        // var topic_type = selected_topicmap.topics[t].type_uri.toLowerCase()
                         if (topic_name.indexOf(user_input) !== -1) {
                             // console.log("> add topic " + topic_name, topic_id, topic_type)
                             search_results.push({
@@ -158,7 +157,7 @@ require(['common'], function (common) {
                     }
                     for (var t in selected_topicmap.assocs) {
                         var assoc_name = selected_topicmap.assocs[t].value.toLowerCase()
-                        var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
+                        // var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
                         if (assoc_name.indexOf(user_input) !== -1) {
                             // console.log("> assoc " + assoc_name)
                             search_results.push({
@@ -167,13 +166,14 @@ require(['common'], function (common) {
                             })
                         }
                     }
+                    console.log("> suggestions", search_results)
                     /** controller.search_topics(idx.trim(), function (items) {
                         console.log("> append fulltext search results for " + idx +" are ", search_results)
                         search_results.push(items)
                         render_search_results()
                     }, null, false) **/
                 }
-                render_search_results()
+                // ### render_search_results()
             }
 
         })
@@ -201,7 +201,12 @@ require(['common'], function (common) {
             var results_list = d3.select('.search-result-list')
             for (var idx in search_results) {
                 var result = search_results[idx]
-                results_list.append('li').append('a').attr('href', "#").html('<em>&ldquo;' +result.topic.value + '&rdquo;</em> Context: ' + result.workspace.value + ' ('+result.topic.type_uri + ')')
+                var item = results_list.append('li')
+                    item.append('a').attr('href', "#")
+                        .html('<em>&ldquo;' 
+                        + result.topic.value + '&rdquo;</em> ')
+                    item.append('span').html(get_label(result.topic.type_uri)
+                        + ' in \"' +result.workspace.value+ '\" (<em>' +result.workspace_mode+ '</em>)')
             }
             if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
         }

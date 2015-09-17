@@ -74,10 +74,10 @@ define(function (require) {
             .data(all_edges).enter().append("line")
             .attr("id", function (d) { return d.id })
             .attr("data-type-uri", function (d) { return d.type_uri })
-            .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'].value })
-            .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'].value })
-            .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'].value })
-            .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'].value })
+            .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
+            .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] })
+            .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
+            .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] })
 
         node = vis.append("g").attr("class", "topics").selectAll("rect")
             .data(all_nodes).enter().append("rect")
@@ -87,8 +87,8 @@ define(function (require) {
             .attr("tabindex", 100)
             .attr("width", 50).attr("height", 20)
             .attr("rx", 5).attr("ry", 5)
-            .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'].value - node_offset_x })
-            .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'].value - node_offset_y })
+            .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
+            .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
             .on("dblclick", function(d) { d3.event.stopPropagation() })
             .on("click", function(d) {
                 if (!shiftKey) {
@@ -139,14 +139,22 @@ define(function (require) {
 
         function move (dx, dy) {
             node.filter(function(d) { return d.selected })
-                .attr("x", function(d) { return (d.view_props['dm4.topicmaps.x'].value += dx) - node_offset_x })
-                .attr("y", function(d) { return (d.view_props['dm4.topicmaps.y'].value += dy) - node_offset_y })
+                .attr("x", function(d) {
+                    var new_val = parseInt(d.view_props['dm4.topicmaps.x']) + dx
+                    d.view_props['dm4.topicmaps.x'] = new_val
+                    return new_val - node_offset_x
+                })
+                .attr("y", function(d) {
+                    var new_val = parseInt(d.view_props['dm4.topicmaps.y']) + dy
+                    d.view_props['dm4.topicmaps.y'] = new_val
+                    return new_val - node_offset_y
+                })
             link.filter(function(d) { return d.source.selected })
-                .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'].value })
-                .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'].value })
+                .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
+                .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] })
             link.filter(function(d) { return d.target.selected })
-                .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'].value })
-                .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'].value })
+                .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
+                .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] })
         }
 
         function zoom_and_pan () {
@@ -171,6 +179,10 @@ define(function (require) {
         }
         d3.select('.text').classed('show', true)
             .html(text)
+    }
+
+    function set_page_class(type) {
+        d3.select('.container').attr('class', 'container ' + type)
     }
 
     function pop_visual_by_topic_id (id) {
@@ -240,7 +252,7 @@ define(function (require) {
 
     function get_topic_by_id (topicId) {
         for (var idx in all_nodes) {
-            if (topicId == all_nodes[idx].id) {
+            if (topicId === all_nodes[idx].id) {
                 return all_nodes[idx]
             }
         }
@@ -251,6 +263,7 @@ define(function (require) {
         show_topicmap: show_topicmap,
         set_title: set_page_title,
         set_description: set_page_description,
+        set_page_type: set_page_class,
         highlight_topic: pop_visual_by_topic_id,
         clear_panel: clear_map_panel,
         listen_to: listen_to,
