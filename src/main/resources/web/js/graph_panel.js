@@ -8,7 +8,7 @@ define(function (require) {
     var svg_panel       = undefined
 
     var width           = window.innerWidth - (window.innerWidth / 5),
-        height          = window.innerHeight - (window.innerHeight / 3) - 100,
+        height          = window.innerHeight - (window.innerHeight / 3),
         shiftKey, ctrlKey
 
     var map_topic, all_nodes, all_edges = undefined
