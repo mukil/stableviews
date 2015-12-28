@@ -1,5 +1,5 @@
 
-define(function (require) {
+define(function(require) {
 
     require('stableviews_ctrl')
     require('common')
@@ -29,7 +29,7 @@ define(function (require) {
 
     // ------ Initialization of page (according to view_state)
 
-    function init_panel () {
+    function init_panel() {
 
         svg_panel = d3.select("#map-panel")
             .on("keydown", key_down)
@@ -40,7 +40,7 @@ define(function (require) {
                 .attr("height", height)
 
         // ### enable moving of selected topics via arrow-keys
-        function key_down () {
+        function key_down() {
             shiftKey = d3.event.shiftKey || d3.event.metaKey
             ctrlKey = d3.event.ctrlKey
             if (shiftKey) {
@@ -48,18 +48,18 @@ define(function (require) {
             }
         }
 
-        function key_up () {
+        function key_up() {
             shiftKey = d3.event.shiftKey || d3.event.metaKey
             ctrlKey = d3.event.ctrlKey
         }
     }
 
-    function render_network () {
+    function render_network() {
 
         svg_panel.attr("id", "topicmap-" + map_topic.info.id)
 
         zoom_control = d3.behavior.zoom()
-            .scaleExtent([0.4,3])
+            .scaleExtent([0.3,2.5])
             .x(xScale).y(yScale)
             .on("zoom", zoom_and_pan)
             .on("zoomend", zoom_and_pan_end)
@@ -88,8 +88,8 @@ define(function (require) {
         link_group = vis.append("g").attr("class", "links")
         link_sel = link_group.selectAll("line").data(all_edges)
         link_sel.enter().append("line")
-                .attr("id", function (d) { return d.id })
-                .attr("data-type-uri", function (d) { return d.type_uri })
+                .attr("id", function(d) { return d.id })
+                .attr("data-type-uri", function(d) { return d.type_uri })
                 .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
                 .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] + node_link_y_off })
                 .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
@@ -100,11 +100,11 @@ define(function (require) {
         node_sel = node_group.selectAll("rect").data(all_nodes)
         // node_sel.attr() // update to operate on old elements
         node_sel.enter().append("rect") // operations for new elements
-                .attr("id", function (d) { return d.id })
-                .attr("data-view-prop-visibility", function (d) { return d.view_props['dm4.topicmaps.visibility'] })
-                .attr("data-type-uri", function (d) { return d.type_uri })
-                .attr("data-type-label", function (d) { return d.value })
-                .attr("tabindex", 100)
+                .attr("id", function(d) { return d.id })
+                .attr("data-view-prop-visibility", function(d) { return d.view_props['dm4.topicmaps.visibility'] })
+                .attr("data-type-uri", function(d) { return d.type_uri })
+                .attr("data-type-label", function(d) { return d.value })
+                // ### make unique .attr("tabindex", 100)
                 .attr("width", node_circle_w).attr("height", node_circle_w)
                 .attr("rx", node_edge_r).attr("ry", node_edge_r)
                 .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
@@ -124,7 +124,7 @@ define(function (require) {
                     } else {
                         fire_item_selection(d)
                     }
-                    // always select this node
+                    // ### if not part of multi-selection, always select this node
                     d3.select(this).classed("selected", d.selected = !d.previouslySelected)
                 })
                 .on("mouseup", function(d) {
@@ -132,13 +132,12 @@ define(function (require) {
                 })
                 .call(d3.behavior.drag()
                     .origin(function(d) { return d })
-                    .on("dragstart", dragstarted)
-                    .on("drag", dragged)
-                    .on("dragend", dragended))
+                    .on("dragstart", drag_node_start)
+                    .on("drag", drag_node))
         // ### operations for old and new elements
         node_sel.exit().remove()  // operations for deleted elements
 
-        function dragstarted (d) {
+        function drag_node_start(d) {
             d3.event.sourceEvent.stopPropagation() // ###
             if (!d.selected && !shiftKey) {
                 // if this node isn't selected, then we have to unselect every other node
@@ -150,16 +149,11 @@ define(function (require) {
             })
         }
  
-        function dragged (d) {
+        function drag_node(d) {
             move(d3.event.dx, d3.event.dy)
         }
 
-        function dragended (d) {
-            // node.filter(function(d) { return d.selected })
-                // .each(function(d) { d.fixed &= ~6; })
-        }
-
-        function move (dx, dy) { // ### maybe adapt to new selection mechanics
+        function move(dx, dy) { // ### maybe adapt to new selection mechanics
             node_sel.filter(function(d) { return d.selected })
                 .attr("x", function(d) {
                     var new_val = parseInt(d.view_props['dm4.topicmaps.x']) + dx
@@ -179,14 +173,14 @@ define(function (require) {
                 .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] + node_link_y_off })
         }
 
-        function pan() {
+        /** function pan() {
             console.log("translate", d3.event.x, d3.event.y)
             vis.attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")")
         }
 
         function pan_end() {
             fire_map_transformation(vis.attr("transform"))
-        }
+        } **/
 
         function zoom_and_pan() {
             vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
@@ -198,14 +192,15 @@ define(function (require) {
 
     }
 
-    function set_page_title (title) {
+    // --- Graph Page Helpers
+
+    function set_page_title(title) {
         // d3.select('title').text(title)
         // d3.select('.container .text').transition().style('height', String("100%")).duration(1000)
-
         d3.select('h1.title').text(title)
     }
 
-    function set_page_description (text) {
+    function set_page_description(text) {
         if (text === "") {
             d3.select('.text').classed('show', false)
             return
@@ -218,17 +213,12 @@ define(function (require) {
         d3.select('.container').attr('class', 'container ' + type)
     }
 
-    function pop_visual_by_topic_id (id) {
-        // console.log(" NYI: pop node radius for topic ", id)
-        // var el = d3.select("#" + id).classed('show', true)
-    }
-
-    function show_topicmap (topicmap) {
-        if (typeof svg_panel === "undefined")
+    function show_topicmap(topicmap) {
+        if (!svg_panel)
             init_panel()
 
-        if (typeof topicmap !== "undefined") {
-            if (typeof topicmap.topics !== "undefined") {
+        if (topicmap) {
+            if (topicmap.topics) {
                 map_topic = topicmap
                 all_nodes = topicmap.topics
                 all_edges = topicmap.assocs
@@ -239,67 +229,115 @@ define(function (require) {
             }
         }
         render_network()
-        hide_Hidden_Nodes()
+        hide_hidden_topics()
         fire_rendered_topicmap()
     }
 
-    function hide_Assocs () { // messing up the method signatures frankenstyle_Camel
-        // console.log("> hiding associations")
-        // all_edges, link = undefined
-        // console.log(all_edges, link) // ## i thougt d3 manipulates the dom when i remove the data ...
-        // d3.selectAll("links").classed("hide", true)
-        d3.selectAll("line").classed("hide", true)
-    }
-
-    function show_Assocs () { // messing up the method signatures frankenstyle_Camel
-        d3.selectAll("line").classed("hide", false)
-    }
-
-    function hide_Hidden_Nodes () {
-        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", true)
-    }
-
-    function show_Hidden_Nodes () {
-        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", false)
-    }
-
-    function clear_map_panel () {
-        if (typeof svg_panel !== "undefined") {
+    function clear_map_panel() {
+        if (!svg_panel) {
             svg_panel = undefined
             d3.select('#map-panel svg').remove() // ## fix: should not clear our text-area
         }
     }
 
-    function listen_to (event_name, handler) {
-        svg_panel[0][0].addEventListener(event_name, handler)
+    // --- Event Handling Methods
+
+    function listen_to(event_name, handler) {
+        svg_panel.node().addEventListener(event_name, handler)
     }
 
-    function fire_item_selection (item) {
-        svg_panel[0][0].dispatchEvent(new CustomEvent('selection', { detail: item }))
+    function fire_item_selection(item) {
+        svg_panel.node().dispatchEvent(new CustomEvent('selection', { detail: item }))
     }
 
-    function fire_multi_selection (items) {
-        svg_panel[0][0].dispatchEvent(new CustomEvent('multi_selection', { detail: items }))
+    function fire_multi_selection(items) {
+        svg_panel.node().dispatchEvent(new CustomEvent('multi_selection', { detail: items }))
     }
 
-    function fire_rendered_topicmap () {
-        svg_panel[0][0].dispatchEvent(new CustomEvent('rendered_topicmap', { detail: map_topic }))
+    function fire_rendered_topicmap() {
+        svg_panel.node().dispatchEvent(new CustomEvent('rendered_topicmap', { detail: map_topic }))
     }
 
-    function fire_map_transformation (value) {
-        svg_panel[0][0].dispatchEvent(new CustomEvent('topicmap_transformed', { detail: value }))
+    function fire_map_transformation(value) {
+        svg_panel.node().dispatchEvent(new CustomEvent('topicmap_transformed', { detail: value }))
     }
 
     // --- Graph Renderer Helper Methods
 
-    function get_topic_by_id (topicId) {
+    function get_topic_by_id(topicId) {
         for (var idx in all_nodes) {
             if (topicId === all_nodes[idx].id) {
                 return all_nodes[idx]
             }
         }
     }
-    
+
+    // --- Visualization Adjustment Methods
+
+    function get_topicmap_bounds() {
+        return svg_graph.node().getBBox()
+    }
+
+    function get_viewport_size() {
+        return { "width": svg_panel.attr("width"), "height": svg_panel.attr("height") }
+    }
+
+    function hide_assocs() {
+        d3.selectAll("line").classed("hide", true)
+    }
+
+    function backdrop_assocs() {
+        d3.selectAll("line").classed("backdrop", true)
+    }
+
+    function backdrop_topics() {
+        d3.selectAll("rect").classed("backdrop", true)
+    }
+
+    function show_assocs() {
+        d3.selectAll("line").classed("hide", false)
+        d3.selectAll("line").classed("backdrop", false)
+    }
+
+    function hide_hidden_topics() {
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", true)
+    }
+
+    function show_hidden_topics() {
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", false)
+    }
+
+    function highlight_institutions() {
+        backdrop_topics()
+        backdrop_assocs()
+        d3.selectAll('[data-type-uri="dm4.contacts.institution"]').classed("backdrop", false)
+    }
+
+    function highlight_web_resources() {
+        backdrop_topics()
+        backdrop_assocs()
+        d3.selectAll('[data-type-uri="dm4.webbrowser.web_resource"]').classed("backdrop", false)
+    }
+
+    function highlight_persons() {
+        backdrop_topics()
+        backdrop_assocs()
+        d3.selectAll('[data-type-uri="dm4.contacts.person"]').classed("backdrop", false)
+    }
+
+    function highlight_notes() {
+        backdrop_topics()
+        backdrop_assocs()
+        d3.selectAll('[data-type-uri="dm4.notes.note"]').classed("backdrop", false)
+    }
+
+    function pop_visual_by_topic_id(id) {
+        // console.log(" NYI: pop node radius for topic ", id)
+        // var el = d3.select("#" + id).classed('show', true)
+    }
+
+    // --- Puiblic Graph Panel API ---
+
     return {
         init: init_panel,
         show_topicmap: show_topicmap,
@@ -307,12 +345,18 @@ define(function (require) {
         set_description: set_page_description,
         set_page_type: set_page_class,
         highlight_topic: pop_visual_by_topic_id,
+        get_topicmap_bounds: get_topicmap_bounds,
+        get_viewport_size: get_viewport_size,
         clear_panel: clear_map_panel,
         listen_to: listen_to,
-        hide_assocs: hide_Assocs,
-        hide_hidden: hide_Hidden_Nodes,
-        show_hidden: show_Hidden_Nodes,
-        show_assocs: show_Assocs
+        hide_assocs: hide_assocs,
+        show_assocs: show_assocs,
+        hide_topics_hidden: hide_hidden_topics,
+        show_topics_hidden: show_hidden_topics,
+        high_institutions: highlight_institutions,
+        high_websites: highlight_web_resources,
+        high_persons: highlight_persons,
+        high_notes: highlight_notes
     }
 
 })

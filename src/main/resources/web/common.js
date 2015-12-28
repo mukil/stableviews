@@ -14,11 +14,9 @@ require.config({
     waitSeconds: 15
 })
 
-define(function () {
-
+define(function() {
     return {
         debug: true,
         fine: false
     }
-    
 })

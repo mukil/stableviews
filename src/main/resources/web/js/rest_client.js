@@ -1,7 +1,7 @@
 
-define(['d3'], function (d3, require) {
+define(['d3'], function(d3, require) {
 
-    function restClient () {}
+    function restClient() {}
 
     function fetch(resource, callback, failure, json, debug, no_workspace) {
         var response_type = "text/plain"
@@ -9,7 +9,7 @@ define(['d3'], function (d3, require) {
         if (no_workspace) resource = resource + "&no_workspace_assignment=true"
         var xhr = d3.xhr(resource, response_type)
             xhr.get()
-            xhr.on('load', function (response) {
+            xhr.on('load', function(response) {
                 var result = undefined
                 if (response !== null) {
                     result = response
@@ -25,7 +25,7 @@ define(['d3'], function (d3, require) {
                     if (typeof callback === "function") callback(result)
                 }
             })
-            xhr.on('error', function (error) {
+            xhr.on('error', function(error) {
                 if (typeof failure === "function") failure(error)
             })
     }
@@ -34,7 +34,7 @@ define(['d3'], function (d3, require) {
         var xhr = d3.xhr(resource)
             xhr.get()
             xhr.on('load', callback)
-            xhr.on('error', function (e){
+            xhr.on('error', function(e){
                 if (typeof fail !== "undefined") fail(e)                
             })
     }
@@ -44,7 +44,7 @@ define(['d3'], function (d3, require) {
         var xhr = d3.xhr(resource, response_type)
             xhr.header('Content-Type', "application/json")
             xhr.post(JSON.stringify(data))
-            xhr.on('load', function (response) {
+            xhr.on('load', function(response) {
                 if (debug) console.log(response)
                 if (json && typeof callback !== "undefined") {
                     // process response
@@ -59,7 +59,7 @@ define(['d3'], function (d3, require) {
                     callback()
                 }
             })
-            xhr.on('error', function (e) {
+            xhr.on('error', function(e) {
                 console.warn(e.status, e.statusText)
                 if (typeof fail !== "undefined") fail(e)
             })
@@ -71,12 +71,12 @@ define(['d3'], function (d3, require) {
             xhr.header('Content-Type', "application/json")
             xhr.header('Authorization', auth_code)
             xhr.post()
-            xhr.on('load', function (response) {
+            xhr.on('load', function(response) {
                 if (debug) console.log(response)
                 if (typeof handle !== "undefined") handle(response)
 
             })
-            xhr.on('error', function (e) {
+            xhr.on('error', function(e) {
                 console.warn(e.status, e.statusText)
                 if (typeof fail !== "undefined") fail(e)
             })
@@ -95,31 +95,31 @@ define(['d3'], function (d3, require) {
 
     restClient.prototype = {
 
-        fetchUsername: function (handle, debug) {
+        fetchUsername: function(handle, debug) {
             fetch('/accesscontrol/user', handle, undefined, false, false)
         },
-        fetchByTypeUri: function (typeUri, handle, fail, debug) {
+        fetchByTypeUri: function(typeUri, handle, fail, debug) {
             fetch('/core/topic/by_type/' + typeUri, handle, fail, true, debug)
         },
-        fetchByTypeUriChilds: function (typeUri, handle, fail, debug) {
+        fetchByTypeUriChilds: function(typeUri, handle, fail, debug) {
             fetch('/core/topic/by_type/' + typeUri + '?include_childs=true', handle, fail, true, debug)
         },
-        fetchTopicmapById: function (topicmapId, handle, fail, debug) {
+        fetchTopicmapById: function(topicmapId, handle, fail, debug) {
             fetch('/topicmap/' + topicmapId, handle, fail, true, debug)
         },
-        fetchTopicById: function (topicId, handle, fail, debug) {
+        fetchTopicById: function(topicId, handle, fail, debug) {
             fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
         },
-        getTopicSuggestions: function (query, handle, fail, debug) {
+        getTopicSuggestions: function(query, handle, fail, debug) {
             fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug, false)
         },
-        postPayload: function (topicId, payload, handle, fail, debug) {
+        postPayload: function(topicId, payload, handle, fail, debug) {
             post('/test/' + topicId, payload, handle, fail, false, debug)
         },
-        doMarkTopic: function (topicId, callback, fail) {
+        doMarkTopic: function(topicId, callback, fail) {
             mark('/test/' + topicId + "/seen", callback, fail)
         },
-        startSession: function (id, handle, debug) {
+        startSession: function(id, handle, debug) {
             authenticate(id, "", handle, false, debug)
         }
 

@@ -182,16 +182,18 @@ div .textblock {
 }
 
 .topics rect.selected {
-    stroke: #383838;
+    stroke: #444;
     stroke-width: 4;
 }
 
+.links line.backdrop,
+.topics rect.backdrop,
 .topics rect.hidden {
     opacity: .2;
 }
 
 .links line {
-    stroke: #383838;
+    stroke: #444;
     stroke-width: 2;
 }
 

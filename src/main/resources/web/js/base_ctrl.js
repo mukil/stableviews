@@ -1,5 +1,5 @@
 
-define(['rest_client'], function (restClient, require) {
+define(['rest_client'], function(restClient, require) {
 
     var restc = new restClient()
 
@@ -9,27 +9,27 @@ define(['rest_client'], function (restClient, require) {
 
     controllerBase.prototype = {
 
-        load_all_topicmaps: function (handler) {
+        load_all_topicmaps: function(handler) {
             restc.fetchByTypeUriChilds("dm4.topicmaps.topicmap", function (result) {
                 handler(result.items)
             }, null, null)
         },
-        load_topicmap: function (id, handler) {
+        load_topicmap: function(id, handler) {
             restc.fetchTopicmapById(id, function (result) {
                 handler(result)
             }, null, null)
         },
-        load_topic: function (id, handler) {
+        load_topic: function(id, handler) {
             restc.fetchTopicById(id, function (result) {
                 handler(result)
             }, null, null)  
         },
-        search_topics: function (query, handler) {
+        search_topics: function(query, handler) {
             restc.getTopicSuggestions(query, handler, function (e){
                 console.warn("restc.getTopicSuggestuins ", e)
             }, false)
         },
-        get_username: function (handler) {
+        get_username: function(handler) {
             return restc.fetchUsername(function (response){
                 handler(response)
             })
