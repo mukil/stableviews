@@ -1,5 +1,5 @@
 
-// Load common code that includes config, then load the app logic for this page.
+// Load common code that includes config, then load the app logic for the stableviews main page.
 require(['common'], function(common) {
 
     require(['graph_panel', 'stableviews_ctrl', 'labels_en'], function(graph_panel, controller, en) {
@@ -22,60 +22,12 @@ require(['common'], function(common) {
         // 0) ..
         graph_panel.init()
 
-        // ### Currently, all these listeners get cleared out with map-panel when switching topicmap
-
-        graph_panel.listen_to('selection', function(e) {
-            // if (common.debug) console.log(" > selection ", e.detail)
-            controller.load_topic(e.detail.id, function(topic) {
-                // update client side model (as a param for commands)
-                selected_topic = topic
-                multi_selection = []
-                graph_panel.highlight_topic(selected_topic.id)
-                // render
-                graph_panel.set_title(topic.value)
-                graph_panel.set_page_type(
-                        topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
-                if (selected_topic.type_uri === "dm4.notes.note") {
-                    graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
-                } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
-                    console.log("Web Topic", selected_topic)
-                } else if (selected_topic.type_uri === "dm4.files.file") {
-                    console.log("File Topic", selected_topic)
-                } else {
-                    // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
-                    // setTimeout(function(e) {
-                    graph_panel.set_description('')
-                    // }, 1000)
-                }
-            })
-        })
-
-        graph_panel.listen_to('multi_selection', function(e) {
-            // update client side model (as a param for commands)
-            multi_selection = e.detail
-            if (common.debug) console.log("Multi Select", e.detail)
-        })
-
-        graph_panel.listen_to('rendered_topicmap', function(e) {
-            var bounds = graph_panel.get_topicmap_bounds()
-            var viewport = graph_panel.get_viewport_size()
-            if (common.debug) console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
-                "Topicmap ID", selected_topicmap.info.id)
-        })
-
-        graph_panel.listen_to('topicmap_transformed', function(e) {
-            if (common.debug) console.log("Topicmap Transformation", e.detail)
-        })
-
-        // General Handlers
-        d3.select("#search").on('click', function(e) {
-            var input = d3.select("#textinput")[0][0]
-            var value = input.value
-            do_search(value)
-        })
+        // ..
+        setup_map_panel_listeners()
+        setup_page_listeners()
 
         // 0) ..
-        controller.get_username(function(xhr) {
+        controller.loadUsername(function(xhr) {
             var user_screen = d3.select('.user-dialog')
             if (xhr.response=== "") {
                 user_screen.text("Hello Visitor!")
@@ -84,14 +36,22 @@ require(['common'], function(common) {
             }
         })
 
-        // 1) ..
-        controller.load_all_topicmaps(function(response) {
+        // 1) ...
+        controller.loadAllTopicTypes(function(topicTypes) {
+            console.log("Topic Types", topicTypes)
+        })
+        controller.loadAllAssocTypes(function(assocTypes) {
+            console.log("Association Types", assocTypes)
+        })
+
+        // 2) ..
+        controller.loadAllTopicmaps(function(response) {
 
             topicmaps = response
             selected_topicmap = topicmaps[0]
 
             // 1.2) ..
-            controller.load_topicmap(selected_topicmap.id, function(result) {
+            controller.loadTopicmap(selected_topicmap.id, function(result) {
                 //
                 selected_topicmap = result
                 graph_panel.show_topicmap(selected_topicmap)
@@ -187,8 +147,8 @@ require(['common'], function(common) {
                             })
                         }
                     }
-                    console.log("> suggestions", search_results)
-                    /** controller.search_topics(idx.trim(), function (items) {
+                    if (common.debug) console.log("Text Input Suggestions", search_results)
+                    /** controller.searchTopics(idx.trim(), function (items) {
                         console.log("> append fulltext search results for " + idx +" are ", search_results)
                         search_results.push(items)
                         render_search_results()
@@ -207,10 +167,75 @@ require(['common'], function(common) {
         function do_search(value) {
             if (!value) throw new Error("Wont search for empty string")
             // depends on dm4-little-helpers module installed
-            controller.search_topics(value.trim(), function(items) {
+            controller.searchTopics(value.trim(), function(items) {
                 search_results = items // store latest search results globally
                 render_search_results()
             }, null, false)
+        }
+
+        // -- Top Level Page Handlers
+
+        function setup_page_listeners()  {
+            // Search Button Handler
+            d3.select("#search").on('click', function(e) {
+                var input = d3.select("#textinput")[0][0]
+                var value = input.value
+                do_search(value)
+            })
+            // Map Viewport Reset Handler
+            d3.select("#map-reset").on('click', function(e) {
+                graph_panel.reset_viewport()
+            })
+        }
+
+        // -- Map Panel Listeners
+
+        // These listeners get cleared out with map-panel when switching topicmap
+        function setup_map_panel_listeners() {
+            graph_panel.listen_to('selection', function(e) {
+                // if (common.debug) console.log(" > selection ", e.detail)
+                controller.loadTopic(e.detail.id, function(topic) {
+                    // update client side model (as a param for commands)
+                    selected_topic = topic
+                    multi_selection = []
+                    graph_panel.highlight_topic(selected_topic.id)
+                    // render
+                    graph_panel.set_title(topic.value)
+                    graph_panel.set_page_type(
+                            topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
+                    if (selected_topic.type_uri === "dm4.notes.note") {
+                        graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                    } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
+                        console.log("Web Topic", selected_topic)
+                    } else if (selected_topic.type_uri === "dm4.files.file") {
+                        console.log("File Topic", selected_topic)
+                    } else {
+                        // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
+                        // setTimeout(function(e) {
+                        graph_panel.set_description('')
+                        // }, 1000)
+                    }
+                })
+            })
+
+            graph_panel.listen_to('multi_selection', function(e) {
+                // update client side model (as a param for commands)
+                multi_selection = e.detail
+                if (common.debug) console.log("Multi Select", e.detail)
+            })
+
+            graph_panel.listen_to('rendered_topicmap', function(e) {
+                var bounds = graph_panel.get_topicmap_bounds()
+                var viewport = graph_panel.get_viewport_size()
+                if (common.debug) console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
+                    "Topicmap ID", selected_topicmap.info.id)
+                // ### hide loader dummy
+                d3.select(".loader").classed("hide", true)
+            })
+
+            graph_panel.listen_to('topicmap_transformed', function(e) {
+                // if (common.debug) console.log("Topicmap Transformation", e.detail)
+            })
         }
 
         // -- Login View
@@ -243,10 +268,12 @@ require(['common'], function(common) {
         }
 
         function load_selected_topicmap() {
-            controller.load_topicmap(selected_topicmap.id, function(result) {
-                graph_panel.clear_panel()
+            controller.loadTopicmap(selected_topicmap.id, function(result) {
+                graph_panel.clear()
                 selected_topicmap = result
                 graph_panel.show_topicmap(selected_topicmap)
+                // re-attach our listeners for events of the map panel module
+                setup_map_panel_listeners()
             })
         }
 

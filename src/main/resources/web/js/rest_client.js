@@ -98,6 +98,12 @@ define(['d3'], function(d3, require) {
         fetchUsername: function(handle, debug) {
             fetch('/accesscontrol/user', handle, undefined, false, false)
         },
+        fetchAllTopicTypes: function(handle, fail, debug) {
+            fetch('/core/topictype/all', handle, fail, true, debug)
+        },
+        fetchAllAssocTypes: function(handle, fail, debug) {
+            fetch('/core/assoctype/all', handle, fail, true, debug)
+        },
         fetchByTypeUri: function(typeUri, handle, fail, debug) {
             fetch('/core/topic/by_type/' + typeUri, handle, fail, true, debug)
         },

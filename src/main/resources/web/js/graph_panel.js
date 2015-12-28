@@ -57,25 +57,6 @@ define(function(require) {
     function render_network() {
 
         svg_panel.attr("id", "topicmap-" + map_topic.info.id)
-
-        zoom_control = d3.behavior.zoom()
-            .scaleExtent([0.3,2.5])
-            .x(xScale).y(yScale)
-            .on("zoom", zoom_and_pan)
-            .on("zoomend", zoom_and_pan_end)
-        svg_panel.call(zoom_control)
-        /* ### disable scroll zoom (activate panning)
-        drag_control = d3.behavior.drag()
-            .on("drag", pan)
-            .on("dragend", pan_end)
-            .origin(function() {
-                var svg_dom = svg_panel[0][0].firstChild.children[0]
-                console.log("event", d3.event)
-                console.log("svg_panel", svg_dom["transform"])
-                return { x: svg_dom.x, y: svg_dom.y }
-            })
-        svg_panel.call(drag_control) **/
-
         svg_graph = svg_panel.append('svg:g')
         vis = svg_graph.append("svg:g").attr('id', 'vis').attr('opacity', 1)
 
@@ -137,6 +118,8 @@ define(function(require) {
         // ### operations for old and new elements
         node_sel.exit().remove()  // operations for deleted elements
 
+        setup_zoom_and_drag_control()
+
         function drag_node_start(d) {
             d3.event.sourceEvent.stopPropagation() // ###
             if (!d.selected && !shiftKey) {
@@ -171,23 +154,6 @@ define(function(require) {
             link_sel.filter(function(d) { return d.target.selected })
                 .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
                 .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] + node_link_y_off })
-        }
-
-        /** function pan() {
-            console.log("translate", d3.event.x, d3.event.y)
-            vis.attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")")
-        }
-
-        function pan_end() {
-            fire_map_transformation(vis.attr("transform"))
-        } **/
-
-        function zoom_and_pan() {
-            vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
-        }
-
-        function zoom_and_pan_end() {
-            fire_map_transformation(vis.attr("transform"))
         }
 
     }
@@ -234,7 +200,7 @@ define(function(require) {
     }
 
     function clear_map_panel() {
-        if (!svg_panel) {
+        if (svg_panel) {
             svg_panel = undefined
             d3.select('#map-panel svg').remove() // ## fix: should not clear our text-area
         }
@@ -272,6 +238,34 @@ define(function(require) {
         }
     }
 
+    function setup_zoom_and_drag_control() {
+        zoom_control = d3.behavior.zoom()
+            .scaleExtent([0.3,2]) // ### maybe set center
+            .x(xScale).y(yScale)
+            .on("zoom", zoom_and_pan)
+            .on("zoomend", zoom_and_pan_end)
+        svg_panel.call(zoom_control)
+
+        function zoom_and_pan() {
+            vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+        }
+
+        function zoom_and_pan_end() {
+            fire_map_transformation(vis.attr("transform"))
+        }
+        /* ### disable scroll zoom (activate panning)
+        drag_control = d3.behavior.drag()
+            .on("drag", pan)
+            .on("dragend", pan_end)
+            .origin(function() {
+                var svg_dom = svg_panel[0][0].firstChild.children[0]
+                console.log("event", d3.event)
+                console.log("svg_panel", svg_dom["transform"])
+                return { x: svg_dom.x, y: svg_dom.y }
+            })
+        svg_panel.call(drag_control) **/
+    }
+
     // --- Visualization Adjustment Methods
 
     function get_topicmap_bounds() {
@@ -280,6 +274,16 @@ define(function(require) {
 
     function get_viewport_size() {
         return { "width": svg_panel.attr("width"), "height": svg_panel.attr("height") }
+    }
+
+    function reset_graph_translation() {
+        // 1) do reset the svg translation matrix
+        vis.attr("transform", "translate(0, 0) scale(1)") // this would be SVG native
+        // zoom_control.translate(0,0) // ### fixme: does not seem to work as expected
+        // zoom_control.scale(1.0) // ### fixme: does not seem to work as expected
+        // console.log("Zoom Control", zoom_control, "SVG Panel", svg_panel.node(), "SVG Graph", svg_graph.node())
+        // 2) setup new d4 zoom control behaviour (as subsequent d3.event.translate will return NaN)
+        setup_zoom_and_drag_control()
     }
 
     function hide_assocs() {
@@ -347,7 +351,8 @@ define(function(require) {
         highlight_topic: pop_visual_by_topic_id,
         get_topicmap_bounds: get_topicmap_bounds,
         get_viewport_size: get_viewport_size,
-        clear_panel: clear_map_panel,
+        reset_viewport: reset_graph_translation,
+        clear: clear_map_panel,
         listen_to: listen_to,
         hide_assocs: hide_assocs,
         show_assocs: show_assocs,
