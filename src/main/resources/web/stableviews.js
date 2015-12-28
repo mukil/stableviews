@@ -25,8 +25,7 @@ require(['common'], function (common) {
         // ### Currently, yll these listeners get cleared out with map-panel when switching topicmap
 
         graph_panel.listen_to('selection', function (e) {
-            if (common.debug) console.log(" > selection ", e.detail)
-
+            // if (common.debug) console.log(" > selection ", e.detail)
             controller.load_topic(e.detail.id, function (topic) {
                 // update client side model (as a param for commands)
                 selected_topic = topic
@@ -38,8 +37,15 @@ require(['common'], function (common) {
                         topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
                 if (selected_topic.type_uri === "dm4.notes.note") {
                     graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
+                    console.log("Web Topic", selected_topic)
+                } else if (selected_topic.type_uri === "dm4.files.file") {
+                    console.log("File Topic", selected_topic)
                 } else {
+                    // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
+                    // setTimeout(function(e) {
                     graph_panel.set_description('')
+                    // }, 1000)
                 }
             })
         })
@@ -55,7 +61,15 @@ require(['common'], function (common) {
         })
 
         graph_panel.listen_to('topicmap_transformed', function (e) {
-            if (common.debug) console.log(" > topicmap transformed ", e.detail)
+            // if (common.debug) console.log(" > topicmap transformed ", e.detail)
+        })
+
+        // General Handlers
+        d3.select("#search").on('click', function (e) {
+            var input = d3.select("#textinput")[0][0]
+            var value = input.value
+            console.log("Search value", input, value)
+            do_search(value)
         })
 
         // 0) ..
@@ -88,7 +102,7 @@ require(['common'], function (common) {
         // --- ### setup gui for autocompletion
         // --- ### make this a web-component
 
-        d3.select('#todoinput').on('keypress', function() {
+        d3.select('#textinput').on('keypress', function() {
 
             if (d3.event.keyCode === 13 && d3.event.target.value.length > 2) {
 
@@ -103,14 +117,22 @@ require(['common'], function (common) {
                     // select, load and render new one
                     selected_topicmap = topicmaps[index]
                     load_selected_topicmap()
+                    // clear command line
+                    d3.event.target.value = ''
 
                 } else if (user_input.startsWith("hide")) {
 
                     if (user_input.indexOf("assocs") !== -1 ) graph_panel.hide_assocs()
+                    if (user_input.indexOf("hidden") !== -1 ) graph_panel.hide_hidden()
+                    // clear command line
+                    d3.event.target.value = ''
 
                 } else if (user_input.startsWith("show")) {
 
                     if (user_input.indexOf("assocs") !== -1 ) graph_panel.show_assocs()
+                    if (user_input.indexOf("hidden") !== -1 ) graph_panel.show_hidden()
+                    // clear command line
+                    d3.event.target.value = ''
 
                 } else if (user_input.startsWith("group")) {
                     // ### create associations of type X between all selected notes
@@ -120,23 +142,10 @@ require(['common'], function (common) {
                         }
                     }
 
-                } else if (user_input.startsWith("?")) {
-
-                    search_result = []
-                    var idx = user_input.split(" ")[1]
-                    if (typeof idx === "undefined") idx = idx[0]
-                    // depends on dm4-little-helpers module installed
-                    controller.search_topics(idx.trim(), function (items) {
-                        
-                        search_results = items // store latest search results globally
-                        console.log("> search results for " + idx +" are ", search_results)
-                        render_search_results()
-
-                    }, null, false)
-
                 } else {
-                    // clear command line
-                    d3.event.target.value = ''
+
+                    do_search(user_input)
+
                 }
 
             } else {
@@ -179,7 +188,20 @@ require(['common'], function (common) {
         })
 
         // --- Focus command line on startup
-        document.getElementById('todoinput').focus()
+        document.getElementById('textinput').focus()
+
+        // --- Search Command
+
+        function do_search (value) {
+            if (!value) throw new Error("Wont search for empty string")
+            console.log("doing search.. " + value)
+            // depends on dm4-little-helpers module installed
+            controller.search_topics(value.trim(), function (items) {
+                search_results = items // store latest search results globally
+                console.log("> search results for " + value +" are ", search_results)
+                render_search_results()
+            }, null, false)
+        }
 
         // -- Login View
 
@@ -204,8 +226,8 @@ require(['common'], function (common) {
                 var item = results_list.append('li')
                     item.append('a').attr('href', "#")
                         .html('<em>&ldquo;' 
-                        + result.topic.value + '&rdquo;</em> ')
-                    item.append('span').html(get_label(result.topic.type_uri)
+                        + result.topic.value + '&rdquo;</em>')
+                    item.append('span').html(' ' + get_label(result.topic.type_uri)
                         + ' in \"' +result.workspace.value+ '\" (<em>' +result.workspace_mode+ '</em>)')
             }
             if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")

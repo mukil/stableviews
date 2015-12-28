@@ -42,13 +42,22 @@ body {
     display: block;
     background-color: #fff;
     color: #fff;
-    width: 100%;
+    max-width: 95%;
+    min-height: 300px;
     position: relative;
     border-top: 1px solid #a9a9a9;
 }
 
+#map-panel svg {
+    max-width: 100%;
+}
+
 #map-panel text {
     cursor: pointer;
+}
+
+#map-panel svg {
+    cursor: move;
 }
 
 #map-panel g {
@@ -65,12 +74,23 @@ body {
     padding-right: 10px;
 }
 
-#todoinput {
-    width: 100%;
+#textinput {
+    min-width: 300px;
     border: 0px solid transparent;
     padding-bottom: 5px;
     padding-top: 15px;
+    display: inline-block;
+    font-size: 1.2em;
 }
+
+#login,
+#search {
+    display: inline-block;
+    padding: 5px; padding-left: 10px; padding-right: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
 
 .search-results {
     padding-bottom: 5px;
@@ -104,7 +124,6 @@ body {
 
 .text {
     display: none;
-    text-align: center;
     margin-left: 100px;
     margin-right: 100px;
     font-size: 1.4em;
@@ -116,14 +135,25 @@ div .textblock {
     font-family: serif;
 }
 
+.toolbar {
+    margin-left: 7%;
+    margin-right: 7%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
 .toolbar li {
     list-style-type: none;
-    padding: 4px;
     display: inline-block;
 }
 
-.toolbar ul {
-    padding: 0px;
+.toolbar li a {
+    text-decoration: none;
+    border-left: 1px solid #383838;
+    border-right: 1px solid #383838;
+    border-bottom: 1px solid #383838;
+    padding: 5px;
+    padding-left: 10px; padding-right: 10px;
 }
 
 .topics text {
@@ -167,4 +197,28 @@ line.show {
 
 div.show-inline {
     display: inline-block;
+}
+
+@media (max-width: 1400px) {
+    .text,
+    h1.title {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    .text,
+    h1.title {
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+}
+
+@media (max-width: 768px), (max-width: 720px) {
+    .text,
+    h1.title {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
 }

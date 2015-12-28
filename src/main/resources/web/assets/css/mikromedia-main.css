@@ -5,22 +5,11 @@ body {
     background-color: #383838;
     padding: 0px; margin: 0px;
     font-family: sans-serif;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin-left: 3%;
+    margin-right: 3%;
 }
 
 /** Areas */
-
-.user-dialog {
-    position: fixed;
-    left    : 0px;
-    bottom: 35px;
-    width: 10%;
-    background-color: #fff;
-    color: rgb(83, 71, 65);
-    padding: 10px; padding-left: 0px;
-    text-align: center;
-}
 
 .container {
     position: relative;
@@ -34,16 +23,26 @@ body {
     height: 100px;
 }
 
+.file .title,
+.web_resource .title {
+    font-size: 16px;
+    font-weight: normal;
+}
+
 #map-panel {
     display: block;
     background-color: #fff;
     color: #fff;
-    width: 100%;
-    position: relative;
+    max-width: 95%;
+    min-height: 300px;
 }
 
 #map-panel text {
     cursor: pointer;
+}
+
+#map-panel svg {
+    cursor: move;
 }
 
 #map-panel g {
@@ -51,26 +50,61 @@ body {
 }
 
 footer {
-    text-align: center;
-    padding-left: 5px;
-    padding-right: 5px;
+    padding: 0px;
+    min-height: 200px;
 }
 
 .copy {
-    position: fixed;
-    bottom: 0px;
-    background-color: rgb(83, 71, 65);;
+    margin-top: 10px;
     color: #fff;
     width: 100%;
     left: 0px;
 }
 
-#todoinput {
-    padding: 5px;
+.user-dialog {
+    width: 150px;
+    padding: 10px; padding-left: 0px;
+    text-align: center;
+    display: inline-block;
+    display: none;
+    font-size: 1.2em;
+}
+
+#textinput {
+    padding: 5px; padding-left: 10px; padding-right: 10px;
+    min-width: 340px;
+    display: inline-block;
+    font-size: 1.2em;
+}
+
+#login,
+#search {
+    display: inline-block;
+    padding: 5px; padding-left: 10px; padding-right: 10px;
+    font-size: 1.2em;
+    cursor: pointer;
+}
+
+.search-results {
+    padding-bottom: 5px;
+    border-top: 1px solid #383838;
+    display: none;
+    height: 100%;
     width: 100%;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-left: -10px;
+    /** background-color: #fff; **/
+    color: #e8e8e8;
+    font-size: .9em;
+    overflow-y: scroll;
+}
+
+.search-results a {
+    color: #40B0E2;
+}
+
+.search-result-list {
+    /** list-style-type: none; */
+    padding-left: 30px;
+    margin-bottom: 10px;
 }
 
 .title {
@@ -79,25 +113,56 @@ footer {
     border-bottom: 1px solid #383838;
     padding-top: 20px;
     padding-bottom: 10px;
-    margin-left: 100px;
-    margin-right: 100px;
+    margin-left: 90px;
+    margin-right: 90px;
     text-transform: uppercase;
     color: #383838;
     min-height: 40px;
+    margin-bottom: 5px;
 }
 
 .text {
     display: none;
-    text-align: center;
-    margin-left: 100px;
-    margin-right: 100px;
-    font-size: 1.4em;
+    margin-left: 7%;
+    margin-right: 7%;
+    font-size: 1.2em;
     font-weight: 200;
     padding: 10px;
 }
 
 div .textblock {
     font-family: serif;
+}
+
+.toolbar {
+    margin-left: 7%;
+    margin-right: 7%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.toolbar li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+.toolbar li a {
+    color: #383838;
+    text-decoration: none;
+    border-left: 1px solid #383838;
+    border-right: 1px solid #383838;
+    border-bottom: 1px solid #383838;
+    padding: 5px;
+    padding-left: 10px; padding-right: 10px;
+}
+
+.toolbar li a:hover {
+    background-color: #e9e9e9;
+}
+
+.toolbar ul {
+    padding: 0px;
+    margin-top: 0px;
 }
 
 .topics text {
@@ -118,6 +183,11 @@ div .textblock {
 
 .topics rect.selected {
     stroke: #383838;
+    stroke-width: 4;
+}
+
+.topics rect.hidden {
+    opacity: .2;
 }
 
 .links line {
@@ -141,4 +211,29 @@ line.show {
 
 div.show-inline {
     display: inline-block;
+}
+
+@media (max-width: 1400px) {
+    h1.title {
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+}
+
+@media (max-width: 1024px) {
+    h1.title {
+        margin-left: 25px;
+        margin-right: 25px;
+    }
+}
+
+@media (max-width: 768px), (max-width: 720px) {
+    .text,
+    h1.title {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+    #textinput, #login, #search, footer, .container {
+        font-size: .8em;
+    }
 }

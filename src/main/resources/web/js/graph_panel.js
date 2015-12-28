@@ -7,7 +7,7 @@ define(function (require) {
     var view_state      = ""
     var svg_panel       = undefined
 
-    var width           = window.innerWidth - (window.innerWidth / 5),
+    var width           = window.innerWidth - (window.innerWidth / 10),
         height          = window.innerHeight - (window.innerHeight / 3),
         shiftKey, ctrlKey
 
@@ -15,6 +15,10 @@ define(function (require) {
 
     var node_offset_x   = 20
     var node_offset_y   = 10
+    //
+    var node_circle_w   = 50
+    var node_edge_r     = 25
+    var node_link_y_off = 12
 
     var zoom_control    = undefined
 
@@ -55,11 +59,22 @@ define(function (require) {
         svg_panel.attr("id", "topicmap-" + map_topic.info.id)
 
         zoom_control = d3.behavior.zoom()
-            .scaleExtent([0.1,10])
+            .scaleExtent([0.4,3])
             .x(xScale).y(yScale)
             .on("zoom", zoom_and_pan)
             .on("zoomend", zoom_and_pan_end)
         svg_panel.call(zoom_control)
+        /* ### disable scroll zoom (activate panning)
+        drag_control = d3.behavior.drag()
+            .on("drag", pan)
+            .on("dragend", pan_end)
+            .origin(function() {
+                var svg_dom = svg_panel[0][0].firstChild.children[0]
+                console.log("event", d3.event)
+                console.log("svg_panel", svg_dom["transform"])
+                return { x: svg_dom.x, y: svg_dom.y }
+            })
+        svg_panel.call(drag_control) **/
 
         svg_graph = svg_panel.append('svg:g')
         vis = svg_graph.append("svg:g").attr('id', 'vis').attr('opacity', 1)
@@ -70,57 +85,64 @@ define(function (require) {
             d.target = get_topic_by_id(d.role_2.topic_id)
         })
     
-        link = vis.append("g").attr("class", "links").selectAll("line")
-            .data(all_edges).enter().append("line")
-            .attr("id", function (d) { return d.id })
-            .attr("data-type-uri", function (d) { return d.type_uri })
-            .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
-            .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] })
-            .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
-            .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] })
+        link_group = vis.append("g").attr("class", "links")
+        link_sel = link_group.selectAll("line").data(all_edges)
+        link_sel.enter().append("line")
+                .attr("id", function (d) { return d.id })
+                .attr("data-type-uri", function (d) { return d.type_uri })
+                .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
+                .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] + node_link_y_off })
+                .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
+                .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] + node_link_y_off })
+        link_sel.exit().remove()
 
-        node = vis.append("g").attr("class", "topics").selectAll("rect")
-            .data(all_nodes).enter().append("rect")
-            .attr("id", function (d) { return d.id })
-            .attr("data-type-uri", function (d) { return d.type_uri })
-            .attr("data-type-label", function (d) { return d.value })
-            .attr("tabindex", 100)
-            .attr("width", 50).attr("height", 20)
-            .attr("rx", 5).attr("ry", 5)
-            .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
-            .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
-            .on("dblclick", function(d) { d3.event.stopPropagation() })
-            .on("click", function(d) {
-                if (!shiftKey) {
-                    //if the shift key isn't down, unselect everything
-                    node.classed("selected", function(p) { 
-                        return p.selected =  p.previouslySelected = false 
-                    })
-                }
-                // fire about selection
-                var selection = node.filter(function(d) { return d.selected })
-                if (selection[0].length >= 2) {
-                    fire_multi_selection(selection[0])
-                } else {
-                    fire_item_selection(d)
-                }
-                // always select this node
-                d3.select(this).classed("selected", d.selected = !d.previouslySelected)
-            })
-            .on("mouseup", function(d) {
-                //if (d.selected && shiftKey) d3.select(this).classed("selected", d.selected = false);
-            })
-            .call(d3.behavior.drag()
-                .origin(function(d) { return d })
-                .on("dragstart", dragstarted)
-                .on("drag", dragged)
-                .on("dragend", dragended))
+        node_group = vis.append("g").attr("class", "topics")
+        node_sel = node_group.selectAll("rect").data(all_nodes)
+        // node_sel.attr() // update to operate on old elements
+        node_sel.enter().append("rect") // operations for new elements
+                .attr("id", function (d) { return d.id })
+                .attr("data-view-prop-visibility", function (d) { return d.view_props['dm4.topicmaps.visibility'] })
+                .attr("data-type-uri", function (d) { return d.type_uri })
+                .attr("data-type-label", function (d) { return d.value })
+                .attr("tabindex", 100)
+                .attr("width", node_circle_w).attr("height", node_circle_w)
+                .attr("rx", node_edge_r).attr("ry", node_edge_r)
+                .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
+                .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
+                .on("dblclick", function(d) { d3.event.stopPropagation() })
+                .on("click", function(d) {
+                    if (!shiftKey) {
+                        //if the shift key isn't down, unselect everything
+                        node_sel.classed("selected", function(p) {
+                            return p.selected =  p.previouslySelected = false
+                        })
+                    }
+                    // fire about selection
+                    var selection = node_sel.filter(function(d) { return d.selected })
+                    if (selection[0].length >= 2) {
+                        fire_multi_selection(selection[0])
+                    } else {
+                        fire_item_selection(d)
+                    }
+                    // always select this node
+                    d3.select(this).classed("selected", d.selected = !d.previouslySelected)
+                })
+                .on("mouseup", function(d) {
+                    //if (d.selected && shiftKey) d3.select(this).classed("selected", d.selected = false);
+                })
+                .call(d3.behavior.drag()
+                    .origin(function(d) { return d })
+                    .on("dragstart", dragstarted)
+                    .on("drag", dragged)
+                    .on("dragend", dragended))
+        // ### operations for old and new elements
+        node_sel.exit().remove()  // operations for deleted elements
 
         function dragstarted (d) {
             d3.event.sourceEvent.stopPropagation() // ###
             if (!d.selected && !shiftKey) {
                 // if this node isn't selected, then we have to unselect every other node
-                node.classed("selected", function(p) { return p.selected =  p.previouslySelected = false })
+                node_sel.classed("selected", function(p) { return p.selected =  p.previouslySelected = false })
             }
             d3.select(this).classed("selected", function(p) { 
                 d.previouslySelected = d.selected
@@ -137,8 +159,8 @@ define(function (require) {
                 // .each(function(d) { d.fixed &= ~6; })
         }
 
-        function move (dx, dy) {
-            node.filter(function(d) { return d.selected })
+        function move (dx, dy) { // ### maybe adapt to new selection mechanics
+            node_sel.filter(function(d) { return d.selected })
                 .attr("x", function(d) {
                     var new_val = parseInt(d.view_props['dm4.topicmaps.x']) + dx
                     d.view_props['dm4.topicmaps.x'] = new_val
@@ -149,15 +171,24 @@ define(function (require) {
                     d.view_props['dm4.topicmaps.y'] = new_val
                     return new_val - node_offset_y
                 })
-            link.filter(function(d) { return d.source.selected })
+            link_sel.filter(function(d) { return d.source.selected })
                 .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
-                .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] })
-            link.filter(function(d) { return d.target.selected })
+                .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] + node_link_y_off })
+            link_sel.filter(function(d) { return d.target.selected })
                 .attr("x2", function(d) { return d.target.view_props['dm4.topicmaps.x'] })
-                .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] })
+                .attr("y2", function(d) { return d.target.view_props['dm4.topicmaps.y'] + node_link_y_off })
         }
 
-        function zoom_and_pan () {
+        function pan() {
+            console.log("translate", d3.event.x, d3.event.y)
+            vis.attr("transform", "translate(" + d3.event.x + "," + d3.event.y + ")")
+        }
+
+        function pan_end() {
+            fire_map_transformation(vis.attr("transform"))
+        }
+
+        function zoom_and_pan() {
             vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
         }
 
@@ -168,7 +199,9 @@ define(function (require) {
     }
 
     function set_page_title (title) {
-        d3.select('title').text(title)
+        // d3.select('title').text(title)
+        // d3.select('.container .text').transition().style('height', String("100%")).duration(1000)
+
         d3.select('h1.title').text(title)
     }
 
@@ -186,7 +219,7 @@ define(function (require) {
     }
 
     function pop_visual_by_topic_id (id) {
-        console.log(" NYI: pop node radius for topic ", id)
+        // console.log(" NYI: pop node radius for topic ", id)
         // var el = d3.select("#" + id).classed('show', true)
     }
 
@@ -206,6 +239,7 @@ define(function (require) {
             }
         }
         render_network()
+        hide_Hidden_Nodes()
         fire_rendered_topicmap()
     }
 
@@ -219,6 +253,14 @@ define(function (require) {
 
     function show_Assocs () { // messing up the method signatures frankenstyle_Camel
         d3.selectAll("line").classed("hide", false)
+    }
+
+    function hide_Hidden_Nodes () {
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", true)
+    }
+
+    function show_Hidden_Nodes () {
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", false)
     }
 
     function clear_map_panel () {
@@ -268,6 +310,8 @@ define(function (require) {
         clear_panel: clear_map_panel,
         listen_to: listen_to,
         hide_assocs: hide_Assocs,
+        hide_hidden: hide_Hidden_Nodes,
+        show_hidden: show_Hidden_Nodes,
         show_assocs: show_Assocs
     }
 
