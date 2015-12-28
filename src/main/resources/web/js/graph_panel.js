@@ -8,7 +8,7 @@ define(function(require) {
     var svg_panel       = undefined
 
     var width           = window.innerWidth - (window.innerWidth / 10),
-        height          = window.innerHeight - (window.innerHeight / 3),
+        height          = window.innerHeight - (window.innerHeight / 3.5),
         shiftKey, ctrlKey
 
     var map_topic, all_nodes, all_edges = undefined
@@ -180,9 +180,9 @@ define(function(require) {
     }
 
     function show_topicmap(topicmap) {
-        if (!svg_panel)
+        if (!svg_panel) {
             init_panel()
-
+        }
         if (topicmap) {
             if (topicmap.topics) {
                 map_topic = topicmap
@@ -209,6 +209,7 @@ define(function(require) {
     // --- Event Handling Methods
 
     function listen_to(event_name, handler) {
+        if (!svg_panel) init_panel()
         svg_panel.node().addEventListener(event_name, handler)
     }
 
@@ -240,7 +241,7 @@ define(function(require) {
 
     function setup_zoom_and_drag_control() {
         zoom_control = d3.behavior.zoom()
-            .scaleExtent([0.3,2]) // ### maybe set center
+            .scaleExtent([0.15, 2]) // ### maybe set center
             .x(xScale).y(yScale)
             .on("zoom", zoom_and_pan)
             .on("zoomend", zoom_and_pan_end)

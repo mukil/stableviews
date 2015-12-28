@@ -18,8 +18,6 @@
     </head>
     <body>
 
-        <div class="loader ion-load-c"></div>
-
         <div class="page container">
 
             <h1 class="title">working title</h1>
@@ -35,14 +33,18 @@
 
             <div class="text">Hello D3 Graph</div>
 
-            <div id="map-panel" tabindex="1"></div>
+            <div id="map-panel" tabindex="1">
+                <div id="map-commands">
+                    <a href="#" id="reset">Reset</a>
+                </div>
+                <div class="loader ion-load-c"></div>
+            </div>
 
         </div> <!-- /.container -->
 
         <footer class="copy" action="do">
             <input type="text" id="textinput" tabindex="2" placeholder="..." />
             <input type="button" id="search" tabindex="3" value="Search" />
-            <a href="#" id="map-reset">Reset Mapview</a>
             <!--input type="button" id="login" tabindex="4" value="Login" /-->
             <!-- span>&hearts; mikromedia.de 2015</span-->
             <div class="search-results">
@@ -50,6 +52,11 @@
                 <ol class="search-result-list" tabindex="5"></ol>
             </div>
             <div class="user-dialog"></div>
+            <div class="source-code">
+                <a href="https://github.com/mukil/stableviews"
+                   title="Stableviews is Free Software - Click here to see the source code and start contributing!"
+                   class="ion-social-github"></a>
+            </div>
         </footer>
 
     </body>

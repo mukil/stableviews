@@ -19,14 +19,21 @@ require(['common'], function(common) {
         var topic_commands = []             // basic set of commands for a given topic
         var reverse_search = []             // list of recently executed commands (non-persistent)
 
-        // 0) ..
-        graph_panel.init()
+        // retrieve ids from route /#1234/#567 (1. Topicmap, 2. Topic)
+        var location = window.document.location
+        var map_id = location.hash.substr(1)
+        var topic_id = undefined
+        if (location.hash.indexOf("/") !== -1) {
+            map_id = location.hash.split("/")[0].substr(1)
+            topic_id = location.hash.split("/")[1].substr(1)
+        }
 
         // ..
+        graph_panel.init()
         setup_map_panel_listeners()
         setup_page_listeners()
 
-        // 0) ..
+        // ..
         controller.loadUsername(function(xhr) {
             var user_screen = d3.select('.user-dialog')
             if (xhr.response=== "") {
@@ -48,9 +55,14 @@ require(['common'], function(common) {
         controller.loadAllTopicmaps(function(response) {
 
             topicmaps = response
-            selected_topicmap = topicmaps[0]
+            console.log("Topicmaps", topicmaps)
 
-            // 1.2) ..
+            if (map_id) { // load routed map
+                selected_topicmap = { id: map_id }
+            } else { // load first map we get
+                selected_topicmap = topicmaps[0]
+            }
+            // 2.1) ..
             controller.loadTopicmap(selected_topicmap.id, function(result) {
                 //
                 selected_topicmap = result
@@ -173,6 +185,10 @@ require(['common'], function(common) {
             }, null, false)
         }
 
+        function set_document_title(message) {
+            window.document.title = message + " - Stableviews 0.3 / DeepaMehta 4.7"
+        }
+
         // -- Top Level Page Handlers
 
         function setup_page_listeners()  {
@@ -183,8 +199,12 @@ require(['common'], function(common) {
                 do_search(value)
             })
             // Map Viewport Reset Handler
-            d3.select("#map-reset").on('click', function(e) {
+            d3.select("#map-commands #reset").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
                 graph_panel.reset_viewport()
+                console.log("Selected Topicmap", selected_topicmap)
+                window.location.hash = "#" + selected_topicmap.info.id
             })
         }
 
@@ -192,6 +212,7 @@ require(['common'], function(common) {
 
         // These listeners get cleared out with map-panel when switching topicmap
         function setup_map_panel_listeners() {
+
             graph_panel.listen_to('selection', function(e) {
                 // if (common.debug) console.log(" > selection ", e.detail)
                 controller.loadTopic(e.detail.id, function(topic) {
@@ -225,12 +246,16 @@ require(['common'], function(common) {
             })
 
             graph_panel.listen_to('rendered_topicmap', function(e) {
+                // calculate bounds (out of interest)
                 var bounds = graph_panel.get_topicmap_bounds()
                 var viewport = graph_panel.get_viewport_size()
                 if (common.debug) console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
                     "Topicmap ID", selected_topicmap.info.id)
+                // set window title
+                set_document_title(selected_topicmap.info.value)
                 // ### hide loader dummy
                 d3.select(".loader").classed("hide", true)
+                d3.select("#map-commands").attr("style", "display: block;")
             })
 
             graph_panel.listen_to('topicmap_transformed', function(e) {
@@ -268,12 +293,15 @@ require(['common'], function(common) {
         }
 
         function load_selected_topicmap() {
+            // prepare/cleanup
+            graph_panel.clear()
+            d3.select("#map-commands").attr("style", "display: none;")
+            // load new topicmap
             controller.loadTopicmap(selected_topicmap.id, function(result) {
-                graph_panel.clear()
                 selected_topicmap = result
+                setup_map_panel_listeners() // ### fixme: there should be no need to re-attach these
                 graph_panel.show_topicmap(selected_topicmap)
                 // re-attach our listeners for events of the map panel module
-                setup_map_panel_listeners()
             })
         }
 

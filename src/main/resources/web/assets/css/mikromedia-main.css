@@ -46,8 +46,9 @@ body {
     display: block;
     background-color: #fff;
     color: #fff;
-    max-width: 95%;
+    max-width: 100%;
     min-height: 300px;
+    position: relative;
 }
 
 #map-panel text {
@@ -62,9 +63,45 @@ body {
     cursor: pointer;
 }
 
+#map-commands {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    display: none;
+}
+
+#map-commands a {
+    text-decoration: none;
+    color: #444;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+}
+
+#map-commands a:hover {
+    color: #000;
+    background: #e8e8e8;
+}
+
 footer {
     padding: 0px;
     min-height: 200px;
+}
+
+.source-code a {
+    color: #666;
+    font-size: 2.5em;
+}
+
+.source-code a:hover {
+    color: #fff;
+}
+
+.source-code {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
 }
 
 .copy {

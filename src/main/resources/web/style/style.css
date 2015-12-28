@@ -1,0 +1,13 @@
+
+#stableviews-link {
+    position: fixed;
+    bottom: 1em;
+    left: 1em;
+    font-size: 60%;
+    color: #444;
+    text-decoration: none;
+}
+
+#stableviews-link:hover {
+    text-decoration: underline;
+}
