@@ -206,9 +206,6 @@ div .textblock {
 .toolbar li a {
     color: #383838;
     text-decoration: none;
-    border-left: 1px solid #383838;
-    border-right: 1px solid #383838;
-    border-bottom: 1px solid #383838;
     padding: 5px;
     padding-left: 10px; padding-right: 10px;
 }

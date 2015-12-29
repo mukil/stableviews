@@ -108,6 +108,7 @@ require(['common'], function(common) {
                     if (user_input.indexOf("hidden") !== -1 ) graph_panel.show_topics_hidden()
                     if (user_input.indexOf("institution") !== -1 ) graph_panel.high_institutions()
                     if (user_input.indexOf("websites") !== -1 ) graph_panel.high_websites()
+                    if (user_input.indexOf("files") !== -1 ) graph_panel.high_files()
                     if (user_input.indexOf("persons") !== -1 ) graph_panel.high_persons()
                     if (user_input.indexOf("notes") !== -1 ) graph_panel.high_notes()
                     // clear command line
@@ -238,8 +239,18 @@ require(['common'], function(common) {
                         graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
                     } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
                         console.log("Web Topic", selected_topic)
+                        // ### todo: refactor commands
+                        d3.selectAll(".toolbar ul li").remove()
+                        d3.select(".toolbar ul").append("li").append("a").attr("title", "Visit Website")
+                            .attr("href", selected_topic.value).text("Open URL")
                     } else if (selected_topic.type_uri === "dm4.files.file") {
-                        console.log("File Topic", selected_topic)
+                        var filepath = selected_topic.childs["dm4.files.path"].value
+                        var file_title = selected_topic.childs["dm4.files.media_type"].value
+                            + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
+                        // ### todo: refactor commands
+                        d3.selectAll(".toolbar ul li").remove()
+                        d3.select(".toolbar ul").append("li").append("a").attr("title", file_title)
+                            .attr("href", "/filerepo/" + filepath).text("Download")
                     } else {
                         // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
                         // setTimeout(function(e) {
@@ -256,7 +267,7 @@ require(['common'], function(common) {
             })
 
             graph_panel.listen_to('topicmap_zoomed', function(e) {
-                if (common.debug) console.log("Topicmap Zoomed", e.detail)
+                // if (common.debug) console.log("Topicmap Zoomed", e.detail)
                 // ### todo: show labels if zoom level >= than 1
             })
 

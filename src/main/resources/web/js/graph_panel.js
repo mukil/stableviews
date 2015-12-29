@@ -22,6 +22,8 @@ define(function(require) {
     var node_link_y_off = 12
 
     var zoom_control    = undefined
+    var zoom_out_stop   = 0.1
+    var zoom_in_stop    = 1.8
 
     var svg_graph, vis, link, node = undefined
 
@@ -174,8 +176,7 @@ define(function(require) {
             d3.select('.text').classed('show', false)
             return
         }
-        d3.select('.text').classed('show', true)
-            .html(text)
+        d3.select('.text').classed('show', true).html(text)
     }
 
     function set_page_class(type) {
@@ -248,7 +249,7 @@ define(function(require) {
 
     function setup_zoom_and_drag_control() {
         zoom_control = d3.behavior.zoom()
-            .scaleExtent([0.15, 2]) // ### maybe set center
+            .scaleExtent([zoom_out_stop, zoom_in_stop])
             .x(xScale).y(yScale)
             .on("zoom", zoom_and_pan)
             .on("zoomend", zoom_and_pan_end)
@@ -263,21 +264,9 @@ define(function(require) {
                 window.fireEvent
             }
         }
-
         function zoom_and_pan_end() {
             fire_map_transformation(vis.attr("transform"))
         }
-        /* ### disable scroll zoom (activate panning)
-        drag_control = d3.behavior.drag()
-            .on("drag", pan)
-            .on("dragend", pan_end)
-            .origin(function() {
-                var svg_dom = svg_panel[0][0].firstChild.children[0]
-                console.log("event", d3.event)
-                console.log("svg_panel", svg_dom["transform"])
-                return { x: svg_dom.x, y: svg_dom.y }
-            })
-        svg_panel.call(drag_control) **/
     }
 
     // --- Visualization Adjustment Methods
@@ -304,18 +293,22 @@ define(function(require) {
 
     function zoom_in() {
         var value = zoom_control.scale() + 0.2
-        var translation = zoom_control.translate()
-        zoom_control.scale(value)
-        vis.attr("transform", "translate("+translation+") scale("+value+")")
-        fire_map_zoom(value)
+        if (value < zoom_in_stop) {
+            var translation = zoom_control.translate()
+            zoom_control.scale(value)
+            vis.attr("transform", "translate("+translation+") scale("+value+")")
+            fire_map_zoom(value)
+        }
     }
 
     function zoom_out() {
         var value = zoom_control.scale() - 0.2
-        var translation = zoom_control.translate()
-        zoom_control.scale(value)
-        vis.attr("transform", "translate("+translation+") scale("+value+")")
-        fire_map_zoom(value)
+        if (value > zoom_out_stop) {
+            var translation = zoom_control.translate()
+            zoom_control.scale(value)
+            vis.attr("transform", "translate("+translation+") scale("+value+")")
+            fire_map_zoom(value)
+        }
     }
 
     function reset_graph_translation() {
@@ -365,6 +358,12 @@ define(function(require) {
         d3.selectAll('[data-type-uri="dm4.webbrowser.web_resource"]').classed("backdrop", false)
     }
 
+    function highlight_files() {
+        backdrop_topics()
+        backdrop_assocs()
+        d3.selectAll('[data-type-uri="dm4.files.file"]').classed("backdrop", false)
+    }
+
     function highlight_persons() {
         backdrop_topics()
         backdrop_assocs()
@@ -405,6 +404,7 @@ define(function(require) {
         show_topics_hidden: show_hidden_topics,
         high_institutions: highlight_institutions,
         high_websites: highlight_web_resources,
+        high_files: highlight_files,
         high_persons: highlight_persons,
         high_notes: highlight_notes
     }
