@@ -152,7 +152,6 @@ footer {
     /** background-color: #fff; **/
     color: #e8e8e8;
     font-size: .9em;
-    overflow-y: scroll;
 }
 
 .search-results a {

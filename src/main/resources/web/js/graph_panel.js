@@ -240,7 +240,7 @@ define(function(require) {
 
     function get_topic_by_id(topicId) {
         for (var idx in all_nodes) {
-            if (topicId === all_nodes[idx].id) {
+            if (topicId == all_nodes[idx].id) {
                 return all_nodes[idx]
             }
         }
@@ -281,6 +281,18 @@ define(function(require) {
     }
 
     // --- Visualization Adjustment Methods
+
+    function focus_topic_by_id(id) {
+        var topic = get_topic_by_id(id)
+        if (topic) {
+            // translate viewport to topic location
+            console.log("Focus X", topic.view_props['dm4.topicmaps.x'], "Y", topic.view_props['dm4.topicmaps.y'])
+            console.log("Topicmap Translation", zoom_control.translate(), "Viewport", get_viewport_size())
+            // ### select topic
+        } else {
+            throw new Error("Could not find topic with id "+id+" in Topicmap", all_nodes)
+        }
+    }
 
     function get_topicmap_bounds() {
         return svg_graph.node().getBBox()
@@ -383,6 +395,7 @@ define(function(require) {
         get_viewport_size: get_viewport_size,
         zoom_in: zoom_in,
         zoom_out: zoom_out,
+        focus_topic: focus_topic_by_id,
         reset_viewport: reset_graph_translation,
         clear: clear_map_panel,
         listen_to: listen_to,

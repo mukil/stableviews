@@ -139,22 +139,21 @@ require(['common'], function(common) {
                         var topic_name = selected_topicmap.topics[t].value.toLowerCase()
                         // var topic_type = selected_topicmap.topics[t].type_uri.toLowerCase()
                         if (topic_name.indexOf(user_input) !== -1) {
-                            // console.log("> add topic " + topic_name, topic_id, topic_type)
                             search_results.push({
                                 topic: selected_topicmap.topics[t],
-                                workspace: {value : "", id: -1},
+                                workspace: {value: "", id: -1},
                                 workspace_mode: ""
                             })
                         }
                     }
-                    for (var t in selected_topicmap.assocs) {
-                        var assoc_name = selected_topicmap.assocs[t].value.toLowerCase()
+                    for (var e in selected_topicmap.assocs) {
+                        var assoc_name = selected_topicmap.assocs[e].value.toLowerCase()
                         // var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
                         if (assoc_name.indexOf(user_input) !== -1) {
                             // console.log("> assoc " + assoc_name)
                             search_results.push({
-                                topic: selected_topicmap.assocs[t],
-                                workspace: {value : "", id: -1},
+                                topic: selected_topicmap.assocs[e],
+                                workspace: {value: "", id: -1},
                                 workspace_mode: ""
                             })
                         }
@@ -300,11 +299,36 @@ require(['common'], function(common) {
             for (var idx in search_results) {
                 var result = search_results[idx]
                 var item = results_list.append('li')
-                    item.append('a').attr('href', "#").html('<em>&ldquo;' + result.topic.value + '&rdquo;</em>')
-                    if (item.workspace.id !== -1) { // result is part of this map
-                        item.append('span').html(' ' + get_label(result.topic.type_uri)
-                            + ' in \"' +result.workspace.value+ '\" (<em>' +result.workspace_mode+ '</em>)')
+                    var reveal_link = item.append('a').attr('href',
+                            "#" + selected_topicmap.info.id + '/#' + result.topic.id)
+                        .attr('class', "reveal-item").attr("id", "show-" + result.topic.id)
+                        .html('&ldquo;' + result.topic.value+'&rdquo;')
+                    if (result.workspace.id > -1) { // search result is NOT part of this map
+                        // hack action into element id
+                        reveal_link.attr("id", "load-" + result.topic.id)
+                        item.append('span').html(' &ndash; <b>' + get_label(result.topic.type_uri) + '</b>'
+                            + ' in Workspace <em>' +result.workspace.value+ ' &ndash; '+result.workspace_mode+'</em>')
                     }
+                    if (result.topic.type_uri === "dm4.topicmaps.topicmap") { // hack action into element id
+                        reveal_link.attr("id", "tmap-" + result.topic.id) // search result is of type TOPICMAP
+                    }
+                    reveal_link.on('click', function() {
+                        var selected_topic_id = d3.event.target.id.substr(5)
+                        if (d3.event.target.id.startsWith("show-")) {
+                            // select and show topic in map
+                            graph_panel.focus_topic(selected_topic_id)
+                        } else if (d3.event.target.id.startsWith("load-")) {
+                            console.log("load and put topic", selected_topic_id)
+                        } else if (d3.event.target.id.startsWith("tmap-")) {
+                            if (selected_topic_id != selected_topicmap.id) {
+                                console.log("open new topicmap...", selected_topic_id, selected_topicmap.id)
+                                selected_topicmap.id = selected_topic_id
+                                load_selected_topicmap()
+                            } else {
+                               console.log("skipping to open topicmap - already visible")
+                            }
+                        }
+                    })
             }
             if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
         }
