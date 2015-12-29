@@ -3,6 +3,7 @@ define(function(require) {
 
     require('stableviews_ctrl')
     require('common')
+    require('labels_en')
 
     var view_state      = ""
     var svg_panel       = undefined
@@ -82,6 +83,8 @@ define(function(require) {
         // node_sel.attr() // update to operate on old elements
         node_sel.enter().append("rect") // operations for new elements
                 .attr("id", function(d) { return d.id })
+                .attr("title", function(d) { return get_label(d.type_uri) + ": " + d.value})
+                .attr("alt", function(d) { return "A circle representing " + d.value})
                 .attr("data-view-prop-visibility", function(d) { return d.view_props['dm4.topicmaps.visibility'] })
                 .attr("data-type-uri", function(d) { return d.type_uri })
                 .attr("data-type-label", function(d) { return d.value })
@@ -229,6 +232,10 @@ define(function(require) {
         svg_panel.node().dispatchEvent(new CustomEvent('topicmap_transformed', { detail: value }))
     }
 
+    function fire_map_zoom(value) {
+        svg_panel.node().dispatchEvent(new CustomEvent('topicmap_zoomed', { detail: value }))
+    }
+
     // --- Graph Renderer Helper Methods
 
     function get_topic_by_id(topicId) {
@@ -248,7 +255,13 @@ define(function(require) {
         svg_panel.call(zoom_control)
 
         function zoom_and_pan() {
-            vis.attr("transform", "translate(" + d3.event.translate + ")" + " scale(" + d3.event.scale + ")")
+            console.log("Translate Event", d3.event)
+            if (d3.event.sourceEvent.type === "mousemove") {
+                vis.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
+            } else if (d3.event.sourceEvent.type === "wheel") {
+                // ### forward scroll to window
+                window.fireEvent
+            }
         }
 
         function zoom_and_pan_end() {
@@ -275,6 +288,22 @@ define(function(require) {
 
     function get_viewport_size() {
         return { "width": svg_panel.attr("width"), "height": svg_panel.attr("height") }
+    }
+
+    function zoom_in() {
+        var value = zoom_control.scale() + 0.2
+        var translation = zoom_control.translate()
+        zoom_control.scale(value)
+        vis.attr("transform", "translate("+translation+") scale("+value+")")
+        fire_map_zoom(value)
+    }
+
+    function zoom_out() {
+        var value = zoom_control.scale() - 0.2
+        var translation = zoom_control.translate()
+        zoom_control.scale(value)
+        vis.attr("transform", "translate("+translation+") scale("+value+")")
+        fire_map_zoom(value)
     }
 
     function reset_graph_translation() {
@@ -352,6 +381,8 @@ define(function(require) {
         highlight_topic: pop_visual_by_topic_id,
         get_topicmap_bounds: get_topicmap_bounds,
         get_viewport_size: get_viewport_size,
+        zoom_in: zoom_in,
+        zoom_out: zoom_out,
         reset_viewport: reset_graph_translation,
         clear: clear_map_panel,
         listen_to: listen_to,

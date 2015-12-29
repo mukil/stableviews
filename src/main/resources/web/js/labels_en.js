@@ -16,7 +16,10 @@ var label = {
     "dm4.topicmaps.topicmap": "Topicmap",
     "dm4.webclient.search": "Suche",
     "dm4.files.file" : "Datei",
-    "dm4.files.folder" : "Ordner"
+    "dm4.files.folder" : "Dateiordner",
+    "dm4.core.topic_type" : "Topic Typ",
+    "dm4.webbrowser.url" : "URL",
+    "Reset": "Zur&uuml;cksetzen"
 }
 
 function get_label(type_uri) {

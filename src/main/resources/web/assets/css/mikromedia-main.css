@@ -76,6 +76,14 @@ body {
     padding: 5px;
     padding-right: 10px;
     padding-left: 10px;
+    display: block;
+    min-height: 20px;
+    min-width: 40px;
+}
+
+#map-commands #zoom-in,
+#map-commands #zoom-out {
+    padding-right: 0px;
 }
 
 #map-commands a:hover {

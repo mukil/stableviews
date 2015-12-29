@@ -142,7 +142,7 @@ require(['common'], function(common) {
                             // console.log("> add topic " + topic_name, topic_id, topic_type)
                             search_results.push({
                                 topic: selected_topicmap.topics[t],
-                                workspace: {value : "This map", id: -1},
+                                workspace: {value : "", id: -1},
                                 workspace_mode: ""
                             })
                         }
@@ -154,7 +154,7 @@ require(['common'], function(common) {
                             // console.log("> assoc " + assoc_name)
                             search_results.push({
                                 topic: selected_topicmap.assocs[t],
-                                workspace: {value : "This map", id: -1},
+                                workspace: {value : "", id: -1},
                                 workspace_mode: ""
                             })
                         }
@@ -199,6 +199,17 @@ require(['common'], function(common) {
                 do_search(value)
             })
             // Map Viewport Reset Handler
+            d3.select("#map-commands #zoom-in").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
+                graph_panel.zoom_in()
+            })
+            d3.select("#map-commands #zoom-out").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
+                graph_panel.zoom_out()
+            })
+            d3.select("#map-commands #reset").html(get_label("Reset"))
             d3.select("#map-commands #reset").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
@@ -245,6 +256,11 @@ require(['common'], function(common) {
                 if (common.debug) console.log("Multi Select", e.detail)
             })
 
+            graph_panel.listen_to('topicmap_zoomed', function(e) {
+                if (common.debug) console.log("Topicmap Zoomed", e.detail)
+                // ### todo: show labels if zoom level >= than 1
+            })
+
             graph_panel.listen_to('rendered_topicmap', function(e) {
                 // calculate bounds (out of interest)
                 var bounds = graph_panel.get_topicmap_bounds()
@@ -284,10 +300,11 @@ require(['common'], function(common) {
             for (var idx in search_results) {
                 var result = search_results[idx]
                 var item = results_list.append('li')
-                    item.append('a').attr('href', "#")
-                        .html('<em>&ldquo;' + result.topic.value + '&rdquo;</em>')
-                    item.append('span').html(' ' + get_label(result.topic.type_uri)
-                        + ' in \"' +result.workspace.value+ '\" (<em>' +result.workspace_mode+ '</em>)')
+                    item.append('a').attr('href', "#").html('<em>&ldquo;' + result.topic.value + '&rdquo;</em>')
+                    if (item.workspace.id !== -1) { // result is part of this map
+                        item.append('span').html(' ' + get_label(result.topic.type_uri)
+                            + ' in \"' +result.workspace.value+ '\" (<em>' +result.workspace_mode+ '</em>)')
+                    }
             }
             if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
         }
