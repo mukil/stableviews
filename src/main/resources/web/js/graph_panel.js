@@ -58,7 +58,7 @@ define(function(require) {
     }
 
     function render_network() {
-
+        // setup elements
         svg_panel.attr("id", "topicmap-" + map_topic.info.id)
         svg_graph = svg_panel.append('svg:g')
         vis = svg_graph.append("svg:g").attr('id', 'vis').attr('opacity', 1)
@@ -124,6 +124,13 @@ define(function(require) {
         node_sel.exit().remove()  // operations for deleted elements
 
         setup_zoom_and_drag_control()
+
+        // get and set initial topicmap translation
+        var translation = map_topic.info.childs["dm4.topicmaps.state"].childs["dm4.topicmaps.translation"]
+        var translationX = parseInt(translation.childs["dm4.topicmaps.translation_x"].value)
+        var translationY = parseInt(translation.childs["dm4.topicmaps.translation_y"].value)
+        console.log("Initial Translation (State)", translationX, translationY)
+        graph_translation_keep_zoom([translationX, translationY])
 
         function drag_node_start(d) {
             d3.event.sourceEvent.stopPropagation() // ###
@@ -268,12 +275,37 @@ define(function(require) {
     function focus_topic_by_id(id) {
         var topic = get_topic_by_id(id)
         if (topic) {
-            // translate viewport to topic location
-            console.log("Focus X", topic.view_props['dm4.topicmaps.x'], "Y", topic.view_props['dm4.topicmaps.y'])
-            console.log("Topicmap Translation", zoom_control.translate(), "Viewport", get_viewport_size())
-            // ### select topic
+            // translate viewport to topic location (when scaled we must match our two coordinate systems somehow)
+            graph_translation_keep_zoom([topic.view_props['dm4.topicmaps.x'], topic.view_props['dm4.topicmaps.y']])
+            console.log("Focus X", topic.view_props['dm4.topicmaps.x'], "Y", topic.view_props['dm4.topicmaps.y'],
+                            zoom_control.translate())
+            // set graph element css class to "selected"
+            set_node_selected(id)
         } else {
             throw new Error("Could not find topic with id "+id+" in Topicmap", all_nodes)
+        }
+    }
+
+    function graph_translation_keep_zoom(coordinatePair) {
+        // set svg property
+        // ### Sure that first Y and than X?
+        vis.attr("transform", "translate(" + coordinatePair + ") scale(" + zoom_control.scale() + ")")
+        // set d3 zoom control
+        zoom_control.translate(coordinatePair)
+    }
+
+    function set_node_selected(topic_id) {
+        // unselect every other node
+        node_sel.classed("selected", function(p) {
+            return p.selected =  p.previouslySelected = false
+        })
+        // highlight node with topic id
+        var selection = node_sel.filter(function(d) {
+            if (d.id == topic_id) return d
+        })
+        if (selection) {
+            console.log("Node selection", selection)
+            selection.classed("selected", true)
         }
     }
 

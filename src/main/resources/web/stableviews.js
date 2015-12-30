@@ -228,28 +228,7 @@ require(['common'], function(common) {
 
             graph_panel.listen_to('selection', function(e) {
                 // if (common.debug) console.log(" > selection ", e.detail)
-                controller.loadTopic(e.detail.id, function(topic) {
-                    // update client side model (as a param for commands)
-                    selected_topic = topic
-                    multi_selection = []
-                    // ###
-                    graph_panel.highlight_topic(selected_topic.id)
-                    // render page title
-                    graph_panel.set_title(topic.value)
-                    graph_panel.set_page_type(
-                            topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
-                    // render topic type commands
-                    render_topic_commands()
-                    // render details
-                    if (selected_topic.type_uri === "dm4.notes.note") {
-                        graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
-                    } else {
-                        // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
-                        // setTimeout(function(e) {
-                        graph_panel.set_description('')
-                        // }, 1000)
-                    }
-                })
+                select_topic(e.detail.id)
             })
 
             graph_panel.listen_to('multi_selection', function(e) {
@@ -280,6 +259,32 @@ require(['common'], function(common) {
                 // if (common.debug) console.log("Topicmap Transformation", e.detail)
             })
         }
+
+        // -- Select/Show/Load Topic
+
+        function select_topic(id) {
+            // load fresh topic from server side and then show it
+            controller.loadTopic(id, function(topic) {
+                // update client side model (as a param for commands)
+                selected_topic = topic
+                multi_selection = []
+                // ###
+                graph_panel.highlight_topic(selected_topic.id)
+                // render page title
+                graph_panel.set_title(topic.value)
+                graph_panel.set_page_type(
+                        topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
+                // render topic type commands
+                render_topic_commands()
+                // render details
+                /** if (selected_topic.type_uri === "dm4.notes.note") {
+                    graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                } else {
+                    graph_panel.set_description('')
+                } **/
+            })
+        }
+
 
         // -- Topic Commands (on selected_topic)
 
@@ -318,12 +323,12 @@ require(['common'], function(common) {
             for (var idx in search_results) {
                 var result = search_results[idx]
                 var item = results_list.append('li')
+                    // ### we hack an internal action command into the search results element id
                     var reveal_link = item.append('a').attr('href',
                             "#" + selected_topicmap.info.id + '/#' + result.topic.id)
                         .attr('class', "reveal-item").attr("id", "show-" + result.topic.id)
                         .html('&ldquo;' + result.topic.value+'&rdquo;')
                     if (result.workspace.id > -1) { // search result is NOT part of this map
-                        // hack action into element id
                         reveal_link.attr("id", "load-" + result.topic.id)
                         item.append('span').html(' &ndash; <b>' + get_label(result.topic.type_uri) + '</b>'
                             + ' in Workspace <em>' +result.workspace.value+ ' &ndash; '+result.workspace_mode+'</em>')
@@ -332,16 +337,20 @@ require(['common'], function(common) {
                         reveal_link.attr("id", "tmap-" + result.topic.id) // search result is of type TOPICMAP
                     }
                     reveal_link.on('click', function() {
-                        var selected_topic_id = d3.event.target.id.substr(5)
-                        if (d3.event.target.id.startsWith("show-")) {
-                            // select and show topic in map
-                            graph_panel.focus_topic(selected_topic_id)
+                        var new_topic_id = d3.event.target.id.substr(5)
+                        if (d3.event.target.id.startsWith("show-")) { // is result from current map
+                            // select topic on page (### todo: no need to load it)
+                            select_topic(new_topic_id)
+                            // focus topic on graph panel
+                            graph_panel.focus_topic(new_topic_id)
                         } else if (d3.event.target.id.startsWith("load-")) {
-                            console.log("load and put topic", selected_topic_id)
+                            // ### todo: load topic and place it in current map
+                            // see/re-use? topicmap_renderer add_topic_to_topicmap()
+                            // console.log("load and put topic", new_topic_id)
                         } else if (d3.event.target.id.startsWith("tmap-")) {
                             if (selected_topic_id != selected_topicmap.id) {
-                                console.log("open new topicmap...", selected_topic_id, selected_topicmap.id)
-                                selected_topicmap.id = selected_topic_id
+                                console.log("open new topicmap...", new_topic_id, selected_topicmap.id)
+                                selected_topicmap.id = new_topic_id
                                 load_selected_topicmap()
                             } else {
                                console.log("skipping to open topicmap - already visible")
@@ -356,9 +365,13 @@ require(['common'], function(common) {
             // prepare/cleanup
             graph_panel.clear()
             d3.select("#map-commands").attr("style", "display: none;")
+            // clear search results ?
+            search_results = []
+            render_search_results()
             // load new topicmap
             controller.loadTopicmap(selected_topicmap.id, function(result) {
                 selected_topicmap = result
+                console.log("Loaded Topicmap", selected_topicmap)
                 setup_map_panel_listeners() // ### fixme: there should be no need to re-attach these
                 graph_panel.show_topicmap(selected_topicmap)
                 // re-attach our listeners for events of the map panel module
