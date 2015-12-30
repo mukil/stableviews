@@ -191,6 +191,10 @@ require(['common'], function(common) {
 
         // -- Top Level Page Handlers
 
+        function update_topicmap_url() {
+            window.location.hash = "#" + selected_topicmap.info.id
+        }
+
         function setup_page_listeners()  {
             // Search Button Handler
             d3.select("#search").on('click', function(e) {
@@ -214,8 +218,6 @@ require(['common'], function(common) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
                 graph_panel.reset_viewport()
-                console.log("Selected Topicmap", selected_topicmap)
-                window.location.hash = "#" + selected_topicmap.info.id
             })
         }
 
@@ -230,27 +232,17 @@ require(['common'], function(common) {
                     // update client side model (as a param for commands)
                     selected_topic = topic
                     multi_selection = []
+                    // ###
                     graph_panel.highlight_topic(selected_topic.id)
-                    // render
+                    // render page title
                     graph_panel.set_title(topic.value)
                     graph_panel.set_page_type(
                             topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
+                    // render topic type commands
+                    render_topic_commands()
+                    // render details
                     if (selected_topic.type_uri === "dm4.notes.note") {
                         graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
-                    } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
-                        console.log("Web Topic", selected_topic)
-                        // ### todo: refactor commands
-                        d3.selectAll(".toolbar ul li").remove()
-                        d3.select(".toolbar ul").append("li").append("a").attr("title", "Visit Website")
-                            .attr("href", selected_topic.value).text("Open URL")
-                    } else if (selected_topic.type_uri === "dm4.files.file") {
-                        var filepath = selected_topic.childs["dm4.files.path"].value
-                        var file_title = selected_topic.childs["dm4.files.media_type"].value
-                            + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
-                        // ### todo: refactor commands
-                        d3.selectAll(".toolbar ul li").remove()
-                        d3.select(".toolbar ul").append("li").append("a").attr("title", file_title)
-                            .attr("href", "/filerepo/" + filepath).text("Download")
                     } else {
                         // d3.select('.container .text').transition().style('height', String("0%")).duration(1000)
                         // setTimeout(function(e) {
@@ -287,6 +279,22 @@ require(['common'], function(common) {
             graph_panel.listen_to('topicmap_transformed', function(e) {
                 // if (common.debug) console.log("Topicmap Transformation", e.detail)
             })
+        }
+
+        // -- Topic Commands (on selected_topic)
+
+        function render_topic_commands() {
+            d3.selectAll(".toolbar ul li").remove()
+            if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {    // -- Web Resource Commands
+                d3.select(".toolbar ul").append("li").append("a").attr("title", "Visit Website")
+                    .attr("href", selected_topic.value).text("Open URL")
+            } else if (selected_topic.type_uri === "dm4.files.file") {          // -- File Topic Commands
+                var filepath = selected_topic.childs["dm4.files.path"].value
+                var file_title = selected_topic.childs["dm4.files.media_type"].value
+                    + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
+                d3.select(".toolbar ul").append("li").append("a").attr("title", file_title)
+                    .attr("href", "/filerepo/" + filepath).text("Get File")
+            }
         }
 
         // -- Login View
@@ -354,6 +362,7 @@ require(['common'], function(common) {
                 setup_map_panel_listeners() // ### fixme: there should be no need to re-attach these
                 graph_panel.show_topicmap(selected_topicmap)
                 // re-attach our listeners for events of the map panel module
+                update_topicmap_url()
             })
         }
 

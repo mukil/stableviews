@@ -95,7 +95,7 @@ define(function(require) {
                 .attr("rx", node_edge_r).attr("ry", node_edge_r)
                 .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
                 .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
-                .on("dblclick", function(d) { d3.event.stopPropagation() })
+                .on("dblclick", function(d) { d3.event.sourceEvent.stopPropagation() })
                 .on("click", function(d) {
                     if (!shiftKey) {
                         //if the shift key isn't down, unselect everything
@@ -256,13 +256,7 @@ define(function(require) {
         svg_panel.call(zoom_control)
 
         function zoom_and_pan() {
-            console.log("Translate Event", d3.event)
-            if (d3.event.sourceEvent.type === "mousemove") {
-                vis.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
-            } else if (d3.event.sourceEvent.type === "wheel") {
-                // ### forward scroll to window
-                window.fireEvent
-            }
+            vis.attr("transform", "translate(" + d3.event.translate + ") scale(" + d3.event.scale + ")")
         }
         function zoom_and_pan_end() {
             fire_map_transformation(vis.attr("transform"))
