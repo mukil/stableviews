@@ -95,7 +95,10 @@ define(function(require) {
                 .attr("rx", node_edge_r).attr("ry", node_edge_r)
                 .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
                 .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
-                .on("dblclick", function(d) { d3.event.sourceEvent.stopPropagation() })
+                .on("dblclick", function(d) {
+                    // ### sourceEvent may be undefined
+                    d3.event.sourceEvent.stopPropagation()
+                })
                 .on("click", function(d) {
                     if (!shiftKey) {
                         //if the shift key isn't down, unselect everything
@@ -275,11 +278,16 @@ define(function(require) {
     function focus_topic_by_id(id) {
         var topic = get_topic_by_id(id)
         if (topic) {
-            // translate viewport to topic location (when scaled we must match our two coordinate systems somehow)
-            graph_translation_keep_zoom([topic.view_props['dm4.topicmaps.x'], topic.view_props['dm4.topicmaps.y']])
-            console.log("Focus X", topic.view_props['dm4.topicmaps.x'], "Y", topic.view_props['dm4.topicmaps.y'],
-                            zoom_control.translate())
-            // set graph element css class to "selected"
+            var viewport = get_viewport_size()
+            console.log("Calculated Viewport Size", viewport)
+            var x = topic.view_props['dm4.topicmaps.x'],
+                y = topic.view_props['dm4.topicmaps.y']
+            if (x < 0 || x >= viewport.width || y < 0 || y >= viewport.height) {
+                var dx = (viewport.width / 2 - x)
+                var dy = (viewport.height / 2 - y)
+            }
+            graph_translation_keep_zoom([dx, dy])
+            // set graph element css class to "selected
             set_node_selected(id)
         } else {
             throw new Error("Could not find topic with id "+id+" in Topicmap", all_nodes)
@@ -314,7 +322,8 @@ define(function(require) {
     }
 
     function get_viewport_size() {
-        return { "width": svg_panel.attr("width"), "height": svg_panel.attr("height") }
+        var map_panel = d3.select('#map-panel')
+        return { "width": parseFloat(map_panel.style("width")), "height": parseFloat(map_panel.style("height")) }
     }
 
     function zoom_in() {
@@ -337,14 +346,14 @@ define(function(require) {
         }
     }
 
-    function reset_graph_translation() {
+    function reset_graph_translation(reinit) {
         // 1) do reset the svg translation matrix
         vis.attr("transform", "translate(0, 0) scale(1)") // this would be SVG native
         // zoom_control.translate(0,0) // ### fixme: does not seem to work as expected
         // zoom_control.scale(1.0) // ### fixme: does not seem to work as expected
         // console.log("Zoom Control", zoom_control, "SVG Panel", svg_panel.node(), "SVG Graph", svg_graph.node())
         // 2) setup new d4 zoom control behaviour (as subsequent d3.event.translate will return NaN)
-        setup_zoom_and_drag_control()
+        if (reinit) setup_zoom_and_drag_control()
     }
 
     function hide_assocs() {

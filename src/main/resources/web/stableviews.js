@@ -217,7 +217,7 @@ require(['common'], function(common) {
             d3.select("#map-commands #reset").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
-                graph_panel.reset_viewport()
+                graph_panel.reset_viewport(true) // true = reinitialize controls
             })
         }
 
@@ -344,10 +344,12 @@ require(['common'], function(common) {
                             // focus topic on graph panel
                             graph_panel.focus_topic(new_topic_id)
                         } else if (d3.event.target.id.startsWith("load-")) {
+                            // ### todo: implement check if topic is part of currnt topicmap
                             // ### todo: load topic and place it in current map
                             // see/re-use? topicmap_renderer add_topic_to_topicmap()
                             // console.log("load and put topic", new_topic_id)
                         } else if (d3.event.target.id.startsWith("tmap-")) {
+                            // ### "selected_topic_id" maybe undefined
                             if (selected_topic_id != selected_topicmap.id) {
                                 console.log("open new topicmap...", new_topic_id, selected_topicmap.id)
                                 selected_topicmap.id = new_topic_id
