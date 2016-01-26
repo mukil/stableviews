@@ -279,14 +279,13 @@ define(function(require) {
         var topic = get_topic_by_id(id)
         if (topic) {
             var viewport = get_viewport_size()
-            console.log("Calculated Viewport Size", viewport)
             var x = topic.view_props['dm4.topicmaps.x'],
                 y = topic.view_props['dm4.topicmaps.y']
             if (x < 0 || x >= viewport.width || y < 0 || y >= viewport.height) {
                 var dx = (viewport.width / 2 - x)
                 var dy = (viewport.height / 2 - y)
+                graph_translation_keep_zoom([dx, dy])
             }
-            graph_translation_keep_zoom([dx, dy])
             // set graph element css class to "selected
             set_node_selected(id)
         } else {
@@ -295,11 +294,14 @@ define(function(require) {
     }
 
     function graph_translation_keep_zoom(coordinatePair) {
-        // set svg property
-        // ### Sure that first Y and than X?
-        vis.attr("transform", "translate(" + coordinatePair + ") scale(" + zoom_control.scale() + ")")
-        // set d3 zoom control
-        zoom_control.translate(coordinatePair)
+        if (!coordinatePair[0] || !coordinatePair[1]) {
+            console.warn("Coordinate Pair for Map Translation is Invalud", coordinatePair)
+            // would break our zoom_control behaviour if passed through
+        } else {
+            vis.attr("transform", "translate(" + coordinatePair + ") scale(" + zoom_control.scale() + ")")
+            // set d3 zoom control
+            zoom_control.translate(coordinatePair)
+        }
     }
 
     function set_node_selected(topic_id) {
@@ -312,7 +314,6 @@ define(function(require) {
             if (d.id == topic_id) return d
         })
         if (selection) {
-            console.log("Node selection", selection)
             selection.classed("selected", true)
         }
     }
@@ -346,14 +347,14 @@ define(function(require) {
         }
     }
 
-    function reset_graph_translation(reinit) {
+    function reset_graph_translation() {
         // 1) do reset the svg translation matrix
         vis.attr("transform", "translate(0, 0) scale(1)") // this would be SVG native
         // zoom_control.translate(0,0) // ### fixme: does not seem to work as expected
         // zoom_control.scale(1.0) // ### fixme: does not seem to work as expected
         // console.log("Zoom Control", zoom_control, "SVG Panel", svg_panel.node(), "SVG Graph", svg_graph.node())
         // 2) setup new d4 zoom control behaviour (as subsequent d3.event.translate will return NaN)
-        if (reinit) setup_zoom_and_drag_control()
+        setup_zoom_and_drag_control()
     }
 
     function hide_assocs() {

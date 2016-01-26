@@ -195,7 +195,7 @@ require(['common'], function(common) {
             window.location.hash = "#" + selected_topicmap.info.id
         }
 
-        function setup_page_listeners()  {
+        function setup_page_listeners() {
             // Search Button Handler
             d3.select("#search").on('click', function(e) {
                 var input = d3.select("#textinput")[0][0]
@@ -217,7 +217,7 @@ require(['common'], function(common) {
             d3.select("#map-commands #reset").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
-                graph_panel.reset_viewport(true) // true = reinitialize controls
+                graph_panel.reset_viewport()
             })
         }
 
