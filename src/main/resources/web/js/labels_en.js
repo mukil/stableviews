@@ -19,6 +19,8 @@ var label = {
     "dm4.files.folder" : "Dateiordner",
     "dm4.core.topic_type" : "Topic Typ",
     "dm4.webbrowser.url" : "URL",
+    "dm4.webbrowser.webpage" : "Webpage",
+    "dm4.workspaces.workspace" : "Workspace",
     "Reset": "Zur&uuml;cksetzen"
 }
 

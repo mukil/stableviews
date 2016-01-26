@@ -276,12 +276,21 @@ require(['common'], function(common) {
                         topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
                 // render topic type commands
                 render_topic_commands()
-                // render details
-                /** if (selected_topic.type_uri === "dm4.notes.note") {
+                // render "Note" details
+                if (selected_topic.type_uri === "dm4.notes.note") {
                     graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
+                    if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.web_resource_description')) {
+                        graph_panel.set_description(selected_topic.childs['dm4.webbrowser.web_resource_description'].value)}
+                    }
+                else if (selected_topic.type_uri === "dm4.contacts.person" ||
+                         selected_topic.type_uri === "dm4.contacts.institution") {
+                    if (selected_topic.childs.hasOwnProperty('dm4.contacts.notes')) {
+                        graph_panel.set_description(selected_topic.childs['dm4.contacts.notes'].value)
+                    }
                 } else {
                     graph_panel.set_description('')
-                } **/
+                }
             })
         }
 
@@ -290,15 +299,29 @@ require(['common'], function(common) {
 
         function render_topic_commands() {
             d3.selectAll(".toolbar ul li").remove()
+
             if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {    // -- Web Resource Commands
-                d3.select(".toolbar ul").append("li").append("a").attr("title", "Visit Website")
-                    .attr("href", selected_topic.value).text("Open URL")
+                render_webbrowser_url_child(selected_topic)
             } else if (selected_topic.type_uri === "dm4.files.file") {          // -- File Topic Commands
                 var filepath = selected_topic.childs["dm4.files.path"].value
                 var file_title = selected_topic.childs["dm4.files.media_type"].value
                     + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
                 d3.select(".toolbar ul").append("li").append("a").attr("title", file_title)
                     .attr("href", "/filerepo/" + filepath).text("Get File")
+            } else if (selected_topic.type_uri === "dm4.contacts.institution" ||
+                       selected_topic.type_uri === "dm4.contacts.person") {     // --- Contact Topic Commands
+                render_webbrowser_url_child(selected_topic)
+            }
+        }
+
+        function render_webbrowser_url_child(selected_topic) {
+            // check if a proper value is set
+            if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.url')) {
+                var url = selected_topic.childs['dm4.webbrowser.url'].value
+                if (url && url != "") {
+                    d3.select(".toolbar ul").append("li").append("a").attr("title", "Open URL " + url)
+                        .attr("href", url).text("Visit Website")
+                }
             }
         }
 
