@@ -4,6 +4,8 @@ require(['common'], function(common) {
 
     require(['graph_panel', 'stableviews_ctrl', 'labels_en'], function(graph_panel, controller, en) {
 
+        // --- Stableviews Client Side Model ---
+
         // authenticated staff only stuff
         var username = undefined            //
         var workspaces = undefined          //
@@ -19,6 +21,10 @@ require(['common'], function(common) {
         var topic_commands = []             // basic set of commands for a given topic
         var reverse_search = []             // list of recently executed commands (non-persistent)
 
+
+
+        // --- Routing ---
+
         // retrieve ids from route /#1234/#567 (1. Topicmap, 2. Topic)
         var location = window.document.location
         var map_id = location.hash.substr(1)
@@ -28,12 +34,14 @@ require(['common'], function(common) {
             topic_id = location.hash.split("/")[1].substr(1)
         }
 
-        // ..
+        // --- Initialization Map and Detail Panel ---
+
         graph_panel.init()
         setup_map_panel_listeners()
         setup_page_listeners()
 
-        // ..
+        // --- Authentication ---
+
         controller.loadUsername(function(xhr) {
             var user_screen = d3.select('.user-dialog')
             if (xhr.response=== "") {
@@ -43,7 +51,8 @@ require(['common'], function(common) {
             }
         })
 
-        // 1) ...
+        // --- Loading DM 4 Type Definitions ---
+
         controller.loadAllTopicTypes(function(topicTypes) {
             console.log("Topic Types", topicTypes)
         })
@@ -51,7 +60,10 @@ require(['common'], function(common) {
             console.log("Association Types", assocTypes)
         })
 
-        // 2) ..
+        // --- Loading of DM 4 Topicmaps ---
+
+        // --- ### Introduce menu to allow for pointer-based selection of/switching among these
+
         controller.loadAllTopicmaps(function(response) {
 
             topicmaps = response
@@ -71,7 +83,8 @@ require(['common'], function(common) {
 
         })
 
-        // --- Setup command line input area
+        // --- Setup command line input area ---
+
         // --- ### setup gui for autocompletion
         // --- ### make this a web-component
 
@@ -79,11 +92,11 @@ require(['common'], function(common) {
 
             if (d3.event.keyCode === 13 && d3.event.target.value.length > 2) {
 
-                // 2) try to execute input as command
+                // --- Fixme: Enter => Execute Command
 
+                // 2) try to execute input as command
                 var user_input = d3.event.target.value.trim()
-                // ##### here is where the magic starts: our first command "open" maps to "show topicmap"
-                if (user_input.startsWith("open")) {
+                if (user_input.startsWith("open")) {            // --- Open/Load Topicmap Command
                     var index = parseInt(user_input.split(" ")[1]) - 1
                     if (index > topicmaps.length)
                        throw Error ("Could not load topicmap " + index + " with just " + topicmaps.length + " available")
@@ -95,14 +108,14 @@ require(['common'], function(common) {
                     // clear command line
                     d3.event.target.value = ''
 
-                } else if (user_input.startsWith("hide")) {
+                } else if (user_input.startsWith("hide")) {     // --- Hide Elements of Graph Panel
 
                     if (user_input.indexOf("assocs") !== -1 ) graph_panel.hide_assocs()
                     if (user_input.indexOf("hidden") !== -1 ) graph_panel.hide_topics_hidden()
                     // clear command line
                     d3.event.target.value = ''
 
-                } else if (user_input.startsWith("show")) {
+                } else if (user_input.startsWith("show")) {     // --- Show Elements of Graph Panel
 
                     if (user_input.indexOf("assocs") !== -1 ) graph_panel.show_assocs()
                     if (user_input.indexOf("hidden") !== -1 ) graph_panel.show_topics_hidden()
@@ -114,7 +127,8 @@ require(['common'], function(common) {
                     // clear command line
                     d3.event.target.value = ''
 
-                } else if (user_input.startsWith("group")) {
+                } else if (user_input.startsWith("group")) {    // --- ### Group Selected Graph Panel Elements
+
                     // ### create associations of type X between all selected notes
                     for (var idx in multi_selection) {
                         if (multi_selection[idx].id !== "") {
@@ -124,16 +138,19 @@ require(['common'], function(common) {
 
                 } else {
 
-                    do_search(user_input)
+                    do_search(user_input)                       // --- Do a fulltext search in the DM4 Database
 
                 }
 
-            } else {
+            } else {    // --- Render search result --- Note: The following code block certainly does not belong here!
 
-                // 1) use input as (topicmap wide) name search command
+                // --- Fixme: NOT Enter => Saerch for Topic in Topicmap, ### Database or for a ### Command
 
-                // searching through names of elements visible in this map
+                // If the key is NOT Enter and the current Text Value entered is NOT longer than 2 Chars ....
+
+                // 0) Fixme: Clear any existing search results ...
                 search_results = []
+                // 1) Fixme: Do search in all names of elements visible in this topicmap
                 if (d3.event.target.value.length >= 2) {
                     var user_input = d3.event.target.value.trim()
                     for (var t in selected_topicmap.topics) {
@@ -151,7 +168,6 @@ require(['common'], function(common) {
                         var assoc_name = selected_topicmap.assocs[e].value.toLowerCase()
                         // var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
                         if (assoc_name.indexOf(user_input) !== -1) {
-                            // console.log("> assoc " + assoc_name)
                             search_results.push({
                                 topic: selected_topicmap.assocs[e],
                                 workspace: {value: "", id: -1},
@@ -166,15 +182,17 @@ require(['common'], function(common) {
                         render_search_results()
                     }, null, false) **/
                 }
+                // 2) Fixme: Render elements in search results which are anway part of the curerntly rendered map
                 render_search_results()
             }
 
         })
 
-        // --- Focus command line on startup
+        // --- Put focus on command line element on startup ---
+
         document.getElementById('textinput').focus()
 
-        // --- Search Command
+        // --- Search Dialog Functionality ---
 
         function do_search(value) {
             if (!value) throw new Error("Wont search for empty string")
@@ -185,11 +203,11 @@ require(['common'], function(common) {
             }, null, false)
         }
 
+        // --- Top Level Page Handlers / Utilities ---
+
         function set_document_title(message) {
             window.document.title = message + " - Stableviews 0.3 / DeepaMehta 4.7"
         }
-
-        // -- Top Level Page Handlers
 
         function update_topicmap_url() {
             window.location.hash = "#" + selected_topicmap.info.id
@@ -221,7 +239,7 @@ require(['common'], function(common) {
             })
         }
 
-        // -- Map Panel Listeners
+        // --- Graph Panel Listeners ---
 
         // These listeners get cleared out with map-panel when switching topicmap
         function setup_map_panel_listeners() {
@@ -260,7 +278,7 @@ require(['common'], function(common) {
             })
         }
 
-        // -- Select/Show/Load Topic
+        // --- Graph Panel Handlers: Selection ---
 
         function select_topic(id) {
             // load fresh topic from server side and then show it
@@ -295,7 +313,7 @@ require(['common'], function(common) {
         }
 
 
-        // -- Topic Commands (on selected_topic)
+        // --- Toolbar Renderer: Show Commands (of selected_topic) in Toolbar ---
 
         function render_topic_commands() {
             d3.selectAll(".toolbar ul li").remove()
@@ -325,7 +343,7 @@ require(['common'], function(common) {
             }
         }
 
-        // -- Login View
+        // --- TODO: Login View ---
 
         function render_login_dialog() {
 
@@ -336,6 +354,8 @@ require(['common'], function(common) {
                 }, common.debug)
             } **/
         }
+
+        // --- Search Result Renderer: Show latest search results (or suggestions?) ---
 
         function render_search_results() {
             // show container
@@ -385,6 +405,8 @@ require(['common'], function(common) {
             }
             if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
         }
+
+        // --- Stableviews Client Functionality ---
 
         function load_selected_topicmap() {
             // prepare/cleanup
