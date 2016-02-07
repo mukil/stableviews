@@ -68,6 +68,7 @@ require(['common'], function(common) {
 
             topicmaps = response
             console.log("Topicmaps", topicmaps)
+            render_topicmap_menu()
 
             if (map_id) { // load routed map
                 selected_topicmap = { id: map_id }
@@ -83,12 +84,14 @@ require(['common'], function(common) {
 
         })
 
+        //
+
         // --- Setup command line input area ---
 
         // --- ### setup gui for autocompletion
         // --- ### make this a web-component
 
-        d3.select('#textinput').on('keypress', function() {
+        d3.select('#search').on('keypress', function() {
 
             if (d3.event.keyCode === 13 && d3.event.target.value.length > 2) {
 
@@ -241,15 +244,15 @@ require(['common'], function(common) {
             // Expand Lower Sidebar
             d3.select(".lower.sidebar").on('click', function(e) {
                 console.log("filterbar clicked", d3.event.currentTarget, d3.event.target)
-                if (d3.event.currentTarget.className.contains("lower") &&
-                    !d3.event.target.nodeName.toLowerCase().contains("input")) {
+                if (d3.event.currentTarget.className.includes("lower") &&
+                    !d3.event.target.nodeName.toLowerCase().includes("input")) {
                     d3.select(".lower.sidebar").classed('expanded', true)
                 }
             })
             // Collapse Lower Sidebar
             d3.select("#map-panel").on('click', function() {
                 // console.log("map panel clicked", d3.event.currentTarget, d3.event.target)
-                if (!d3.event.target.nodeName.contains('rect') && !d3.event.target.nodeName.contains('line')) {
+                if (!d3.event.target.nodeName.includes('rect') && !d3.event.target.nodeName.includes('line')) {
                     d3.select(".lower.sidebar").classed('expanded', false)
                 }
             })
@@ -271,6 +274,12 @@ require(['common'], function(common) {
                 })
             $('#close-menu').click(function(e) {
                 $('.main.sidebar').removeClass('visible')
+            })
+            // Topicmap Selection Menu
+            d3.select('.main.menu .ui.topicmaps.dropdown').on('change', function() {
+                selected_topicmap.id = d3.event.target.value
+                console.log("Load Topicmap Selection", selected_topicmap.id)
+                load_selected_topicmap()
             })
         }
 
@@ -348,10 +357,10 @@ require(['common'], function(common) {
         }
 
 
-        // --- Toolbar Renderer: Show Commands (of selected_topic) in Toolbar ---
+        // --- XYZ Renderer: Show Commands (of selected_topic) in Toolbar ---
 
         /** Toolbar is currently defused .toolbar div does not exist **/
-        function render_topic_commands() { 
+        function render_topic_commands() {
 
             d3.selectAll(".toolbar ul li").remove()
             d3.select(".toolbar").classed('hide', false)
@@ -382,6 +391,36 @@ require(['common'], function(common) {
                         .attr("href", url).text("Visit Website")
                 }
             }
+        }
+
+        // ### use d3 data (binding) here
+        function render_topicmap_menu() {
+            //
+            var selectMenu = d3.select('.ui.topicmaps.dropdown')
+            // var items = []
+            console.log("Topicmap Selection Menu", selectMenu)
+            for (var t in topicmaps) {
+                // items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
+                selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
+            }
+            $('.ui.main.menu .ui.topicmaps').dropdown({
+                "fullTextSearch": true
+            })
+            /**
+                apiSettings: {
+                    url: '/core/topic/by_type/dm4.topicmaps.topicmap?include_childs=true'
+                }, onResponse: function(response) {
+                    console.log("Topicmap Selection API Response", response)
+                    var items = []
+                    for (var t in topicmaps) {
+                        items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
+                    }
+                    return {
+                        "success": true,
+                        "results": items
+                    }
+                }
+            }) **/
         }
 
         // --- TODO: Login View ---
@@ -444,7 +483,18 @@ require(['common'], function(common) {
                         }
                     })
             }
-            if (search_results.length === 0) d3.select('.search-results').attr("style", "display: none")
+            // show/hide search results area
+            if (search_results.length === 0) {
+                if (selected_topic) { // ## may not be set, selected_topicmap could be set here then
+                    graph_panel.set_title(selected_topic.value)
+                } else {
+                    graph_panel.set_title(selected_topicmap.info.value)
+                }
+                d3.select('.search-results').classed("hide", true)
+            } else {
+                graph_panel.set_title('Search results')
+                d3.select('.search-results').classed("hide", false)
+            }
         }
 
         // --- Stableviews Client Functionality ---

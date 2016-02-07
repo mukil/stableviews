@@ -41,6 +41,7 @@ body {
     margin-right: 370px;
 }
 
+.lower.sidebar .search-results,
 .lower.sidebar .details {
     max-height: 150px;
     overflow-y: scroll;
@@ -49,7 +50,8 @@ body {
     margin-top: 10px;
 }
 
-.lower.sidebar.expanded .details {
+.lower.sidebar.expanded .details,
+.lower.sidebar.expanded .search-results {
     max-height: 90%;
     height: 90%;
 }
@@ -272,6 +274,25 @@ div.show-inline {
 .ui.lower.sidebar.bottom.expanded {
 	height: 75% !important;
 }
+
+/** Main Sidebar Right */
+
+.main.menu .ui.selection.dropdown {
+    min-height: 0;
+}
+
+.main.menu .ui.container {
+    padding: 15px;
+}
+
+/* .main.menu .ui.selection.dropdown .menu.transition {
+    background-color: #434343;
+    color: #fff;
+}
+
+.ui.menu .ui.dropdown .menu > .active.item {
+    color: #fff;
+} **/
 
 /* .ui.very.wide.sidebar.right {
     z-index: 3001;
