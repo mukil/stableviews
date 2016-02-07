@@ -257,8 +257,9 @@ require(['common'], function(common) {
             d3.select(window).on('resize', function() {
                 if (graph_panel) graph_panel.resize()
             })
-            //
+            // initiate "display options" menu // our only jQuery dependency
             $('.ui.tertiary ').dropdown()
+            // initiate sidebar handler // no need for jQuery here
             var $menubtn = $('#menu-button')
                 $menubtn.click(function(e) {
                     $('.main.sidebar').addClass('visible')
@@ -349,8 +350,8 @@ require(['common'], function(common) {
 
         // --- Toolbar Renderer: Show Commands (of selected_topic) in Toolbar ---
 
-        /** Toolbar is currently defused **/
-        function render_topic_commands() {
+        /** Toolbar is currently defused .toolbar div does not exist **/
+        function render_topic_commands() { 
 
             d3.selectAll(".toolbar ul li").remove()
             d3.select(".toolbar").classed('hide', false)
@@ -366,9 +367,10 @@ require(['common'], function(common) {
             } else if (selected_topic.type_uri === "dm4.contacts.institution" ||
                        selected_topic.type_uri === "dm4.contacts.person") {     // --- Contact Topic Commands
                 render_webbrowser_url_child(selected_topic)
-            } //
+            } else {
+                d3.select(".toolbar").classed('hide', true)
+            }
 
-            d3.select(".toolbar").classed('hide', true)
         }
 
         function render_webbrowser_url_child(selected_topic) {
