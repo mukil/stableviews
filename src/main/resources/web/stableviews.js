@@ -190,7 +190,7 @@ require(['common'], function(common) {
 
         // --- Put focus on command line element on startup ---
 
-        document.getElementById('textinput').focus()
+        // ### document.getElementById('textinput').focus()
 
         // --- Search Dialog Functionality ---
 
@@ -216,26 +216,60 @@ require(['common'], function(common) {
         function setup_page_listeners() {
             // Search Button Handler
             d3.select("#search").on('click', function(e) {
-                var input = d3.select("#textinput")[0][0]
+                var input = d3.select("#search")[0][0]
+                console.log("Clicked Search", d3.event)
                 var value = input.value
                 do_search(value)
             })
             // Map Viewport Reset Handler
-            d3.select("#map-commands #zoom-in").on('click', function(e) {
+            d3.select("#zoom-in").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
                 graph_panel.zoom_in()
             })
-            d3.select("#map-commands #zoom-out").on('click', function(e) {
+            d3.select("#zoom-out").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
                 graph_panel.zoom_out()
             })
-            d3.select("#map-commands #reset").html(get_label("Reset"))
-            d3.select("#map-commands #reset").on('click', function(e) {
+            d3.select("#reset").html(get_label("Reset"))
+            d3.select("#reset").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
                 graph_panel.reset_viewport()
+            })
+            // Expand Lower Sidebar
+            d3.select(".lower.sidebar").on('click', function(e) {
+                console.log("filterbar clicked", d3.event.currentTarget, d3.event.target)
+                if (d3.event.currentTarget.className.contains("lower") &&
+                    !d3.event.target.nodeName.toLowerCase().contains("input")) {
+                    d3.select(".lower.sidebar").classed('expanded', true)
+                }
+            })
+            // Collapse Lower Sidebar
+            d3.select("#map-panel").on('click', function() {
+                // console.log("map panel clicked", d3.event.currentTarget, d3.event.target)
+                if (!d3.event.target.nodeName.contains('rect') && !d3.event.target.nodeName.contains('line')) {
+                    d3.select(".lower.sidebar").classed('expanded', false)
+                }
+            })
+            // Keep SVG Graph Panel in Sync with Document Size
+            d3.select(window).on('resize', function() {
+                if (graph_panel) graph_panel.resize()
+            })
+            //
+            $('.ui.tertiary ').dropdown()
+            var $menubtn = $('#menu-button')
+                $menubtn.click(function(e) {
+                    $('.main.sidebar').addClass('visible')
+                    if ($('.main.sidebar').hasClass('visible')) {
+                        console.log("Sidebar is Visible")
+                    } else {
+                        console.log("Sidebar is NOT Visible")
+                    }
+                })
+            $('#close-menu').click(function(e) {
+                $('.main.sidebar').removeClass('visible')
             })
         }
 
@@ -315,8 +349,11 @@ require(['common'], function(common) {
 
         // --- Toolbar Renderer: Show Commands (of selected_topic) in Toolbar ---
 
+        /** Toolbar is currently defused **/
         function render_topic_commands() {
+
             d3.selectAll(".toolbar ul li").remove()
+            d3.select(".toolbar").classed('hide', false)
 
             if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {    // -- Web Resource Commands
                 render_webbrowser_url_child(selected_topic)
@@ -329,7 +366,9 @@ require(['common'], function(common) {
             } else if (selected_topic.type_uri === "dm4.contacts.institution" ||
                        selected_topic.type_uri === "dm4.contacts.person") {     // --- Contact Topic Commands
                 render_webbrowser_url_child(selected_topic)
-            }
+            } //
+
+            d3.select(".toolbar").classed('hide', true)
         }
 
         function render_webbrowser_url_child(selected_topic) {

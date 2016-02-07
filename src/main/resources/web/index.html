@@ -8,9 +8,32 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/ionicons.min.css">
-        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/mikromedia-main.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/ionicons.min.css"> <!-- Loader Icon -->
 
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/mobile-layout.css">
+
+        <!-- Semantic UI Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/search.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/sidebar.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/button.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/input.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/menu.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/item.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/dropdown.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/header.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/transition.min.css">
+        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/form.min.css"-->
+        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/divider.min.css"-->
+        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/checkbox.min.css"-->
+
+        <!-- Semantic UI Script Dependencies -->
+        <script src="/de.mikromedia.stableviews/assets/vendor/jquery/jquery-2.1.4.min.js"></script>
+        <!--script src="/de.mikromedia.stableviews/assets/vendor/semantic.min.js"></script-->
+        <script src="/de.mikromedia.stableviews/assets/vendor/dropdown.min.js"></script>
+        <script src="/de.mikromedia.stableviews/assets/vendor/transition.min.js"></script>
+
+        <!-- Stabelviews Client Scripts -->
         <script
             data-main="/de.mikromedia.stableviews/stableviews.js"
             src="/de.mikromedia.stableviews/assets/vendor/require.js"></script>
@@ -18,47 +41,90 @@
     </head>
     <body>
 
-        <div class="page container">
+        <div class="ui right vertical inverted menu very wide sidebar main">
+            <button id="close-menu" class="ui basic inverted icon button">
+                <i class="right chevron icon"></i>
+            </button>
+            <a class="item">
+                Item 1
+            </a>
+            <a class="item">
+                Item 2
+            </a>
+            <a class="item">
+                Item 3
+            </a>
+        </div>
 
-            <h1 class="title">working title</h1>
-
-            <div class="toolbar">
-                <ul>
-                    <!-- li><a href="javascript:show_more()">Show more</a></li>
-                    <li><a href="javascript:do_associate()">Associate</a></li>
-                    <li><a href="javascript:do_edit()">Edit</a></li>
-                    <li><a href="javascript:do_hide()">Hide</a></li-->
-                </ul>
-            </div>
-
-            <div class="text">Hello D3 Graph</div>
+        <div class="page container ui pusher fixed">
 
             <div id="map-panel" tabindex="1">
-                <div id="map-commands">
-                    <a href="#" id="zoom-in" class="ion-plus-round"></a>
-                    <a href="#" id="zoom-out" class="ion-minus-round"></a>
-                    <a href="#" id="reset">Reset</a>
-                </div>
+
                 <div class="loader ion-load-c"></div>
+
+                <div class="ui basic vertical main">
+                    <button id="menu-button" class="ui basic tiny icon button">
+                        <i class="left chevron icon"></i>
+                    </button>
+                </div>
+
+                <div class="ui tertiary pointing right dropdown icon basic button">
+                    <i class="settings icon"></i>
+                    <div class="menu">
+                        <div class="header">Display Options</div>
+                        <div class="item">
+                            Associations
+                        </div>
+                        <div class="item">
+                            Texts
+                        </div>
+                    </div>
+                </div>
+                <div class="ui basic mini vertical buttons zooming">
+                    <button id="zoom-in" class="ui basic mini icon button">
+                        <i class="plus icon"></i>
+                    </button>
+                    <button id="zoom-out" class="ui basic mini icon button">
+                        <i class="minus icon"></i>
+                    </button>
+                </div>
+
             </div>
 
-        </div> <!-- /.container -->
+        </div>
 
-        <footer class="copy" action="do">
-            <input type="text" id="textinput" tabindex="2" placeholder="..." />
-            <input type="button" id="search" tabindex="3" value="Search" />
-            <!--input type="button" id="login" tabindex="4" value="Login" /-->
-            <!-- span>&hearts; mikromedia.de 2015</span-->
-            <div class="search-results">
+        <div class="ui lower very wide sidebar visible bottom">
+
+            <h2 class="title"></h2>
+
+            <div class="search-controls">
+                <div class="ui icon input inline">
+                    <input class="prompt" id="search" placeholder="Search ..." type="text"/>
+                    <i class="search icon"></i>
+                </div>
+                <!--button class="ui primary button">Suchen</button-->
+            </div>
+
+            <div class="details"></div>
+
+            <div class="search-results hide">
                 <!-- Start using one of the following search results:<br/-->
                 <ol class="search-result-list" tabindex="5"></ol>
             </div>
-            <div class="user-dialog"></div>
-            <div class="source-code">
+
+        </div>
+
+        <!--footer class="copy" action="do">
+            <!--input type="text" id="textinput" tabindex="2" placeholder="..." />
+            <input type="button" id="search" tabindex="3" value="Search" />
+            <!--input type="button" id="login" tabindex="4" value="Login" /-->
+            <!-- span>&hearts; mikromedia.de 2015</span-->
+            <!--div class="user-dialog"></div-->
+            <!--div class="source-code">
                 <a href="https://github.com/mukil/stableviews"
                    title="Stableviews is free software - Please contribute" class="ion-social-github"></a>
             </div>
-        </footer>
+        </footer-->
 
     </body>
 

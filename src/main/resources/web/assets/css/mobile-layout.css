@@ -1,0 +1,298 @@
+
+/** General Styles */
+
+.loader {
+    font-size: 4em;
+    color: #444;
+    margin-top: 40px;
+    z-index: 2001;
+    text-align: center;
+    width: 100%;
+}
+
+.details,
+.hide {
+    display: none;
+}
+
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
+.content {
+    width: 100%;
+    height: 100px;
+}
+
+.title {
+    display: inline-block;
+    margin: 5px;
+}
+
+.lower.sidebar .search-controls {
+    display: inline-block;
+    position: absolute;
+    right: 45px;
+    top: 15px;
+}
+
+.lower.sidebar .title {
+    margin-right: 370px;
+}
+
+.lower.sidebar .details {
+    max-height: 150px;
+    overflow-y: scroll;
+    padding-left: 5px;
+    width: 97%;
+    margin-top: 10px;
+}
+
+.lower.sidebar.expanded .details {
+    max-height: 90%;
+    height: 90%;
+}
+
+.file .title,
+.web_resource .title {
+    font-size: 16px;
+    font-weight: normal;
+}
+
+#map-panel {
+    display: block;
+    background-color: #fff;
+    color: #fff;
+    max-width: 100%;
+    min-height: 300px;
+    position: relative;
+}
+
+#map-panel text {
+    cursor: pointer;
+}
+
+#map-panel svg {
+    cursor: move;
+}
+
+#map-panel g {
+    cursor: pointer;
+}
+
+#map-commands {
+    position: absolute;
+    right: 0px;
+    top: 10px;
+    display: none;
+}
+
+#map-commands a {
+    text-decoration: none;
+    color: #444;
+    padding: 5px;
+    padding-right: 10px;
+    padding-left: 10px;
+    display: block;
+    min-height: 20px;
+    min-width: 40px;
+}
+
+#map-commands #zoom-in,
+#map-commands #zoom-out {
+    padding-right: 0px;
+}
+
+#map-commands a:hover {
+    color: #000;
+    background: #e8e8e8;
+}
+
+footer {
+    padding: 0px;
+    min-height: 200px;
+}
+
+.source-code a {
+    color: #666;
+    font-size: 2.5em;
+}
+
+.source-code a:hover {
+    color: #fff;
+}
+
+.source-code {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 10px;
+}
+
+.copy {
+    margin-top: 10px;
+    color: #fff;
+    width: 100%;
+    left: 0px;
+}
+
+/** Graph Panel Styles **/
+
+.toolbar {
+    margin-left: 7%;
+    margin-right: 7%;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.toolbar li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+.toolbar li a {
+    color: #383838;
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 10px; padding-right: 10px;
+}
+
+.toolbar li a:hover {
+    background-color: #e9e9e9;
+}
+
+.toolbar ul {
+    padding: 0px;
+    margin-top: 0px;
+}
+
+.topics text {
+    text-transform: uppercase;
+    padding-left: 7px; padding-right: 7px;
+    padding: 5px;
+}
+
+.red {
+    border: 1px solid #c1272d;
+}
+
+.topics rect {
+    fill: #fff;
+    stroke: #40B0E2;
+    stroke-width: 2;
+}
+
+.topics rect.selected {
+    stroke: #444;
+    stroke-width: 4;
+}
+
+.links line.backdrop,
+.topics rect.backdrop,
+.topics rect.hidden {
+    opacity: .2;
+}
+
+.links line {
+    stroke: #444;
+    stroke-width: 2;
+}
+
+div.show {
+    display: block;
+    z-index: 1001;
+    background: #fff;
+}
+
+line.show {
+    display: inline-block;
+}
+
+div.show-inline {
+    display: inline-block;
+}
+
+
+/** General Semantic UI Overrides **/
+
+.ui.checkbox input {
+	cursor: pointer;
+}
+
+.ui.input #search {
+	min-width: 140px;
+}
+
+.ui.input #search:focus {
+    min-width: 280px;
+}
+
+.ui.primary.button {
+	margin-left: 15px; margin-right: 15px;
+}
+
+.ui.inverted.menu.main {
+    background-color: #343434;
+}
+
+/** Three Button Groups Right */
+#menu-button {
+    position: fixed;
+    right: -7px;
+    top: 22px;
+}
+
+#close-menu {
+    position: relative;
+    left: -10px;
+    top: -4px;
+}
+
+.ui.tertiary.dropdown {
+    position: fixed;
+    right: -8px;
+    top: 65px;
+}
+
+.ui.vertical.zooming {
+    position: fixed;
+    right: -3px;
+    top: 115px;
+}
+
+/* Lower Sidebar */
+
+.ui.lower.sidebar {
+	padding: 15px;
+	background: #fff;
+	max-height: 75%;
+}
+
+.ui.lower.sidebar.bottom.expanded {
+	height: 75% !important;
+}
+
+/* .ui.very.wide.sidebar.right {
+    z-index: 3001;
+} **/
+
+/**
+.ui.lower.sidebar.left.sided,
+.ui.lower.sidebar.right.sided {
+	top: 25%;
+	height: 75% !important;
+	width: 50% !important;
+}
+
+.ui.lower.sidebar.left.sided {
+	border-right: 1px solid #a9a9a9;
+}
+
+.ui.lower.sidebar.right.sided {
+	border-left: 1px solid #a9a9a9;
+}
+
+.ui.lower.sidebar .ui.button.add-bar {
+	right: 15px;
+} **/

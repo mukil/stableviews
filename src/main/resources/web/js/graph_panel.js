@@ -8,8 +8,8 @@ define(function(require) {
     var view_state      = ""
     var svg_panel       = undefined
 
-    var width           = window.innerWidth - (window.innerWidth / 10),
-        height          = window.innerHeight - (window.innerHeight / 3.5),
+    var width           = window.innerWidth, // - (window.innerWidth / 10),
+        height          = window.innerHeight - parseInt(d3.select('.lower.sidebar').style('height')),
         shiftKey, ctrlKey
 
     var map_topic, all_nodes, all_edges = undefined
@@ -55,6 +55,12 @@ define(function(require) {
             shiftKey = d3.event.shiftKey || d3.event.metaKey
             ctrlKey = d3.event.ctrlKey
         }
+    }
+
+    function resize_viewport() {
+        var width           = window.innerWidth, // - (window.innerWidth / 10),
+            height          = window.innerHeight - parseInt(d3.select('.lower.sidebar').style('height'))
+        if (svg_panel) svg_panel.attr('width', width).attr('height', height)
     }
 
     function render_network() {
@@ -178,15 +184,15 @@ define(function(require) {
     function set_page_title(title) {
         // d3.select('title').text(title)
         // d3.select('.container .text').transition().style('height', String("100%")).duration(1000)
-        d3.select('h1.title').text(title)
+        d3.select('.title').text(title)
     }
 
     function set_page_description(text) {
         if (text === "") {
-            d3.select('.text').classed('show', false)
+            d3.select('.details').classed('show', false)
             return
         }
-        d3.select('.text').classed('show', true).html(text)
+        d3.select('.details').classed('show', true).html(text)
     }
 
     function set_page_class(type) {
@@ -428,6 +434,7 @@ define(function(require) {
         highlight_topic: pop_visual_by_topic_id,
         get_topicmap_bounds: get_topicmap_bounds,
         get_viewport_size: get_viewport_size,
+        resize: resize_viewport,
         zoom_in: zoom_in,
         zoom_out: zoom_out,
         focus_topic: focus_topic_by_id,
