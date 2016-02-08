@@ -169,38 +169,6 @@ footer {
     margin-top: 0px;
 }
 
-.topics text {
-    text-transform: uppercase;
-    padding-left: 7px; padding-right: 7px;
-    padding: 5px;
-}
-
-.red {
-    border: 1px solid #c1272d;
-}
-
-.topics rect {
-    fill: #fff;
-    stroke: #40B0E2;
-    stroke-width: 2;
-}
-
-.topics rect.selected {
-    stroke: #444;
-    stroke-width: 4;
-}
-
-.links line.backdrop,
-.topics rect.backdrop,
-.topics rect.hidden {
-    opacity: .2;
-}
-
-.links line {
-    stroke: #444;
-    stroke-width: 2;
-}
-
 div.show {
     display: block;
     z-index: 1001;
@@ -215,6 +183,9 @@ div.show-inline {
     display: inline-block;
 }
 
+.red {
+    border: 1px solid #c1272d;
+}
 
 /** General Semantic UI Overrides **/
 

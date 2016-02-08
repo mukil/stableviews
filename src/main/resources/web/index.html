@@ -11,6 +11,7 @@
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/ionicons.min.css"> <!-- Loader Icon -->
 
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/mobile-layout.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/custom-graph.css">
 
         <!-- Semantic UI Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/search.min.css">
@@ -23,8 +24,8 @@
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/dropdown.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/header.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/transition.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/divider.min.css">
         <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/form.min.css"-->
-        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/divider.min.css"-->
         <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/checkbox.min.css"-->
 
         <!-- Semantic UI Script Dependencies -->
@@ -42,13 +43,29 @@
     <body>
 
         <div class="ui right vertical inverted menu very wide sidebar main">
+
             <button id="close-menu" class="ui basic inverted icon button">
                 <i class="right chevron icon"></i>
             </button>
+
+            <!-- Active Topicmap -->
             <div class="ui container">
-                <h4 class="ui header inverted">Topicmaps</h4>
+                <label class="ui label">Current View</label>
+                <h4 class="inverted ui header" id="topicmap-title"></h4>
+            </div>
+
+            <div class="ui divider"></div>
+
+            <!-- Topicmap Selector -->
+            <div class="ui container">
+                <h4 class="ui header inverted">Other Topicmaps</h4>
                 <select class="ui topicmaps inverted search dropdown" id="topicmap-selector"></select>
             </div>
+
+            <div class="ui container">
+                <button class="ui button basic inverted">Login</button>
+            </div>
+
         </div>
 
         <div class="page container ui pusher fixed">

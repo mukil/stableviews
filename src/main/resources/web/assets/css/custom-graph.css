@@ -1,0 +1,46 @@
+
+.topics text {
+    text-transform: uppercase;
+    padding-left: 7px; padding-right: 7px;
+    padding: 5px;
+}
+
+.topics rect {
+    fill: #fff;
+    stroke: #40B0E2;
+    stroke-width: 2;
+}
+
+.topics rect.selected {
+    stroke: #444;
+    stroke-width: 4;
+    -webkit-filter: drop-shadow( 1px 1px 4px #343434 );
+            filter: drop-shadow( 1px 1px 4px #343434 );
+}
+
+.links line.backdrop,
+.topics rect.backdrop,
+.topics rect.hidden {
+    opacity: .2;
+}
+
+.links line {
+    stroke: #444;
+    stroke-width: 2;
+}
+
+.topics rect[data-type-uri="dm4.notes.note"] {
+    stroke: #f9e100;
+}
+
+.topics rect[data-type-uri="dm4.contacts.institution"] {
+    stroke: #c10101;
+}
+
+.topics rect[data-type-uri="dm4.contacts.person"] {
+    stroke: #2b2d28;
+}
+
+.topics rect[data-type-uri="dm4.webbrowser.web_resource"] {
+    stroke: #4272c9;
+}
