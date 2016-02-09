@@ -187,6 +187,10 @@ div.show-inline {
     border: 1px solid #c1272d;
 }
 
+.topics rect[data-view-prop-visibility="false"] {
+    display: none;
+}
+
 /** General Semantic UI Overrides **/
 
 .ui.checkbox input {

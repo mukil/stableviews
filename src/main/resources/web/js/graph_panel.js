@@ -137,6 +137,11 @@ define(function(require) {
         // ### operations for old and new elements
         node_sel.exit().remove()  // operations for deleted elements
 
+        // for alternative text rendering approaches see
+        // foreignObject: https://gist.github.com/mbostock/1424037
+        // wrappingLongLabels: http://bl.ocks.org/mbostock/7555321
+        // wordWrapFunction: http://stackoverflow.com/questions/12677878/change-svg-text-to-css-word-wrapping
+        // w. text-breakup: https://www.w3.org/Graphics/SVG/Test/20110816/svg/text-text-03-b.svg
         text_group = vis.append("g").attr("class", "labels")
         text_sel = text_group.selectAll("textArea").data(all_nodes)
         text_sel.enter()
@@ -401,12 +406,20 @@ define(function(require) {
         d3.selectAll("line").classed("backdrop", false)
     }
 
+    function hide_node_labels() {
+        d3.selectAll('g.labels').classed("hide", true)
+    }
+
+    function show_node_labels() {
+        d3.selectAll('g.labels').classed("hide", false)
+    }
+
     function hide_hidden_topics() {
-        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", true)
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hide", true)
     }
 
     function show_hidden_topics() {
-        d3.selectAll('[data-view-prop-visibility=false]').classed("hidden", false)
+        d3.selectAll('[data-view-prop-visibility=false]').classed("hide", false)
     }
 
     function highlight_institutions() {
@@ -466,6 +479,8 @@ define(function(require) {
         show_assocs: show_assocs,
         hide_topics_hidden: hide_hidden_topics,
         show_topics_hidden: show_hidden_topics,
+        hide_node_labels: hide_node_labels,
+        show_node_labels: show_node_labels,
         high_institutions: highlight_institutions,
         high_websites: highlight_web_resources,
         high_files: highlight_files,

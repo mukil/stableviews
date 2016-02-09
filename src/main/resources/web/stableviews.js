@@ -34,6 +34,12 @@ require(['common'], function(common) {
             topic_id = location.hash.split("/")[1].substr(1)
         }
 
+        // --- ### Cookie Visualization / Layout Settings
+
+        var show_hidden_topics  = false
+        var show_associations   = true
+        var show_labels         = true
+
         // --- Initialization Map and Detail Panel ---
 
         graph_panel.init()
@@ -206,6 +212,36 @@ require(['common'], function(common) {
             }, null, false)
         }
 
+        function toggle_hidden_topics() {
+            if (show_hidden_topics) {
+                graph_panel.hide_topics_hidden()
+                show_hidden_topics = false
+            } else {
+                graph_panel.show_topics_hidden()
+                show_hidden_topics = true
+            }
+        }
+
+        function toggle_associations() {
+            if (show_associations) {
+                graph_panel.hide_assocs()
+                show_associations = false
+            } else {
+                graph_panel.show_assocs()
+                show_associations = true
+            }
+        }
+
+         function toggle_labels() {
+            if (show_labels) {
+                graph_panel.hide_node_labels()
+                show_labels = false
+            } else {
+                graph_panel.show_node_labels()
+                show_labels = true
+            }
+        }
+
         // --- Top Level Page Handlers / Utilities ---
 
         function set_document_title(message) {
@@ -240,6 +276,21 @@ require(['common'], function(common) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
                 graph_panel.reset_viewport()
+            })
+            d3.select("#toggle-topics").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
+                toggle_hidden_topics()
+            })
+            d3.select("#toggle-assocs").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
+                toggle_associations()
+            })
+            d3.select("#toggle-labels").on('click', function(e) {
+                d3.event.preventDefault()
+                d3.event.stopPropagation()
+                toggle_labels()
             })
             // Expand Lower Sidebar
             d3.select(".lower.sidebar").on('click', function(e) {

@@ -19,8 +19,7 @@ text {
 }
 
 .links line.backdrop,
-.topics rect.backdrop,
-.topics rect.hidden {
+.topics rect.backdrop {
     opacity: .2;
     z-index: -1;
 }
@@ -45,4 +44,14 @@ text {
 
 .topics rect[data-type-uri="dm4.webbrowser.web_resource"] {
     stroke: #4272c9;
+}
+
+.topics rect[data-view-prop-visibility="false"] {
+    display: inline-block;
+    opacity: .4;
+    z-index: -1;
+}
+
+.topics rect[data-view-prop-visibility="false"].hide {
+    display: none;
 }
