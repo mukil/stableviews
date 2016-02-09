@@ -17,6 +17,9 @@ define(function(require) {
     var node_offset_x   = 20
     var node_offset_y   = 10
     //
+    var text_offset_x   = 40
+    var text_offset_y   = 15
+    //
     var node_circle_w   = 50
     var node_edge_r     = 25
     var node_link_y_off = 12
@@ -89,7 +92,9 @@ define(function(require) {
         node_group = vis.append("g").attr("class", "topics")
         node_sel = node_group.selectAll("rect").data(all_nodes)
         // node_sel.attr() // update to operate on old elements
-        node_sel.enter().append("rect") // operations for new elements
+            // .append("g").attr("class", "topic")
+        node_sel.enter()
+            .append("rect") // operations for new elements
                 .attr("id", function(d) { return d.id })
                 .attr("title", function(d) { return get_label(d.type_uri) + ": " + d.value})
                 .attr("alt", function(d) { return "A circle representing " + d.value})
@@ -99,8 +104,8 @@ define(function(require) {
                 // ### make unique .attr("tabindex", 100)
                 .attr("width", node_circle_w).attr("height", node_circle_w)
                 .attr("rx", node_edge_r).attr("ry", node_edge_r)
-                .attr("x", function(d) { return d.view_props['dm4.topicmaps.x'] - node_offset_x })
-                .attr("y", function(d) { return d.view_props['dm4.topicmaps.y'] - node_offset_y })
+                .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - node_offset_x })
+                .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - node_offset_y })
                 .on("dblclick", function(d) {
                     // ### sourceEvent may be undefined
                     d3.event.sourceEvent.stopPropagation()
@@ -132,13 +137,23 @@ define(function(require) {
         // ### operations for old and new elements
         node_sel.exit().remove()  // operations for deleted elements
 
+        text_group = vis.append("g").attr("class", "labels")
+        text_sel = text_group.selectAll("textArea").data(all_nodes)
+        text_sel.enter()
+            .append("text")
+                .attr("id", function(d) { return 'label-' + d.id })
+                .attr("title", function (d) { return d.value })
+                .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - text_offset_x })
+                .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - text_offset_y })
+                .attr("class", function(d) { return (d.view_props['dm4.topicmaps.visibility']) ? '' : 'hide' })
+                .text(function (d) { return d.value })
+        text_sel.exit().remove()
         setup_zoom_and_drag_control()
 
         // get and set initial topicmap translation
         var translation = map_topic.info.childs["dm4.topicmaps.state"].childs["dm4.topicmaps.translation"]
         var translationX = parseInt(translation.childs["dm4.topicmaps.translation_x"].value)
         var translationY = parseInt(translation.childs["dm4.topicmaps.translation_y"].value)
-        console.log("Initial Translation (State)", translationX, translationY)
         graph_translation_keep_zoom([translationX, translationY])
 
         function drag_node_start(d) {
@@ -158,6 +173,11 @@ define(function(require) {
         }
 
         function move(dx, dy) { // ### maybe adapt to new selection mechanics
+            // label data join
+            text_sel.filter(function(d) { return d.selected })
+                .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - text_offset_x })
+                .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - text_offset_y })
+            // topics data join
             node_sel.filter(function(d) { return d.selected })
                 .attr("x", function(d) {
                     var new_val = parseInt(d.view_props['dm4.topicmaps.x']) + dx
@@ -169,6 +189,7 @@ define(function(require) {
                     d.view_props['dm4.topicmaps.y'] = new_val
                     return new_val - node_offset_y
                 })
+            // association data join
             link_sel.filter(function(d) { return d.source.selected })
                 .attr("x1", function(d) { return d.source.view_props['dm4.topicmaps.x'] })
                 .attr("y1", function(d) { return d.source.view_props['dm4.topicmaps.y'] + node_link_y_off })

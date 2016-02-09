@@ -1,14 +1,13 @@
 
-.topics text {
-    text-transform: uppercase;
-    padding-left: 7px; padding-right: 7px;
-    padding: 5px;
+text {
+    z-index: 3001;
 }
 
 .topics rect {
     fill: #fff;
     stroke: #40B0E2;
     stroke-width: 2;
+    z-index: 2001;
 }
 
 .topics rect.selected {
@@ -16,17 +15,20 @@
     stroke-width: 4;
     -webkit-filter: drop-shadow( 1px 1px 4px #343434 );
             filter: drop-shadow( 1px 1px 4px #343434 );
+    z-index: 4001;
 }
 
 .links line.backdrop,
 .topics rect.backdrop,
 .topics rect.hidden {
     opacity: .2;
+    z-index: -1;
 }
 
 .links line {
-    stroke: #444;
+    stroke: #c6c6c6;
     stroke-width: 2;
+    z-index: 1001;
 }
 
 .topics rect[data-type-uri="dm4.notes.note"] {
