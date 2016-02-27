@@ -1,9 +1,23 @@
 
-### Codename: stableviews ui
+### Stableviews UI
 
-An alternate, command-line controllable presentation layer for _Topicmaps_ authored with DeepaMehta 4.
+An alternate presentation layer for _Topicmaps_ authored in DeepaMehta 4.
 
-Current features include:
+#### Getting Started
+
+ - Install [DeepaMehta **4.7**](http://github.com/jri/deepamehta)
+ - Install [dm47-littlehelpers-0.1-SNAPSHOT](http://github.com/mukil/dm4-littlehelpers)
+ - Install [dm47-stableviews-0.3-SNAPSHOT](http://github.com/mukil/stableviews)
+
+You can find the most recent builds of DeepaMehta **4.7** and the two required modules/plugins on [http://download.deepamehta.de](http://download.deepamehta.de).
+
+After working in and having created a DeepaMehta 4 Topicmap you can use the ``View in stableviews'' button in the lower left corner of the Webclient. Clicking on it you'll open the current map in the stableviews ui.
+
+#### Development Roadmap (Initially, Partially Outdated)
+
+To become an alternate, command-line controllable presentation layer...
+
+Current & former features include:
  * Load a Topicmap via `open <name>`
  * Free placement and panning (allowing to interact with the loaded topic map without persistence)
  * Multiple selection of topics using the `SHIFT` key with (offering event handling for the controller)
@@ -89,6 +103,10 @@ I am curious and still want to get to know more about the limits of visual sense
 
 Everyone is welcome!
 
-#####################
-Berlin, November 2014
+Cheers!
+
+-----------------------------------------
+Author: Malte Reißig<br/>
+Berlin <-> Leipzig, 2014-2016
+
 
