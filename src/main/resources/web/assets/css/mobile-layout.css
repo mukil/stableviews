@@ -2,7 +2,7 @@
 /** General Styles */
 
 .loader {
-    font-size: 4em;
+    font-size: 1em;
     color: #444;
     margin-top: 40px;
     z-index: 2001;
@@ -10,6 +10,7 @@
     width: 100%;
 }
 
+.loader.active.dimmer.hide,
 .details,
 .hide {
     display: none;

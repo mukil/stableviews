@@ -8,14 +8,13 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
-        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/ionicons.min.css"> <!-- Loader Icon -->
-
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/mobile-layout.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/custom-graph.css">
 
         <!-- Semantic UI Assets -->
-        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/search.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/sidebar.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/search.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/button.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/input.min.css">
@@ -71,7 +70,11 @@
 
             <div id="map-panel" tabindex="1">
 
-                <div class="loader ion-load-c"></div>
+                <div class="loader ui inverted active dimmer">
+                    <div class="ui indeterminate text loader">
+                        Loading Topicmap
+                    </div>
+                </div>
 
                 <div class="ui basic vertical main">
                     <button id="menu-button" class="ui basic tiny icon button">
