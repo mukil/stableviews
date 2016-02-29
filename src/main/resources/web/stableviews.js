@@ -553,10 +553,11 @@ require(['common'], function(common) {
         function load_selected_topicmap() {
             // prepare/cleanup
             graph_panel.clear()
+            d3.select(".loader").classed("hide", false)
             d3.select("#map-commands").attr("style", "display: none;")
             // clear search results ?
-            search_results = []
-            render_search_results()
+            // search_results = []
+            // render_search_results()
             // load new topicmap
             controller.loadTopicmap(selected_topicmap.id, function(result) {
                 selected_topicmap = result
