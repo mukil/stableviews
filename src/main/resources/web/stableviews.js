@@ -331,22 +331,21 @@ require(['common'], function(common) {
                 if (graph_panel) graph_panel.resize()
             })
             // initiate "display options" menu // our only jQuery dependency
-            $('.ui.tertiary ').dropdown()
-            // initiate sidebar handler // no need for jQuery here
-            var $menubtn = $('#menu-button')
-                $menubtn.click(function(e) {
-                    $('.main.sidebar').addClass('visible')
-                    if ($('.main.sidebar').hasClass('visible')) {
-                        console.log("Sidebar is Visible")
-                    } else {
-                        console.log("Sidebar is NOT Visible")
-                    }
-                })
-            $('#close-menu').click(function(e) {
-                $('.main.sidebar').removeClass('visible')
+            // $('.ui.tertiary ').dropdown()
+            // initiate sidebar handler // ### no need for jQuery here
+            d3.select('#menu-button').on('click', function() {
+                d3.select('.main.sidebar').classed('visible', true)
+                if (d3.select('.main.sidebar').classed('visible')) {
+                    console.log("Sidebar is Visible")
+                } else {
+                    console.log("Sidebar is NOT Visible")
+                }
+            })
+            d3.select('#close-menu').on('click', function() {
+                d3.select('.main.sidebar').classed('visible', false)
             })
             // Topicmap Selection Menu
-            d3.select('.main.menu .ui.topicmaps.dropdown').on('change', function() {
+            d3.select('.main.menu .ui.topicmaps').on('change', function() {
                 selected_topicmap.id = d3.event.target.value // fixme: should use setters/getters
                 console.log("Load Topicmap Selection", selected_topicmap.id)
                 load_selected_topicmap()
@@ -361,12 +360,14 @@ require(['common'], function(common) {
             graph_panel.listen_to('selection', function(e) {
                 // if (common.debug) console.log(" > selection ", e.detail)
                 select_topic(e.detail.id)
+                multi_selection = undefined
+                render_selection_commands()
             })
 
             graph_panel.listen_to('multi_selection', function(e) {
                 // update client side model (as a param for commands)
                 multi_selection = e.detail
-                if (common.debug) console.log("Multi Select", e.detail)
+                console.log("Multi Select", e.detail)
                 render_selection_commands()
             })
 
@@ -377,12 +378,8 @@ require(['common'], function(common) {
 
             graph_panel.listen_to('rendered_topicmap', function(e) {
                 // calculate bounds (out of interest)
-                var bounds = graph_panel.get_topicmap_bounds()
-                var viewport = graph_panel.get_viewport_size()
-                if (common.debug) {
-                    console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
-                        "Topicmap ID", selected_topicmap.info.id)
-                }
+                // var bounds = graph_panel.get_topicmap_bounds()
+                // var viewport = graph_panel.get_viewport_size()
                 // clear search results
                 search_results = []
                 render_search_results()
@@ -412,8 +409,6 @@ require(['common'], function(common) {
                 // render page title
                 set_page_title(topic.value)
                 set_page_class(topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
-                // render topic type commands
-                render_topic_commands()
 
                 // render "Note" details
                 if (selected_topic.type_uri === "dm4.notes.note") {
@@ -430,6 +425,7 @@ require(['common'], function(common) {
                 } else {
                     set_page_details('')
                 }
+                render_topic_commands()
             })
         }
 
@@ -438,15 +434,17 @@ require(['common'], function(common) {
 
         function render_selection_commands() {
             d3.selectAll(".selection-commands ul li").remove()
-            d3.select(".selection-commands").classed('hide', false)
-            d3.select(".selection-commands ul").append("li").append("a")
+            if (multi_selection) {
+                d3.select(".selection-commands").classed('hide', false)
+                d3.select(".selection-commands ul").append("li").append("a")
                     .attr("title", "Associate selection").text('A').on('click', function() {
                         console.log("Associate current items in selection..", multi_selection)
                     })
-            d3.select(".selection-commands ul").append("li").append("a")
+                d3.select(".selection-commands ul").append("li").append("a")
                     .attr("title", "Hide selection").text('H').on('click', function() {
                         console.log("Hide current items in selection..", multi_selection)
                     })
+            }
         }
 
         function render_topic_commands() {
@@ -476,7 +474,7 @@ require(['common'], function(common) {
             if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.url')) {
                 var url = selected_topic.childs['dm4.webbrowser.url'].value
                 if (url && url != "") {
-                    d3.select(".toolbar ul").append("li").append("a").attr("title", "Open URL " + url)
+                    d3.select(".topic-commands ul").append("li").append("a").attr("title", "Open URL " + url)
                         .attr("href", url).text("Open Webpage")
                 }
             }
@@ -485,31 +483,14 @@ require(['common'], function(common) {
         // ### use d3 data (binding) here
         function render_topicmap_menu() {
             //
-            var selectMenu = d3.select('.ui.topicmaps.dropdown')
+            var selectMenu = d3.select('.ui.topicmaps')
             // var items = []
             console.log("Topicmap Selection Menu", selectMenu)
             for (var t in topicmaps) {
                 // items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
                 selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
             }
-            $('.ui.main.menu .ui.topicmaps').dropdown({
-                "fullTextSearch": true
-            })
-            /**
-                apiSettings: {
-                    url: '/core/topic/by_type/dm4.topicmaps.topicmap?include_childs=true'
-                }, onResponse: function(response) {
-                    console.log("Topicmap Selection API Response", response)
-                    var items = []
-                    for (var t in topicmaps) {
-                        items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
-                    }
-                    return {
-                        "success": true,
-                        "results": items
-                    }
-                }
-            }) **/
+            /** $('.ui.main.menu .ui.topicmaps').dropdown({ "fullTextSearch": true }) */
         }
 
         // --- TODO: Login View ---

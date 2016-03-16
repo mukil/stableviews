@@ -112,6 +112,10 @@ body {
     background: #e8e8e8;
 }
 
+select.topicmaps {
+    padding: 5px;
+}
+
 footer {
     padding: 0px;
     min-height: 200px;

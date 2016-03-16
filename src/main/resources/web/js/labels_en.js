@@ -23,13 +23,15 @@ var label = {
     "dm4.workspaces.workspace" : "Workspace",
     "dm4.tags.tag": "Schlagwort",
     "dm4.accesscontrol.username": "Username",
+    "de.mikromedia.page": "Webpage",
+    "ka2.geo_object": "Geo Objekt",
     "Reset": "Zur&uuml;cksetzen",
     "Open Webpage": "Webseite &ouml;ffnen"
 }
 
 function get_label(type_uri) {
     if (!label.hasOwnProperty(type_uri)) {
-        console.warn("No LABEL translation available, yet.", type_uri)
+        console.log("No LABEL translation available, yet.", type_uri)
     }
     return label[type_uri]
 }
