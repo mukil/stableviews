@@ -184,7 +184,7 @@ require(['common'], function(common) {
                             })
                         }
                     }
-                    if (common.debug) console.log("Text Input Suggestions", search_results)
+                    // if (common.debug) console.log("Text Input Suggestions", search_results)
                     /** controller.searchTopics(idx.trim(), function (items) {
                         console.log("> append fulltext search results for " + idx +" are ", search_results)
                         search_results.push(items)
@@ -220,6 +220,24 @@ require(['common'], function(common) {
                 graph_panel.show_topics_hidden()
                 show_hidden_topics = true
             }
+        }
+
+        function set_page_title(title) {
+            // d3.select('title').text(title)
+            // d3.select('.container .text').transition().style('height', String("100%")).duration(1000)
+            d3.select('.title').text(title)
+        }
+
+        function set_page_details(text) {
+            if (text === "") {
+                d3.select('.details').classed('show', false)
+                return
+            }
+            d3.select('.details').classed('show', true).html(text)
+        }
+
+        function set_page_class(type) {
+            d3.select('.container').attr('class', 'container ' + type)
         }
 
         function toggle_associations() {
@@ -294,9 +312,10 @@ require(['common'], function(common) {
             })
             // Expand Lower Sidebar
             d3.select(".lower.sidebar").on('click', function(e) {
-                console.log("filterbar clicked", d3.event.currentTarget, d3.event.target)
+                // console.log("filterbar clicked", d3.event.currentTarget, d3.event.target)
                 if (d3.event.currentTarget.className.includes("lower") &&
-                    !d3.event.target.nodeName.toLowerCase().includes("input")) {
+                    !d3.event.target.nodeName.toLowerCase().includes("input") &&
+                    !d3.event.target.nodeName.toLowerCase().includes("a")) {
                     d3.select(".lower.sidebar").classed('expanded', true)
                 }
             })
@@ -328,7 +347,7 @@ require(['common'], function(common) {
             })
             // Topicmap Selection Menu
             d3.select('.main.menu .ui.topicmaps.dropdown').on('change', function() {
-                selected_topicmap.id = d3.event.target.value
+                selected_topicmap.id = d3.event.target.value // fixme: should use setters/getters
                 console.log("Load Topicmap Selection", selected_topicmap.id)
                 load_selected_topicmap()
             })
@@ -348,6 +367,7 @@ require(['common'], function(common) {
                 // update client side model (as a param for commands)
                 multi_selection = e.detail
                 if (common.debug) console.log("Multi Select", e.detail)
+                render_selection_commands()
             })
 
             graph_panel.listen_to('topicmap_zoomed', function(e) {
@@ -359,10 +379,16 @@ require(['common'], function(common) {
                 // calculate bounds (out of interest)
                 var bounds = graph_panel.get_topicmap_bounds()
                 var viewport = graph_panel.get_viewport_size()
-                if (common.debug) console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
-                    "Topicmap ID", selected_topicmap.info.id)
+                if (common.debug) {
+                    console.log("Rendered Topicmap Bounds", bounds, "Viewport Bounds", viewport,
+                        "Topicmap ID", selected_topicmap.info.id)
+                }
+                // clear search results
+                search_results = []
+                render_search_results()
                 // set window title
                 set_document_title(selected_topicmap.info.value)
+                set_page_title(selected_topicmap.info.value)
                 // ### hide loader dummy
                 d3.select(".loader").classed("hide", true)
                 d3.select("#map-commands").attr("style", "display: block;")
@@ -384,25 +410,25 @@ require(['common'], function(common) {
                 // ###
                 graph_panel.highlight_topic(selected_topic.id)
                 // render page title
-                graph_panel.set_title(topic.value)
-                graph_panel.set_page_type(
-                        topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
+                set_page_title(topic.value)
+                set_page_class(topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
                 // render topic type commands
                 render_topic_commands()
+
                 // render "Note" details
                 if (selected_topic.type_uri === "dm4.notes.note") {
-                    graph_panel.set_description(selected_topic.childs['dm4.notes.text'].value)
+                    set_page_details(selected_topic.childs['dm4.notes.text'].value)
                 } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
                     if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.web_resource_description')) {
-                        graph_panel.set_description(selected_topic.childs['dm4.webbrowser.web_resource_description'].value)}
+                        set_page_details(selected_topic.childs['dm4.webbrowser.web_resource_description'].value)}
                     }
                 else if (selected_topic.type_uri === "dm4.contacts.person" ||
                          selected_topic.type_uri === "dm4.contacts.institution") {
                     if (selected_topic.childs.hasOwnProperty('dm4.contacts.notes')) {
-                        graph_panel.set_description(selected_topic.childs['dm4.contacts.notes'].value)
+                        set_page_details(selected_topic.childs['dm4.contacts.notes'].value)
                     }
                 } else {
-                    graph_panel.set_description('')
+                    set_page_details('')
                 }
             })
         }
@@ -410,11 +436,23 @@ require(['common'], function(common) {
 
         // --- XYZ Renderer: Show Commands (of selected_topic) in Toolbar ---
 
-        /** Toolbar is currently defused .toolbar div does not exist **/
+        function render_selection_commands() {
+            d3.selectAll(".selection-commands ul li").remove()
+            d3.select(".selection-commands").classed('hide', false)
+            d3.select(".selection-commands ul").append("li").append("a")
+                    .attr("title", "Associate selection").text('A').on('click', function() {
+                        console.log("Associate current items in selection..", multi_selection)
+                    })
+            d3.select(".selection-commands ul").append("li").append("a")
+                    .attr("title", "Hide selection").text('H').on('click', function() {
+                        console.log("Hide current items in selection..", multi_selection)
+                    })
+        }
+
         function render_topic_commands() {
 
-            d3.selectAll(".toolbar ul li").remove()
-            d3.select(".toolbar").classed('hide', false)
+            d3.selectAll(".topic-commands ul li").remove()
+            d3.select(".topic-commands").classed('hide', false)
 
             if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {    // -- Web Resource Commands
                 render_webbrowser_url_child(selected_topic)
@@ -422,24 +460,24 @@ require(['common'], function(common) {
                 var filepath = selected_topic.childs["dm4.files.path"].value
                 var file_title = selected_topic.childs["dm4.files.media_type"].value
                     + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
-                d3.select(".toolbar ul").append("li").append("a").attr("title", file_title)
-                    .attr("href", "/filerepo/" + filepath).text("Get File")
+                d3.select(".topic-commands ul").append("li").append("a").attr("title", file_title)
+                    .attr("href", "/filerepo/" + filepath).text("Access File")
             } else if (selected_topic.type_uri === "dm4.contacts.institution" ||
                        selected_topic.type_uri === "dm4.contacts.person") {     // --- Contact Topic Commands
                 render_webbrowser_url_child(selected_topic)
             } else {
-                d3.select(".toolbar").classed('hide', true)
+                d3.select(".topic-commands").classed('hide', true)
             }
 
         }
 
         function render_webbrowser_url_child(selected_topic) {
-            // check if a proper value is set
+            // if a webbrowser.url value is set, append a "link" button into the toolbar
             if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.url')) {
                 var url = selected_topic.childs['dm4.webbrowser.url'].value
                 if (url && url != "") {
                     d3.select(".toolbar ul").append("li").append("a").attr("title", "Open URL " + url)
-                        .attr("href", url).text("Visit Website")
+                        .attr("href", url).text("Open Webpage")
                 }
             }
         }
@@ -537,13 +575,13 @@ require(['common'], function(common) {
             // show/hide search results area
             if (search_results.length === 0) {
                 if (selected_topic) { // ## may not be set, selected_topicmap could be set here then
-                    graph_panel.set_title(selected_topic.value)
+                    set_page_title(selected_topic.value)
                 } else {
-                    graph_panel.set_title(selected_topicmap.info.value)
+                    set_page_title(selected_topicmap.info.value)
                 }
                 d3.select('.search-results').classed("hide", true)
             } else {
-                graph_panel.set_title('Search results')
+                set_page_title('Search results')
                 d3.select('.search-results').classed("hide", false)
             }
         }
@@ -555,9 +593,6 @@ require(['common'], function(common) {
             graph_panel.clear()
             d3.select(".loader").classed("hide", false)
             d3.select("#map-commands").attr("style", "display: none;")
-            // clear search results ?
-            // search_results = []
-            // render_search_results()
             // load new topicmap
             controller.loadTopicmap(selected_topicmap.id, function(result) {
                 selected_topicmap = result

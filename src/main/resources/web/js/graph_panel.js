@@ -205,26 +205,6 @@ define(function(require) {
 
     }
 
-    // --- Graph Page Helpers
-
-    function set_page_title(title) {
-        // d3.select('title').text(title)
-        // d3.select('.container .text').transition().style('height', String("100%")).duration(1000)
-        d3.select('.title').text(title)
-    }
-
-    function set_page_description(text) {
-        if (text === "") {
-            d3.select('.details').classed('show', false)
-            return
-        }
-        d3.select('.details').classed('show', true).html(text)
-    }
-
-    function set_page_class(type) {
-        d3.select('.container').attr('class', 'container ' + type)
-    }
-
     function show_topicmap(topicmap) {
         if (!svg_panel) {
             init_panel()
@@ -234,7 +214,6 @@ define(function(require) {
                 map_topic = topicmap
                 all_nodes = topicmap.topics
                 all_edges = topicmap.assocs
-                set_page_title(map_topic.info.value)
                 // ### view_state = "topicmap_show"
             } else {
                 throw Error ("Could not load topicmap for ID ", topicmap)
@@ -462,9 +441,6 @@ define(function(require) {
     return {
         init: init_panel,
         show_topicmap: show_topicmap,
-        set_title: set_page_title,
-        set_description: set_page_description,
-        set_page_type: set_page_class,
         highlight_topic: pop_visual_by_topic_id,
         get_topicmap_bounds: get_topicmap_bounds,
         get_viewport_size: get_viewport_size,

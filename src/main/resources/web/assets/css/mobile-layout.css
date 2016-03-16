@@ -142,32 +142,33 @@ footer {
 
 /** Graph Panel Styles **/
 
-.toolbar {
-    margin-left: 7%;
-    margin-right: 7%;
-    padding-left: 10px;
-    padding-right: 10px;
-}
-
-.toolbar li {
+.selection-commands li,
+.topic-commands li {
     list-style-type: none;
     display: inline-block;
 }
 
-.toolbar li a {
+.selection-commands li a,
+.topic-commands li a {
     color: #383838;
     text-decoration: none;
     padding: 5px;
     padding-left: 10px; padding-right: 10px;
-}
-
-.toolbar li a:hover {
     background-color: #e9e9e9;
+    cursor: pointer;
 }
 
-.toolbar ul {
+.selection-commands li a:hover,
+.topic-commands li a:hover {
+    background-color: #343434;
+    color: #fefefe;
+}
+
+.selection-commands ul,
+.topic-commands ul {
     padding: 0px;
     margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 div.show {

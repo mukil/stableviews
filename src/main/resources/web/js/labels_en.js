@@ -21,12 +21,15 @@ var label = {
     "dm4.webbrowser.url" : "URL",
     "dm4.webbrowser.webpage" : "Webpage",
     "dm4.workspaces.workspace" : "Workspace",
-    "Reset": "Zur&uuml;cksetzen"
+    "dm4.tags.tag": "Schlagwort",
+    "dm4.accesscontrol.username": "Username",
+    "Reset": "Zur&uuml;cksetzen",
+    "Open Webpage": "Webseite &ouml;ffnen"
 }
 
 function get_label(type_uri) {
     if (!label.hasOwnProperty(type_uri)) {
-        console.warn("No label translation available, yet.", type_uri)
+        console.warn("No LABEL translation available, yet.", type_uri)
     }
     return label[type_uri]
 }
