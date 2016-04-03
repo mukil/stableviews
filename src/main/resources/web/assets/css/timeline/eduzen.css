@@ -1,0 +1,82 @@
+
+/** Generic educationZEN Web Design Definition */
+
+body.eduzen {
+    margin: 0px;
+    font-family: "Helvetica Neue", "Arial", "sans-serif";
+}
+
+.eduzen .headline .username {
+    position: absolute;
+    left: 40px;
+    top: 0px;
+    padding-left: 7px;
+    border-top: 1px solid #f1f1f1;
+    color: #a9a9a9;
+    background-color: #f1f1f1;
+    padding-top: 2px;
+}
+
+.eduzen .headline .username:hover {
+    border-top: 1px solid #FFC700;
+
+}
+
+.eduzen .headline {
+    z-index: 100;
+    width: 100%;
+    min-height: 40px;
+   /**  border-bottom: 1px solid #FFC700; **/
+    position: fixed;
+    top: 0px; left: 0px;
+    background-color: #fff;
+    font-size: 12px;
+}
+
+.eduzen #menu .pages {
+    position: fixed;
+    right: 40px;
+}
+
+.eduzen #menu .pages a {
+    margin-right: 10px;
+    display: inline-block;
+    padding: 7px;
+    border: 1px solid #f1f1f1;
+    border-top: 1px solid #fff;
+    padding-top: 9px;
+    text-decoration: none;
+    background-color: #fff;
+}
+
+.eduzen #menu .pages a:hover {
+    text-decoration: underline;
+}
+
+.eduzen .eduzen-logo {
+    float: right;
+    position: absolute;
+    top: 1px; right: 40px;
+    z-index: 1001;
+}
+
+.eduzen a {
+    color: #0782C1;
+    text-decoration: none;
+}
+
+.eduzen .data-container {
+    display: none;
+    position: fixed;
+    top: 0px; left: 0px;
+    width: 90%;
+    height: 100%;
+    opacity: .8;
+    background-color: #fff;
+}
+
+.eduzen .data-container img.spinner {
+    position: fixed;
+    top: 40%;
+    left: 45%;
+}

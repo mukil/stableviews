@@ -1,0 +1,247 @@
+
+/** ----------------------------------------- Upper Timeline Info Styles -- */
+
+.main-timeline .headline {
+    color: #a9a9a9; /** #3E6D8E; **/
+}
+
+.main-timeline .headline .selected-item {
+    font-size: 1.2em;
+    margin-left: 10px;
+    margin-top: 10px;
+}
+
+.main-timeline .headline .selected-item span {
+    color: #0782C1;
+    margin-left: 10px;
+}
+
+.main-timeline .headline .selected-item a.view-button {
+    border: 1px solid #f1f1f1;
+    border-top: 1px solid #fff;
+    padding: 7px;
+    margin-left: 10px;
+}
+
+.eduzen.main-timeline {
+    padding: 40px;
+    font-size: 1em;
+}
+
+.main-timeline .timeline-info {
+    display: none;
+    padding: 10px;
+    margin-left: 30px;
+    font-size: 1.2em;
+}
+
+.main-timeline .timeline-info span.state {
+    color: #0782C1;
+}
+
+.eduzen h3 {
+    margin-bottom: 10px;
+}
+
+.eduzen .item-list-header .counter {
+    font-size: .9em;
+}
+
+.eduzen .item-list-header {
+    position: fixed;
+    top: -10px;
+    left: 40px;
+    z-index: 1002;
+}
+
+.eduzen ul.note-list {
+    margin-left: 0px;
+    padding-left: 0px;
+    padding-right: 200px;
+}
+
+.eduzen ul.note-list li.item {
+    list-style-type: none;
+    color: #a9a9a9;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+.eduzen li.item .note-container {
+    color: #a9a9a9;
+    cursor: pointer;
+}
+
+.eduzen li.item .username,
+.eduzen li.item .timestamp {
+    font-size: .9em;
+}
+
+.eduzen li.item .note-container img {
+    margin-right: 10px;
+    float: left;
+}
+
+.eduzen li.item .note-container img.type-icon {
+    height: 20px;
+    vertical-align: bottom;
+    /** padding-right: 10px; **/
+}
+
+.eduzen li.item .name {
+    color: #0782C1;
+}
+
+/** ------------------------------------------------ Topic Inline Details -- */
+
+.eduzen li.item .body {
+    margin-right: 10px;
+    margin-top: 10px;
+    max-width: 100%;
+    min-height: 30px;
+    display: none;
+}
+
+.eduzen li.item .body img {
+    float: none;
+    margin-top: 5px;
+    max-width: 100%;
+    height: auto;
+}
+
+.eduzen li.item a.outlink,
+.eduzen li.item .body a.command {
+    padding: 5px;
+    padding-left: 7px;
+    padding-right: 7px;
+    background: #f1f1f1;
+    margin-right: 10px;
+}
+
+.eduzen li.item .body a:hover {
+    text-decoration: underline;
+}
+
+.eduzen li.item a.outlink:active,
+.eduzen li.item .body a.command:active {
+    color: #fff;
+}
+
+.eduzen li.item a.outlink:hover,
+.eduzen li.item .body a.command:hover {
+    text-decoration: none;
+    background-color: #0782C1;
+    color: #eaeaea;
+}
+
+.eduzen li.item .body .label {
+    margin-right: 10px;
+}
+
+.eduzen li.item .body .tag {
+    padding-right: 10px;
+}
+
+/** .eduzen li.item .note-container.moodle-item img.type-icon {
+    border-right: 3px solid #C50E1F;
+}
+
+.eduzen li.item .note-container.course img.type-icon {
+    border-right: 3px solid #ffffff;
+}
+
+.eduzen li.item .note-container.file img.type-icon {
+    border-right: 3px solid #91b6e2;
+}
+
+.eduzen li.item .note-container.tag img.type-icon {
+    border-right: 3px solid #0782c1;
+}
+
+.eduzen li.item .note-container.notiz img.type-icon {
+    border-right: 3px solid #a9a9a9;
+} **/
+
+
+/** ---------------------------------------------- Time Range Axis Styles -- */
+
+.eduzen .time-axis-header {
+    position: fixed;
+    top: -10px;
+    right: 100px;
+    z-index: 1002;
+}
+
+.eduzen .time-axis {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    height: 95%;
+    overflow-y: scroll;
+}
+
+.eduzen .time-axis .axis {
+    padding-top: 5px;
+}
+
+.eduzen .time-axis .loader {
+    width: 250px;
+    height: 100%;
+    opacity: .8;
+    background-color: #fff;
+}
+
+
+.eduzen .time-axis .axis text {
+    font-family: sans-serif;
+    font-size: .9em;
+    color: #0782C1;
+}
+
+.eduzen .time-axis .axis path,
+.eduzen .time-axis .axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+/** .eduzen .time-axis .axis .dot .label {
+    display: none;
+}
+
+.eduzen .time-axis .axis .dot:hover .label {
+    display: inline-block;
+} **/
+
+/** New scrollbar style for the time-axis */
+
+.eduzen .time-axis::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+}
+
+.eduzen .time-axis::-webkit-scrollbar-button:start:decrement,
+.eduzen .time-axis::-webkit-scrollbar-button:end:increment {
+    display: block;
+    height: 0;
+    background-color: transparent;
+}
+
+.eduzen .time-axis::-webkit-scrollbar-track-piece {
+    background-color: #f1f1f1;
+    -webkit-border-radius: 0;
+    -webkit-border-bottom-right-radius: 8px;
+    -webkit-border-bottom-left-radius: 8px;
+}
+
+.eduzen .time-axis::-webkit-scrollbar-thumb:vertical {
+    height: 50px;
+    background-color: #a9a9a9;
+    -webkit-border-radius: 8px;
+}
+
+.eduzen .time-axis::-webkit-scrollbar-thumb:horizontal {
+    width: 50px;
+    background-color: #a9a9a9;
+    -webkit-border-radius: 8px;
+}

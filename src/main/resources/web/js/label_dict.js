@@ -4,7 +4,6 @@
  * and open the template in the editor.
  */
 
-
 var label = {
     "dm4.contacts.person" : "Person",
     "dm4.contacts.institution" : "Institution",
@@ -26,7 +25,16 @@ var label = {
     "de.mikromedia.page": "Webpage",
     "ka2.geo_object": "Geo Objekt",
     "Reset": "Zur&uuml;cksetzen",
-    "Open Webpage": "Webseite &ouml;ffnen"
+    "Open Webpage": "Webseite &ouml;ffnen",
+    "modified": "bearbeitet",
+    "created": "erstellt"
+}
+
+var monthNames = [ "Januar", "Februar", "März", "April", "Mai", "Juni",
+    "July", "August", "September", "Oktober", "November", "Dezember" ]
+
+function get_month_name(idx) {
+    return monthNames[idx]
 }
 
 function get_label(type_uri) {

@@ -3,7 +3,7 @@ define(function(require) {
 
     require('stableviews_ctrl')
     require('common')
-    require('labels_en')
+    require('label_dict')
 
     var view_state      = ""
     var svg_panel       = undefined

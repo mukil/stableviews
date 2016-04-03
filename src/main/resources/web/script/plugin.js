@@ -8,12 +8,21 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
         show_stableviews_link(topicmaps.get_topicmap().get_id())
     })
 
+    // adding "Timeline" link to help menu
+    dm4c.toolbar.special_menu.add_item({
+        label: "Timeline", handler: go_to_timeline_view
+    })
+
     function show_stableviews_link(map_id) {
         var $link = jQuery('<a href="#stableviews" id="stableviews-link">View with stableviews</a>')
         jQuery('#topicmap-panel').append($link)
         $link.click(function(e) {
             window.location.assign('/de.mikromedia.stableviews/#' + topicmaps.get_topicmap().get_id())
         })
+    }
+
+    function go_to_timeline_view() {
+            window.location.assign("/de.mikromedia.stableviews/timeline.html")
     }
 
 })

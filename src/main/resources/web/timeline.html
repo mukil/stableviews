@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Timeline View - DeepaMehta 4.7</title>
+        <script
+            data-main="/de.mikromedia.stableviews/js/timeline/require_main"
+            src="/de.mikromedia.stableviews/assets/vendor/require.js">
+        </script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Legacy Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/eduzen.css"/>
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/timeline-style.css"/>
+        <!-- Semantic UI Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css">
+    </head>
+    <body class="eduzen main-timeline">
+        <div class="headline">
+
+            <div id="menu">
+                <!-- a class="btn sort" id="most-popular">Sortierung nach Bewertung</a-->
+                <!-- a class="btn" id="new">Neuen Inhalt hinzuf&uuml;gen</a-->
+                <div class="about-login"></div>
+                <div class="pages">
+                    <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">zur&uuml;ck zum Webclient</a>
+                    <a href="//github.com/mukil/stableviews/" id="info" title="Source Code">Github</a>
+                    <a href="/de.mikromedia.stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
+                </div>
+                <span class="username"></span>
+                <div class="subscription-view"></div>
+            </div>
+
+            <!-- ko if: get_selected_item() -->
+                <!-- div class="selected-item">
+                    Selected <span data-bind="text: get_selected_item().value"></span>
+                    <a class="view-button"
+                       data-bind="attr: { href:'/notes/' + get_selected_item().id, title: 'View Details' }">View</a>
+                </div-->
+            <!-- /ko -->
+
+            <div class="timeline-info">
+                <span class="label">Zwischen dem</span>
+                <span class="state from" data-bind="text: get_from_time()"></span>
+                <span class="label">und dem</span>
+                <span class="state to" data-bind="text: get_to_time()"></span>
+                <span class="label">wurden</span>
+                <span class="state items" data-bind="text: get_items().length"></span>
+                <span class="label">Topics</span>
+                <span class="state timestamp-option"></span>.
+                <!-- ko if: get_current_tags().length > 0 -->
+                    <span class="label">Tags</span>
+                    <span class="state tags" data-bind="text: get_current_tags().length"></span>
+                <!-- /ko -->
+            </div>
+
+        </div>
+
+        <div>
+            <ul data-bind="foreach: get_items()" class="note-list">
+                
+                    <!-- List Item of Web Resources -->
+                    <!-- ko if: $data.type_uri === 'dm4.webbrowser.web_resource' -->
+                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                        <div class="note-container">
+                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Notiz Icon" class="type-icon" title="Notiz"/>
+                            <a class="name outlink" data-bind="text: $data.value, attr: { href: $data.childs['dm4.webbrowser.url'].value, title: 'Open Web Resource' } "></a>
+                        </div>
+                        <div class="body"></div>
+                        <br/>
+                        <span data-bind="text: 'Zuletzt bearbeitet am '
+                            + new Date($data.childs['dm4.time.modified'].value)" class="timestamp"></span>
+                    </li>
+                    <!-- /ko -->
+                
+                    <!-- List Item of Everything Else -->
+                    <!-- ko if: $data.type_uri !== 'dm4.webbrowser.web_resource' -->
+                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                        <div class="note-container">
+                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Notiz Icon" class="type-icon" title="Notiz"/>
+                            <span data-bind="text: $data.value" class="name"></span>
+                        </div>
+                        <div class="body"></div>
+                        <br/>
+                        <span data-bind="text: 'Zuletzt bearbeitet am '
+                            + new Date($data.childs['dm4.time.modified'].value)" class="timestamp"></span>
+                    </li>
+                    <!-- /ko -->
+
+            </ul>
+            <div class="data-container">
+                <div class="loader ui inverted active dimmer">
+                    <div class="ui indeterminate text loader">
+                        Loading Timeline
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="time-axis">
+            <div class="loader">
+                <div class="loader ui inverted active dimmer">
+                    <div class="ui indeterminate text loader">
+                        Building<br/>Topic Index
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </body>
+</html>

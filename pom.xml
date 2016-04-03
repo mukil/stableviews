@@ -4,10 +4,10 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <name>DM4 - Stableviews</name>
+    <name>DM4 Stableviews UI</name>
     <groupId>de.mikromedia</groupId>
     <artifactId>dm47-stableviews</artifactId>
-    <version>0.3-SNAPSHOT</version>
+    <version>0.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <parent>
@@ -20,7 +20,7 @@
         <dependency>
             <groupId>org.deepamehta</groupId>
             <artifactId>dm47-littlehelpers</artifactId>
-            <version>0.1-SNAPSHOT</version>
+            <version>0.2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

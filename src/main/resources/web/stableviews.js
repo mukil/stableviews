@@ -2,7 +2,7 @@
 // Load common code that includes config, then load the app logic for the stableviews main page.
 require(['common'], function(common) {
 
-    require(['graph_panel', 'stableviews_ctrl', 'labels_en'], function(graph_panel, controller, en) {
+    require(['graph_panel', 'stableviews_ctrl', 'label_dict'], function(graph_panel, controller, en) {
 
         // --- Stableviews Client Side Model ---
 
