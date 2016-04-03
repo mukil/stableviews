@@ -6,8 +6,8 @@ An alternate presentation layer for _Topicmaps_ authored in DeepaMehta 4.
 #### Getting Started
 
  - Install [DeepaMehta **4.7**](http://github.com/jri/deepamehta)
- - Install [dm47-littlehelpers-0.1-SNAPSHOT](http://github.com/mukil/dm4-littlehelpers)
- - Install [dm47-stableviews-0.3-SNAPSHOT](http://github.com/mukil/stableviews)
+ - Install [dm47-littlehelpers-0.2-SNAPSHOT](http://github.com/mukil/dm4-littlehelpers)
+ - Install [dm47-stableviews-0.4-SNAPSHOT](http://github.com/mukil/stableviews)
 
 You can find the most recent builds of DeepaMehta **4.7** and the two required modules/plugins on [http://download.deepamehta.de](http://download.deepamehta.de).
 
