@@ -381,9 +381,9 @@ require(['common'], function(common) {
             d3.select(window).on('resize', function() {
                 if (graph_panel) graph_panel.resize()
             })
-            // initiate "display options" menu // our only jQuery dependency
-            // $('.ui.tertiary ').dropdown()
-            // initiate sidebar handler // ### no need for jQuery here
+            // initiate "display options" menu
+            $('.ui.tertiary ').dropdown() // jQuery here
+            // initiate sidebar handler
             d3.select('#menu-button').on('click', function() {
                 set_cookie_value(SIDEBAR_COOKIE_NAME, true)
                 d3.select('.main.sidebar').classed('visible', true)
@@ -538,7 +538,7 @@ require(['common'], function(common) {
                 // items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
                 selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
             }
-            /** $('.ui.main.menu .ui.topicmaps').dropdown({ "fullTextSearch": true }) */
+            $('.ui.main.menu .ui.topicmaps').dropdown() // { "fullTextSearch": true }) // jQuery
         }
 
         // --- TODO: Login View ---
