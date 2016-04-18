@@ -3,10 +3,15 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
 
     // --- Model instance variables
 
-    var from_time = ko.observable(undefined)
-    var to_time = ko.observable(undefined)
+    var from_time = 0
+    var to_time = 0
+    var max_from_time = 0
+    var max_to_time = 0
+    var range_plus = 0
+
     var timerange = ko.observableArray([])
     var items = ko.observableArray([])
+
     var selected_item = ko.observable(undefined)
     var current_tags = ko.observableArray([])
     //
@@ -48,29 +53,48 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
     }
 
     return {
-        set_from_time: function (new_from) {
-            from_time(date_format(new_from))
+        format_date: date_format,
+        set_from_time: function(new_from) {
+            from_time = new_from
         },
-        get_from_time: function () {
+        get_from_time: function() {
             return from_time
         },
-        set_to_time: function (new_to) {
-            to_time(date_format(new_to))
+        set_to_time: function(new_to) {
+            to_time = new_to
         },
-        get_to_time: function () {
+        get_to_time: function() {
             return to_time
         },
+        set_max_from_time: function(new_from) {
+            max_from_time = new_from
+        },
+        get_max_from_time: function() {
+            return max_from_time
+        },
+        set_max_to_time: function(new_to) {
+            max_to_time = new_to
+        },
+        get_max_to_time: function() {
+            return max_to_time
+        },
+        set_plus_range: function(new_range) {
+            range_plus = new_range
+        },
+        get_plus_range: function() {
+            return range_plus
+        },
         set_timerange: function (new_range) {
-            timerange = new_range  // observableArray?
+            timerange(new_range)  // observableArray?
         },
-        get_timerange: function () {
-            return timerange
+        get_timerange: function() {
+            return timerange()
         },
-        set_items: function (new_items) {
+        set_items: function(new_items) {
             console.log("Loaded Timeline Topics", new_items)
             items(new_items) // observableArray?
         },
-        get_items: function () {
+        get_items: function() {
             return items
         },
         set_current_tags: function (new_tags) {
@@ -83,6 +107,9 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
             update_selected_item(list_item)
             page_route.render_item_content(list_item)
             return true
+        },
+        toggle_timerange_dialog: function() {
+            page_route.adjust_timerange()
         },
         get_selected_item: selected_item,
         get_timestamp_option: function () {

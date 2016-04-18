@@ -65,6 +65,14 @@ define(['knockout'], function(ko) {
                 view.render_details_in_list(item)
             })
 
+        },
+
+        adjust_timerange: function() {
+
+            require(['modules/timeline'], function (view) { // circular dependency
+                view.toggle_timerange_settings()
+            })
+
         }
 
     }

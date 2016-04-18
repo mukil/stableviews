@@ -436,7 +436,7 @@ define(function(require) {
         // var el = d3.select("#" + id).classed('show', true)
     }
 
-    // --- Puiblic Graph Panel API ---
+    // --- Public Graph Panel API ---
 
     return {
         init: init_panel,

@@ -16,8 +16,11 @@ define(['modules/model', 'd3'], function(model, d3) {
                     }
             },
 
-            load_timerange_index: function (since, to, callback) {
+            load_timerange_index: function (callback) {
 
+                var since = model.get_max_from_time()
+                var to = model.get_max_to_time()
+                console.log("Querying Topic Index (Right Side) Since", new Date(since), "To", new Date(to))
                 // var now = new Date().getTime()
                 // var since = Date.parse("2015")
                 // update gui
@@ -31,7 +34,7 @@ define(['modules/model', 'd3'], function(model, d3) {
                         // update gui
                         d3.select('.data-container').style({'display': 'none'})
                         // callback
-                        if (typeof callback !== "undefined") callback(since, to)
+                        if (typeof callback !== "undefined") callback(since, to) // fixme
                     })
                     xhr.on('error'), function (error) {
                         console.log("d3.error:: " + error)
@@ -39,11 +42,12 @@ define(['modules/model', 'd3'], function(model, d3) {
                     }
             },
 
-            load_topics_in_range: function (since, to, callback) {
+            load_topics_in_range: function (callback) {
 
                 // update model
-                model.set_from_time(since)
-                model.set_to_time(to)
+                var since = model.get_from_time(since)
+                var to = model.get_to_time(to)
+                console.log("Querying Timeline (Left Side) Since", new Date(since), "To", new Date(to))
                 // update gui
                 d3.select('.data-container').style({'display': 'inline-block'})
                 // issue request

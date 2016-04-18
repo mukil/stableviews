@@ -2,23 +2,122 @@
 define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
     // setup default values for our time range queries
-    var TIMESTAMP_NOW   = new Date()
-    var DEFAULT_BACK_TO = TIMESTAMP_NOW.getTime() - (2 * 604800000) // - (~14 Days)
-    var MAX_BACK_TO     = TIMESTAMP_NOW.getTime() - (12 * 604800000) // ~12weeks, ~26weeks / ~54 Weeks
+    var a_day = 86400000
+    var three_days = (3 * a_day)
+    var a_week = (7 * a_day)
+    var fourteen_days = (2 * a_week) // - (~14 Days)
+    var six_weeks = (6 * a_week) // - (~12 Weeks)
+    var twelve_weeks = (12 * a_week) // - (~12 Weeks)
 
-    return {
+    var TIMESTAMP_NOW   = new Date()
+    var DEFAULT_BACK_TO = TIMESTAMP_NOW.getTime() - fourteen_days
+    var MAX_BACK_TO     = TIMESTAMP_NOW.getTime() - twelve_weeks
+    // view model
+    var model = restc.get_clientside_model()
+
+    var tl = {
 
         init: function() {
+            // 0) initialize timestamps
+            model.set_plus_range(twelve_weeks)
+            model.set_from_time(DEFAULT_BACK_TO)
+            model.set_to_time(TIMESTAMP_NOW.getTime())
+            model.set_max_from_time(MAX_BACK_TO)
+            model.set_max_to_time(TIMESTAMP_NOW.getTime())
             // 1) fire query to initialize a defualt timeline, showing contents of the last two eeks
-            restc.load_topics_in_range(DEFAULT_BACK_TO, TIMESTAMP_NOW.getTime()) // to, from
-            console.log("Querying Timeline (Left Side) Since", new Date(DEFAULT_BACK_TO))
+            restc.load_topics_in_range() // rendering is done through knockout observing the model
             // 2) fire query to initialize the query timeline, showing an index of contents of the last 12 weeks
-            restc.load_timerange_index(MAX_BACK_TO, TIMESTAMP_NOW.getTime(), this.render_timerange_slider)
-            console.log("Querying Topic Index (Right Side) Since", new Date(MAX_BACK_TO))
+            restc.load_timerange_index(this.render_timerange_slider)
             // 3) set timeline header info label
-            var timestamp_option = restc.get_clientside_model().get_timestamp_option()
-            console.log("Timestamp Option Label", timestamp_option, get_label(timestamp_option))
+            tl.render_timestamps()
+            tl.render_timestamp_settings()
+            d3.select('#timerange-form').on('click', function() {
+                if (d3.event.target.localName === "button" && d3.event.target.id === "adjust") {
+                    var day = tl.get_selected_option_value('#from-day option')
+                    var month = tl.get_selected_option_value('#from-month option')
+                    var year = tl.get_selected_option_value('#from-year option')
+                    var range_option = convert_range_option_value(tl.get_selected_option_value('#range option'))
+                    var timestamp_option = tl.get_selected_option_value('#timerange-option option')
+                    var new_date = new Date()
+                        new_date.setDate(day)
+                        new_date.setMonth(month)
+                        new_date.setYear(year)
+                    var adjusted_from_time = new_date.getTime()
+                    var adjusted_to_time = adjusted_from_time + range_option
+                    model.set_max_from_time(adjusted_from_time)
+                    model.set_max_to_time(adjusted_to_time)
+                    model.set_timestamp_option(timestamp_option)
+                    d3.select(".time-axis .loader").classed("hidden", false)
+                    restc.load_timerange_index(tl.render_timerange_slider)
+                    tl.render_timestamps()
+                    tl.toggle_timerange_settings()
+                } else if (d3.event.target.localName === "button" && d3.event.target.id === "cancel") {
+                    tl.toggle_timerange_settings()
+                }
+
+                function convert_range_option_value(value) {
+                    if (value === "1d") return a_day
+                    if (value === "3d") return three_days
+                    if (value === "7d") return a_week
+                    if (value === "2w") return fourteen_days
+                    if (value === "6w") return six_weeks
+                    if (value === "12w") return twelve_weeks
+                }
+            })
+        },
+
+        render_timestamps: function() {
+            var timestamp_option = model.get_timestamp_option()
             d3.select('.timestamp-option').text(get_label(timestamp_option))
+            d3.select('.state.from').text(model.format_date(new Date(model.get_from_time())))
+            d3.select('.state.to').text(model.format_date(new Date(model.get_to_time())))
+        },
+
+        render_timestamp_settings: function() {
+            // render the current timestamp option
+            var timestamp_option = model.get_timestamp_option()
+                tl.set_selected_option('#timerange-option option', timestamp_option)
+            // render the complete current max from date
+            var max_from_day = new Date(model.get_max_from_time()).getDate()
+                tl.set_selected_option('#from-day option', max_from_day)
+            var max_from_month = new Date(model.get_max_from_time()).getMonth()
+                tl.set_selected_option('#from-month option', max_from_month)
+            var max_from_year = new Date(model.get_max_from_time()).getFullYear()
+                tl.set_selected_option('#from-year option', max_from_year)
+            var range_plus = model.get_plus_range()
+                if (range_plus === a_day) {
+                    tl.set_selected_option('#range option', "1")
+                } else if (range_plus === three_days) {
+                    tl.set_selected_option('#range option', "3")
+                } else if (range_plus === a_week) {
+                    tl.set_selected_option('#range option', "7")
+                } else if (range_plus === fourteen_days) {
+                    tl.set_selected_option('#range option', "2w")
+                } else if (range_plus === six_weeks) {
+                    tl.set_selected_option('#range option', "6w")
+                } else if (range_plus === twelve_weeks) {
+                    tl.set_selected_option('#range option', "12w")
+                }
+        },
+
+        get_selected_option_value: function(selectionDomId) {
+            var options = d3.selectAll(selectionDomId)[0]
+            for (var i in options) {
+                if (options[i].selected === true) return options[i].getAttribute('value')
+            }
+            return undefined
+        },
+        
+        set_selected_option: function(selectionDomId, value) {
+            var day_options = d3.selectAll(selectionDomId)[0]
+            for (var i in day_options) {
+                if (day_options[i].getAttribute('value') == value) { // compares numbers with string
+                    // console.log("Set \""+ selectionDomId + ", "+ day_options[i].value+"\" Option Selected")
+                    day_options[i].selected = true
+                } else {
+                    day_options[i].selected = false
+                }
+            }
         },
 
         render_details_in_list: function (item) {
@@ -91,9 +190,20 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
         },
 
+        toggle_timerange_settings: function() {
+            var dialog = d3.selectAll('.timerange-settings-dialog')
+            if (dialog.classed("hidden")) {
+                tl.render_timestamp_settings()
+                dialog.classed("hidden", false)
+            } else {
+                dialog.classed("hidden", true)
+            }
+        },
+
         render_timerange_slider:  function (since, to) {
 
-            var topics = restc.get_clientside_model().get_timerange()
+            var topics = model.get_timerange()
+            console.log("Render Timescale Index Oldest", new Date(since), "Youngest", new Date(to))
                 // topics.sort(timestamp_sort_ascending)
             // console.log("Loaded Timeindex", topics)
             /** var dates = []
@@ -107,8 +217,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             console.log("Loaded Time Index Topic Dates", topics)
             dates = dates.sort(d3.descending) **/
             // console.log(dates[dates.length-1])
-            console.log("Timescale Renderer Oldest", new Date(since), "Youngest", new Date(to))
-            d3.select(".time-axis .loader").remove() // ##
+            d3.select(".time-axis .loader").classed("hidden", true)
             var timescale = d3.time.scale()
                 .domain([new Date(to), new Date(since)])
                 .range([0, 1200])
@@ -119,6 +228,8 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 .orient("right")
                 .ticks(d3.time.weeks)
                 .tickFormat(d3.time.format("%d.%B %y"))
+            // clean up for re-rendering
+            d3.select(".time-axis svg").remove()
             var area = d3.select(".time-axis")
                 .append("svg")
                     .attr("class", "axis")
@@ -211,9 +322,10 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 // xScale.domain( s);
                 console.log('on brush move', brush.empty(), s[0],s[1]);
                 // document.getElementById('abc').innerHTML = s[0]+ "     "+s[1];
-                var from = new Date(s[0]).getTime()
-                var to = new Date(s[1]).getTime()
-                restc.load_topics_in_range(from, to)
+                model.set_from_time(new Date(s[0]).getTime())
+                model.set_to_time(new Date(s[1]).getTime())
+                restc.load_topics_in_range()
+                tl.render_timestamps()
                 //
                 // render spinning wheel..
                 //
@@ -235,5 +347,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
         }
 
     }
+
+    return tl
 
 })
