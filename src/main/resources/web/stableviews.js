@@ -365,16 +365,16 @@ require(['common'], function(common) {
                 if (d3.event.currentTarget.className.includes("lower") &&
                     !d3.event.target.nodeName.toLowerCase().includes("input") &&
                     !d3.event.target.nodeName.toLowerCase().includes("a")) {
-                    d3.select(".lower.sidebar").classed('expanded', true)
                     set_cookie_value(DETAILS_COOKIE_NAME, true)
+                    d3.select(".lower.sidebar").classed('expanded', true)
                 }
             })
             // Collapse Lower Sidebar
             d3.select("#map-panel").on('click', function() {
                 // console.log("map panel clicked", d3.event.currentTarget, d3.event.target)
                 if (!d3.event.target.nodeName.includes('rect') && !d3.event.target.nodeName.includes('line')) {
-                    d3.select(".lower.sidebar").classed('expanded', false)
                     set_cookie_value(DETAILS_COOKIE_NAME, false)
+                    d3.select(".lower.sidebar").classed('expanded', false)
                 }
             })
             // Keep SVG Graph Panel in Sync with Document Size
@@ -385,12 +385,12 @@ require(['common'], function(common) {
             // $('.ui.tertiary ').dropdown()
             // initiate sidebar handler // ### no need for jQuery here
             d3.select('#menu-button').on('click', function() {
-                d3.select('.main.sidebar').classed('visible', true)
                 set_cookie_value(SIDEBAR_COOKIE_NAME, true)
+                d3.select('.main.sidebar').classed('visible', true)
             })
             d3.select('#close-menu').on('click', function() {
-                d3.select('.main.sidebar').classed('visible', false)
                 set_cookie_value(SIDEBAR_COOKIE_NAME, false)
+                d3.select('.main.sidebar').classed('visible', false)
             })
             // Topicmap Selection Menu
             d3.select('.main.menu .ui.topicmaps').on('change', function() {
@@ -548,7 +548,7 @@ require(['common'], function(common) {
                 d3.select(".login-failure").text("")
                 render_user_status(user)
             }, function() {
-                    d3.select(".login-failure").text("Login incorrect.<br/><br/>Sorry, this username/password combination does not match.")
+                    d3.select(".login-failure").html("Login incorrect.<br/><br/>Sorry, this username/password combination does not match.")
                     console.warn("Login Attempt FAILED")
                 }, false)
         }
@@ -628,7 +628,6 @@ require(['common'], function(common) {
         }
 
         function set_cookie_value(name, value) {
-            console.log("Set Cookie", name, value)
             document.cookie = name + "=" + value + "; "
         }
 

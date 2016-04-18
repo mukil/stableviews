@@ -30,12 +30,12 @@ body {
     color: #fff;
 }
 
-.login .userstatus {
-    margin-bottom: 15px;
+.sidebar .login #submit {
+    margin-top: 15px;
 }
 
 .login .username {
-    font: italic;
+    font-style: italic;
 }
 
 .login .login-failure {
