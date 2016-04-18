@@ -39,6 +39,8 @@ require(['common'], function(common) {
         var show_hidden_topics  = false
         var show_associations   = true
         var show_labels         = true
+        var SIDEBAR_COOKIE_NAME = "stableviews_sidebar"
+        var DETAILS_COOKIE_NAME = "stableviews_detailwindow"
 
         // --- Initialization Map and Detail Panel ---
 
@@ -48,14 +50,28 @@ require(['common'], function(common) {
 
         // --- Authentication ---
 
-        controller.loadUsername(function(xhr) {
-            var user_screen = d3.select('.user-dialog')
-            if (xhr.response=== "") {
-                user_screen.text("Hello Visitor!")
-            } else {
-                user_screen.text("Hello " + xhr.response + "!")
-            }
-        })
+        render_user_status()
+
+        function render_user_status(name) {
+            controller.loadUsername(function(response) {
+                if (typeof response === "object") {
+                    username = undefined
+                    d3.select('.username').text(username)
+                    d3.select(".login .userstatus").classed("hide", true)
+                    d3.select("#username").classed("hide", false)
+                    d3.select("#password").classed("hide", false)
+                    d3.select("#submit").classed("logout", false).text('Login')
+                } else if (response !== "") {
+                    username = response
+                    if (typeof username === "undefined") username = name
+                    d3.select('.username').text(username)
+                    d3.select(".login .userstatus").classed("hide", false)
+                    d3.select("#password").classed("hide", true)
+                    d3.select("#username").classed("hide", true)
+                    d3.select("#submit").classed("logout", true).text('Logout')
+                }
+            })
+        }
 
         // --- Loading DM 4 Type Definitions ---
 
@@ -73,7 +89,7 @@ require(['common'], function(common) {
         controller.loadAllTopicmaps(function(response) {
 
             topicmaps = response
-            console.log("Topicmaps", topicmaps)
+            console.log("Loaded Topicmaps", topicmaps)
             render_topicmap_menu()
 
             if (map_id) { // load routed map
@@ -86,6 +102,7 @@ require(['common'], function(common) {
                 //
                 selected_topicmap = result
                 graph_panel.show_topicmap(selected_topicmap)
+                initiate_last_layout()
             })
 
         })
@@ -199,6 +216,21 @@ require(['common'], function(common) {
 
         // --- Put focus on command line element on startup ---
 
+        function initiate_last_layout() {
+            var sidebarState = get_cookie_value(SIDEBAR_COOKIE_NAME)
+            if (sidebarState === null) { // no cookie set
+                set_cookie_value(SIDEBAR_COOKIE_NAME, "false")
+            } else if (sidebarState === "true") {
+                d3.select('.main.sidebar').classed('visible', true)
+            }
+            var detailWindowState = get_cookie_value(DETAILS_COOKIE_NAME)
+            if (detailWindowState === null) { // no cookie set
+                set_cookie_value(DETAILS_COOKIE_NAME, "false")
+            } else if (detailWindowState === "true") {
+                d3.select(".lower.sidebar").classed('expanded', true)
+            }
+        }
+
         // ### document.getElementById('textinput').focus()
 
         // --- Search Dialog Functionality ---
@@ -271,6 +303,23 @@ require(['common'], function(common) {
         }
 
         function setup_page_listeners() {
+            // Authentication Form Handler
+            d3.select("#authentication").on('submit', function() {
+                var button = d3.select("#submit")[0][0]
+                if (!button.className.contains("logout")) {
+                    var user = d3.select('#username')[0][0]
+                    var pass = d3.select('#password')[0][0]
+                    if (typeof user.value !== "undefined" && typeof pass.value !== "undefined"
+                            || typeof user.value !== " " && typeof pass.value !== " "
+                            || typeof user.value !== "" && typeof pass.value !== "") {
+                        do_auth(user.value, pass.value)
+                    }
+                } else {
+                    controller.stopSession(function() {
+                        render_user_status()
+                    })
+                }
+            })
             // Search Button Handler
             d3.select("#search").on('click', function(e) {
                 var input = d3.select("#search")[0][0]
@@ -317,6 +366,7 @@ require(['common'], function(common) {
                     !d3.event.target.nodeName.toLowerCase().includes("input") &&
                     !d3.event.target.nodeName.toLowerCase().includes("a")) {
                     d3.select(".lower.sidebar").classed('expanded', true)
+                    set_cookie_value(DETAILS_COOKIE_NAME, true)
                 }
             })
             // Collapse Lower Sidebar
@@ -324,6 +374,7 @@ require(['common'], function(common) {
                 // console.log("map panel clicked", d3.event.currentTarget, d3.event.target)
                 if (!d3.event.target.nodeName.includes('rect') && !d3.event.target.nodeName.includes('line')) {
                     d3.select(".lower.sidebar").classed('expanded', false)
+                    set_cookie_value(DETAILS_COOKIE_NAME, false)
                 }
             })
             // Keep SVG Graph Panel in Sync with Document Size
@@ -335,14 +386,11 @@ require(['common'], function(common) {
             // initiate sidebar handler // ### no need for jQuery here
             d3.select('#menu-button').on('click', function() {
                 d3.select('.main.sidebar').classed('visible', true)
-                if (d3.select('.main.sidebar').classed('visible')) {
-                    console.log("Sidebar is Visible")
-                } else {
-                    console.log("Sidebar is NOT Visible")
-                }
+                set_cookie_value(SIDEBAR_COOKIE_NAME, true)
             })
             d3.select('#close-menu').on('click', function() {
                 d3.select('.main.sidebar').classed('visible', false)
+                set_cookie_value(SIDEBAR_COOKIE_NAME, false)
             })
             // Topicmap Selection Menu
             d3.select('.main.menu .ui.topicmaps').on('change', function() {
@@ -495,14 +543,14 @@ require(['common'], function(common) {
 
         // --- TODO: Login View ---
 
-        function render_login_dialog() {
-
-            /** function do_auth() {
-                var element = d3.select('input.vp-id')[0][0]
-                newCtrl.startSession(element.value, function (){
-                    window.location.reload()
-                }, common.debug)
-            } **/
+        function do_auth(user, pass) {
+            controller.startSession(user, pass, function(e) {
+                d3.select(".login-failure").text("")
+                render_user_status(user)
+            }, function() {
+                    d3.select(".login-failure").text("Login incorrect.<br/><br/>Sorry, this username/password combination does not match.")
+                    console.warn("Login Attempt FAILED")
+                }, false)
         }
 
         // --- Search Result Renderer: Show latest search results (or suggestions?) ---
@@ -565,6 +613,23 @@ require(['common'], function(common) {
                 set_page_title('Search results')
                 d3.select('.search-results').classed("hide", false)
             }
+        }
+
+        /** Code original authored by quirksmode (Source: http://www.quirksmode.org/js/cookies.html) */
+        function get_cookie_value(name) {
+            var nameEQ = name + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i < ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(nameEQ) == 0) return c.substring(nameEQ.length,c.length);
+            }
+            return null
+        }
+
+        function set_cookie_value(name, value) {
+            console.log("Set Cookie", name, value)
+            document.cookie = name + "=" + value + "; "
         }
 
         // --- Stableviews Client Functionality ---

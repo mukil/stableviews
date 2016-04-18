@@ -3,10 +3,9 @@ define(['d3'], function(d3, require) {
 
     function restClient() {}
 
-    function fetch(resource, callback, failure, json, debug, no_workspace) {
+    function fetch(resource, callback, failure, json, debug) {
         var response_type = "text/plain"
         if (json) response_type = "application/json"
-        if (no_workspace) resource = resource + "&no_workspace_assignment=true"
         var xhr = d3.xhr(resource, response_type)
             xhr.get()
             xhr.on('load', function(response) {
@@ -83,12 +82,7 @@ define(['d3'], function(d3, require) {
             
             /** Returns value for the "Authorization" header. */
             function authorization() {
-                var key = "-SHA256-"
-                var code = btoa(username) // ### FIXME: btoa() might not work in IE
-                if (passwd !== "") {
-                    key += SHA256(passwd)
-                    code = btoa(username + ":" + key)
-                }
+                var code = btoa(username + ":" + passwd)
                 return "Basic " + code
             }
     }
@@ -96,7 +90,7 @@ define(['d3'], function(d3, require) {
     restClient.prototype = {
 
         fetchUsername: function(handle, debug) {
-            fetch('/accesscontrol/user', handle, undefined, false, false)
+            fetch('/accesscontrol/user', handle, undefined, false, debug)
         },
         fetchAllTopicTypes: function(handle, fail, debug) {
             fetch('/core/topictype/all', handle, fail, true, debug)
@@ -117,7 +111,7 @@ define(['d3'], function(d3, require) {
             fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
         },
         getTopicSuggestions: function(query, handle, fail, debug) {
-            fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug, false)
+            fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug)
         },
         postPayload: function(topicId, payload, handle, fail, debug) {
             post('/test/' + topicId, payload, handle, fail, false, debug)
@@ -125,8 +119,11 @@ define(['d3'], function(d3, require) {
         doMarkTopic: function(topicId, callback, fail) {
             mark('/test/' + topicId + "/seen", callback, fail)
         },
-        startSession: function(id, handle, debug) {
-            authenticate(id, "", handle, false, debug)
+        startSession: function(id, key, handle, fail, debug) {
+            authenticate(id, key, handle, fail, debug)
+        },
+        stopSession: function (callback, fail) {
+            post('/accesscontrol/logout', undefined, callback, fail)
         }
 
     }

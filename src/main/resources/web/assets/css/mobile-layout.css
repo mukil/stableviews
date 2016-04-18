@@ -1,6 +1,11 @@
 
 /** General Styles */
 
+body {
+    padding: 0px;
+    margin: 0px;
+}
+
 .loader {
     font-size: 1em;
     color: #444;
@@ -16,9 +21,25 @@
     display: none;
 }
 
-body {
-    padding: 0px;
-    margin: 0px;
+.details img {
+    max-width: 100%;
+    height: auto !important;
+}
+
+.right.sidebar {
+    color: #fff;
+}
+
+.login .userstatus {
+    margin-bottom: 15px;
+}
+
+.login .username {
+    font: italic;
+}
+
+.login .login-failure {
+    color: #ff0000;
 }
 
 .content {
@@ -260,6 +281,16 @@ div.show-inline {
 
 .main.menu .ui.selection.dropdown {
     min-height: 0;
+}
+
+.sidebar .login div,
+.sidebar .login button {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.sidebar .login button {
+    display: block;
 }
 
 .main.menu .ui.container {

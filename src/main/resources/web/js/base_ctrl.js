@@ -39,10 +39,14 @@ define(['rest_client'], function(restClient, require) {
                 console.warn("restc.getTopicSuggestuins ", e)
             }, false)
         },
-        loadUsername: function(handler) {
-            return restc.fetchUsername(function (response){
-                handler(response)
-            })
+        loadUsername: function(handler, debug) {
+            return restc.fetchUsername(handler, debug)
+        },
+        startSession: function(username, pass, handler, failure, debug) {
+            return restc.startSession(username, pass, handler, failure, debug)
+        },
+        stopSession: function(handler, fail) {
+            return restc.stopSession(handler, fail)
         }
         
     }

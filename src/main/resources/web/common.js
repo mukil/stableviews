@@ -4,7 +4,7 @@
 require.config({
     baseUrl: "/de.mikromedia.stableviews/js/",
     paths: {
-      d3: "/de.mikromedia.stableviews/assets/vendor/d3.min"
+        d3: "/de.mikromedia.stableviews/assets/vendor/d3.min"
     },
     shim: {
         'd3': {
@@ -14,7 +14,7 @@ require.config({
     waitSeconds: 15
 })
 
-define(function() {
+define(function () {
     return {
         debug: true,
         fine: false

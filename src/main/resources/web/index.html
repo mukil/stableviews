@@ -33,7 +33,7 @@
         <!--script src="/de.mikromedia.stableviews/assets/vendor/dropdown.min.js"></script-->
         <!--script src="/de.mikromedia.stableviews/assets/vendor/transition.min.js"></script-->
 
-        <!-- Stabelviews Client Scripts -->
+        <!-- Stableview Scripts -->
         <script
             data-main="/de.mikromedia.stableviews/stableviews.js"
             src="/de.mikromedia.stableviews/assets/vendor/require.js"></script>
@@ -60,8 +60,19 @@
                 <select class="ui topicmaps inverted search dropdown" id="topicmap-selector"></select>
             </div>
 
-            <div class="ui container">
-                <button class="ui button basic inverted">Login</button>
+            <div class="ui login container">
+                <form id="authentication">
+                    <div class="ui input inverted">
+                        <input type="text" id="username" placeholder="Username"/>
+                    </div>
+                    <div class="ui input inverted">
+                        <input type="password" id="password" placeholder="Password"/>
+                    </div>
+                    <div class="ui inverted basic userstatus hide">
+                        Logged in as <span class="username"></span>
+                    </div>
+                        <button class="ui button" type="submit" id="submit" title="Do Login">Login</button><span class="login-failure"></span>
+                </form>
             </div>
 
         </div>
