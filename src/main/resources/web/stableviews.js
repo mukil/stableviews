@@ -50,28 +50,22 @@ require(['common'], function(common) {
 
         // --- Authentication ---
 
-        render_user_status()
+        refresh_user_status()
 
-        function render_user_status(name) {
+        function refresh_user_status() {
             controller.loadUsername(function(response) {
+                console.log("Auth Status", username)
                 if (typeof response === "object") {
                     username = undefined
-                    d3.select('.username').text(username)
-                    d3.select(".login .userstatus").classed("hide", true)
-                    d3.select("#username").classed("hide", false)
-                    d3.select("#password").classed("hide", false)
-                    d3.select("#submit").classed("logout", false).text('Login')
                 } else if (response !== "") {
                     username = response
                     if (typeof username === "undefined") username = name
-                    d3.select('.username').text(username)
-                    d3.select(".login .userstatus").classed("hide", false)
-                    d3.select("#password").classed("hide", true)
-                    d3.select("#username").classed("hide", true)
-                    d3.select("#submit").classed("logout", true).text('Logout')
                 }
+                render_authentication_dialog()
+                load_selected_topicmap()
             })
         }
+
 
         // --- Loading DM 4 Type Definitions ---
 
@@ -316,7 +310,7 @@ require(['common'], function(common) {
                     }
                 } else {
                     controller.stopSession(function() {
-                        render_user_status()
+                        refresh_user_status()
                     })
                 }
             })
@@ -541,12 +535,28 @@ require(['common'], function(common) {
             $('.ui.main.menu .ui.topicmaps').dropdown() // { "fullTextSearch": true }) // jQuery
         }
 
-        // --- TODO: Login View ---
+        // --- Login / Logout View ---
+
+        function render_authentication_dialog() {
+            if (!username) { // Not authenticated
+                d3.select('.username').text(username)
+                d3.select(".login .userstatus").classed("hide", true)
+                d3.select("#username").classed("hide", false)
+                d3.select("#password").classed("hide", false)
+                d3.select("#submit").classed("logout", false).text('Login')
+            } else { // Authenticated
+                d3.select('.username').text(username)
+                d3.select(".login .userstatus").classed("hide", false)
+                d3.select("#password").classed("hide", true)
+                d3.select("#username").classed("hide", true)
+                d3.select("#submit").classed("logout", true).text('Logout')
+            }
+        }
 
         function do_auth(user, pass) {
             controller.startSession(user, pass, function(e) {
                 d3.select(".login-failure").text("")
-                render_user_status(user)
+                refresh_user_status(user)
             }, function() {
                     d3.select(".login-failure").html("Login incorrect.<br/><br/>Sorry, this username/password combination does not match.")
                     console.warn("Login Attempt FAILED")
@@ -634,6 +644,12 @@ require(['common'], function(common) {
         // --- Stableviews Client Functionality ---
 
         function load_selected_topicmap() {
+            console.log("Load Selected Topicmap", selected_topicmap)
+            if (!selected_topicmap.hasOwnProperty("id")) {
+                // fixme: a selected_topicmap should always be the same type of object
+                console.warn("Correcting Selected Topicmap ID", selected_topicmap.info)
+                selected_topicmap = selected_topicmap.info
+            }
             // prepare/cleanup
             graph_panel.clear()
             d3.select(".loader").classed("hide", false)
