@@ -42,6 +42,9 @@ define(['rest_client'], function(restClient, require) {
         loadUsername: function(handler, debug) {
             return restc.fetchUsername(handler, debug)
         },
+        updateTopicPosition: function(topicId, topicmapId, pos, fail, debug) {
+            return restc.updateTopicPosition(topicId, pos, topicmapId, fail, debug)
+        },
         startSession: function(username, pass, handler, failure, debug) {
             return restc.startSession(username, pass, handler, failure, debug)
         },

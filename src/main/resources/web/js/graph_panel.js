@@ -133,7 +133,8 @@ define(function(require) {
                 .call(d3.behavior.drag()
                     .origin(function(d) { return d })
                     .on("dragstart", drag_node_start)
-                    .on("drag", drag_node))
+                    .on("drag", drag_node)
+                    .on("dragend", drag_node_end))
         // ### operations for old and new elements
         node_sel.exit().remove()  // operations for deleted elements
 
@@ -173,7 +174,12 @@ define(function(require) {
             })
         }
  
-        function drag_node(d) {
+        function drag_node_end(d) {
+            var pos = { x: d.view_props['dm4.topicmaps.x'], y: d.view_props['dm4.topicmaps.y']}
+            fire_topic_translation({ pos: pos, topic: d.id})
+        }
+
+        function drag_node() {
             move(d3.event.dx, d3.event.dy)
         }
 
@@ -252,6 +258,10 @@ define(function(require) {
 
     function fire_map_transformation(value) {
         svg_panel.node().dispatchEvent(new CustomEvent('topicmap_transformed', { detail: value }))
+    }
+
+    function fire_topic_translation(value) {
+        svg_panel.node().dispatchEvent(new CustomEvent('topic_translated', { detail: value }))
     }
 
     function fire_map_zoom(value) {

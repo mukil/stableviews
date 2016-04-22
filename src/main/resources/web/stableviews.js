@@ -54,7 +54,6 @@ require(['common'], function(common) {
 
         function refresh_user_status() {
             controller.loadUsername(function(response) {
-                console.log("Auth Status", username)
                 if (typeof response === "object") {
                     username = undefined
                 } else if (response !== "") {
@@ -65,7 +64,6 @@ require(['common'], function(common) {
                 load_selected_topicmap()
             })
         }
-
 
         // --- Loading DM 4 Type Definitions ---
 
@@ -436,6 +434,15 @@ require(['common'], function(common) {
             graph_panel.listen_to('topicmap_transformed', function(e) {
                 // if (common.debug) console.log("Topicmap Transformation", e.detail)
             })
+
+            graph_panel.listen_to('topic_translated', function(e) {
+                console.log("Topic Translate Event: ", e.detail.topic, "X", e.detail.pos.x, "Y", e.detail.pos.y)
+                if (username) {
+                    controller.updateTopicPosition(e.detail.topic, selected_topicmap.id, e.detail.pos, function(err) {
+                        console.warn("Error while updating topic position", err, e.detail)
+                    })
+                }
+            })
         }
 
         // --- Graph Panel Handlers: Selection ---
@@ -644,7 +651,6 @@ require(['common'], function(common) {
         // --- Stableviews Client Functionality ---
 
         function load_selected_topicmap() {
-            console.log("Load Selected Topicmap", selected_topicmap)
             if (!selected_topicmap.hasOwnProperty("id")) {
                 // fixme: a selected_topicmap should always be the same type of object
                 console.warn("Correcting Selected Topicmap ID", selected_topicmap.info)

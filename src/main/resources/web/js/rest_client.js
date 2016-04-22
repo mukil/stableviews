@@ -63,7 +63,7 @@ define(['d3'], function(d3, require) {
                 if (typeof fail !== "undefined") fail(e)
             })
     }
-    
+
     function authenticate(username, passwd, handle, fail, debug) {
         var xhr = d3.xhr('/accesscontrol/login')
         var auth_code = authorization()
@@ -118,6 +118,10 @@ define(['d3'], function(d3, require) {
         },
         doMarkTopic: function(topicId, callback, fail) {
             mark('/test/' + topicId + "/seen", callback, fail)
+        },
+        updateTopicPosition: function(topicId, pos, topicmapId, fail, debug) {
+            // put("/topicmap/" + topicmapId + "/topic/" + topicId + "/" + pos.x + "/" + pos.y, undefined, fail, debug)
+            console.warn("D3 does not wrap XHR PUTs...")
         },
         startSession: function(id, key, handle, fail, debug) {
             authenticate(id, key, handle, fail, debug)
