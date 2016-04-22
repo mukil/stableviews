@@ -482,7 +482,7 @@ require(['common'], function(common) {
 
         function render_selection_commands() {
             d3.selectAll(".selection-commands ul li").remove()
-            if (multi_selection) {
+            if (multi_selection && username) {
                 d3.select(".selection-commands").classed('hide', false)
                 d3.select(".selection-commands ul").append("li").append("a")
                     .attr("title", "Associate selection").text('A').on('click', function() {

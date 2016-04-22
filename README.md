@@ -1,7 +1,15 @@
 
 ### Stableviews UI
 
-An alternate presentation layer for _Topicmaps_ authored in DeepaMehta 4.
+Alternate user interfaces for work done in _Topicmaps_, my freestyle project with DeepaMehta 4.
+
+This plugin currently bundles three type of _views_ for content authored in Topicmaps:
+
+ - SVG Graph Browser - Think nodes, edges, labels and details
+ - Timeline Browser - Think twitter but without any "customer magic".
+ - Advanced Search - Presenting fulltext search results with their context.
+
+Each of these three user dialog are still under heavy development and work in progress. Feel free to provide me some feedback in the Issues section of this page.
 
 #### Getting Started
 
