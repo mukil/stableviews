@@ -298,7 +298,7 @@ require(['common'], function(common) {
             // Authentication Form Handler
             d3.select("#authentication").on('submit', function() {
                 var button = d3.select("#submit")[0][0]
-                if (!button.className.contains("logout")) {
+                if (!button.className.indexOf("logout") !== -1) {
                     var user = d3.select('#username')[0][0]
                     var pass = d3.select('#password')[0][0]
                     if (typeof user.value !== "undefined" && typeof pass.value !== "undefined"
@@ -399,15 +399,15 @@ require(['common'], function(common) {
 
             graph_panel.listen_to('selection', function(e) {
                 // if (common.debug) console.log(" > selection ", e.detail)
+                multi_selection = []
                 select_topic(e.detail.id)
-                multi_selection = undefined
                 render_selection_commands()
             })
 
             graph_panel.listen_to('multi_selection', function(e) {
                 // update client side model (as a param for commands)
                 multi_selection = e.detail
-                console.log("Multi Select", e.detail)
+                // console.log("Multi Select", e.detail)
                 render_selection_commands()
             })
 
@@ -436,11 +436,15 @@ require(['common'], function(common) {
             })
 
             graph_panel.listen_to('topic_translated', function(e) {
-                console.log("Topic Translate Event: ", e.detail.topic, "X", e.detail.pos.x, "Y", e.detail.pos.y)
-                if (username) {
-                    controller.updateTopicPosition(e.detail.topic, selected_topicmap.id, e.detail.pos, function(err) {
-                        console.warn("Error while updating topic position", err, e.detail)
-                    })
+                if (username) { // persist topic moves if authenticated
+                    if (multi_selection.length > 0) {
+                        console.log("Move Selection", e.detail.id, "Diff X", e.detail.diff.x, " Diff Y", e.detail.diff.y)
+                    } else {
+                        console.log("Move Topic", e.detail.id, "Diff X", e.detail.diff.x, " Diff Y", e.detail.diff.y)
+                        /* controller.updateTopicPosition(e.detail.topic, selected_topicmap.id, e.detail.diff, function(err) {
+                            console.warn("Error while updating topic position", err, e.detail)
+                        }) **/
+                    }
                 }
             })
         }
@@ -651,6 +655,7 @@ require(['common'], function(common) {
         // --- Stableviews Client Functionality ---
 
         function load_selected_topicmap() {
+            if (!selected_topicmap) return
             if (!selected_topicmap.hasOwnProperty("id")) {
                 // fixme: a selected_topicmap should always be the same type of object
                 console.warn("Correcting Selected Topicmap ID", selected_topicmap.info)

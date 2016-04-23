@@ -162,21 +162,24 @@ define(function(require) {
         var translationY = parseInt(translation.childs["dm4.topicmaps.translation_y"].value)
         graph_translation_keep_zoom([translationX, translationY])
 
+        var drag_started = {x: 0, y: 0}
         function drag_node_start(d) {
+            drag_started = {x: d.view_props['dm4.topicmaps.x'], y: d.view_props['dm4.topicmaps.y']}
             d3.event.sourceEvent.stopPropagation() // ###
             if (!d.selected && !shiftKey) {
                 // if this node isn't selected, then we have to unselect every other node
                 node_sel.classed("selected", function(p) { return p.selected =  p.previouslySelected = false })
             }
             d3.select(this).classed("selected", function(p) { 
-                d.previouslySelected = d.selected
-                return d.selected = true 
+                p.previouslySelected = p.selected
+                return p.selected = true
             })
         }
  
         function drag_node_end(d) {
-            var pos = { x: d.view_props['dm4.topicmaps.x'], y: d.view_props['dm4.topicmaps.y']}
-            fire_topic_translation({ pos: pos, topic: d.id})
+            var drag_ended = {x: d.view_props['dm4.topicmaps.x'], y: d.view_props['dm4.topicmaps.y']}
+            var topic = { id: d.id, diff: { x: (drag_started.x - drag_ended.x) * -1, y: (drag_started.y - drag_ended.y) * (-1) }}
+            fire_topic_translation(topic)
         }
 
         function drag_node() {
