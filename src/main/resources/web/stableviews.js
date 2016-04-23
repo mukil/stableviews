@@ -48,58 +48,22 @@ require(['common'], function(common) {
         setup_map_panel_listeners()
         setup_page_listeners()
 
-        // --- Authentication ---
+        refresh_client_state()
+        initiate_last_layout()
 
-        refresh_user_status()
-
-        function refresh_user_status() {
-            controller.loadUsername(function(response) {
-                if (typeof response === "object") {
-                    username = undefined
-                } else if (response !== "") {
-                    username = response
-                    if (typeof username === "undefined") username = name
-                }
-                render_authentication_dialog()
-                load_selected_topicmap()
+        function refresh_client_state(name) {
+            // --- Loading of DM 4 Username ---
+            refresh_user_status(name)
+            // --- Loading DM 4 Type Definitions ---
+            controller.loadAllTopicTypes(function(topicTypes) {
+                console.log("Topic Types", topicTypes)
             })
+            controller.loadAllAssocTypes(function(assocTypes) {
+                console.log("Association Types", assocTypes)
+            })
+            // --- Loading of DM 4 Topicmaps ---
+            reload_topicmaps()
         }
-
-        // --- Loading DM 4 Type Definitions ---
-
-        controller.loadAllTopicTypes(function(topicTypes) {
-            console.log("Topic Types", topicTypes)
-        })
-        controller.loadAllAssocTypes(function(assocTypes) {
-            console.log("Association Types", assocTypes)
-        })
-
-        // --- Loading of DM 4 Topicmaps ---
-
-        // --- ### Introduce menu to allow for pointer-based selection of/switching among these
-
-        controller.loadAllTopicmaps(function(response) {
-
-            topicmaps = response
-            console.log("Loaded Topicmaps", topicmaps)
-            render_topicmap_menu()
-
-            if (map_id) { // load routed map
-                selected_topicmap = { id: map_id }
-            } else { // load first map we get
-                selected_topicmap = topicmaps[0]
-            }
-            // 2.1) ..
-            controller.loadTopicmap(selected_topicmap.id, function(result) {
-                //
-                selected_topicmap = result
-                graph_panel.show_topicmap(selected_topicmap)
-                initiate_last_layout()
-            })
-
-        })
-
-        //
 
         // --- Setup command line input area ---
 
@@ -298,7 +262,11 @@ require(['common'], function(common) {
             // Authentication Form Handler
             d3.select("#authentication").on('submit', function() {
                 var button = d3.select("#submit")[0][0]
-                if (!button.className.indexOf("logout") !== -1) {
+                if (button.className.indexOf("logout") !== -1) {
+                    controller.stopSession(function() {
+                        refresh_client_state()
+                    })
+                } else {
                     var user = d3.select('#username')[0][0]
                     var pass = d3.select('#password')[0][0]
                     if (typeof user.value !== "undefined" && typeof pass.value !== "undefined"
@@ -306,10 +274,6 @@ require(['common'], function(common) {
                             || typeof user.value !== "" && typeof pass.value !== "") {
                         do_auth(user.value, pass.value)
                     }
-                } else {
-                    controller.stopSession(function() {
-                        refresh_user_status()
-                    })
                 }
             })
             // Search Button Handler
@@ -534,19 +498,32 @@ require(['common'], function(common) {
         }
 
         // ### use d3 data (binding) here
-        function render_topicmap_menu() {
-            //
-            var selectMenu = d3.select('.ui.topicmaps')
+        function refresh_topicmap_menu() {
+            var selectMenu = d3.select('#topicmap-selector')
+            // clear menu entries
+            d3.selectAll('#topicmap-selector option').remove()
             // var items = []
             console.log("Topicmap Selection Menu", selectMenu)
             for (var t in topicmaps) {
                 // items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
                 selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
             }
-            $('.ui.main.menu .ui.topicmaps').dropdown() // { "fullTextSearch": true }) // jQuery
+            $('#topicmap-selector').dropdown({ "fullTextSearch": true }) // jQuery
         }
 
-        // --- Login / Logout View ---
+        // --- Authentication Dialog ---
+
+        function refresh_user_status(name) {
+            controller.loadUsername(function(response) {
+                if (typeof response === "object") {
+                    username = undefined
+                } else if (response !== "") {
+                    username = response
+                    if (typeof username === "undefined") username = name
+                }
+                render_authentication_dialog()
+            })
+        }
 
         function render_authentication_dialog() {
             if (!username) { // Not authenticated
@@ -567,7 +544,7 @@ require(['common'], function(common) {
         function do_auth(user, pass) {
             controller.startSession(user, pass, function(e) {
                 d3.select(".login-failure").text("")
-                refresh_user_status(user)
+                refresh_client_state(user)
             }, function() {
                     d3.select(".login-failure").html("Login incorrect.<br/><br/>Sorry, this username/password combination does not match.")
                     console.warn("Login Attempt FAILED")
@@ -653,6 +630,20 @@ require(['common'], function(common) {
         }
 
         // --- Stableviews Client Functionality ---
+
+        function reload_topicmaps() {
+            controller.loadAllTopicmaps(function(response) {
+                topicmaps = response
+                console.log("Loaded Topicmaps", topicmaps)
+                refresh_topicmap_menu()
+                if (map_id) { // load routed map
+                    selected_topicmap = { id: map_id }
+                } else { // load first map we get
+                    selected_topicmap = topicmaps[0]
+                }
+                load_selected_topicmap()
+            })
+        }
 
         function load_selected_topicmap() {
             if (!selected_topicmap) return

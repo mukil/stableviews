@@ -39,7 +39,7 @@ function get_month_name(idx) {
 
 function get_label(type_uri) {
     if (!label.hasOwnProperty(type_uri)) {
-        console.log("No LABEL translation available, yet.", type_uri)
+        // console.log("No LABEL translation available, yet.", type_uri)
     }
     return label[type_uri]
 }
