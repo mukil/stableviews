@@ -125,7 +125,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             var body = d3.select('#topic-' + item.id + ' .body')
             // allow to toggle details in list
             console.log("Timeline Inline Rendering", item, "Display Style Attr:", body.style("display"))
-            if (body.style("display").contains("block")) {
+            if (body.style("display").indexOf("block") !== -1) {
                 body.style("display", "none")
                 return true
             }
@@ -134,14 +134,14 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             if (item.type_uri === 'dm4.files.file') {
 
                 var filepath = '/filerepo/' + item.childs['dm4.files.path'].value
-                if (item.value.contains('.pdf')) {
+                if (item.value.indexOf('.pdf') !== -1) {
                     item_html = '<p><object data="'+filepath+'" width="760" height="640" type="application/pdf">'
                         + '</p>'
                         + '<a href="' +filepath+ '" class="command" title="Download PDF">Download</a>'
                         + '</p>'
 
-                } else if (item.value.contains('.jpg') || item.value.contains('.jpeg') ||
-                        item.value.contains('.png') || item.value.contains('.svg')) {
+                } else if (item.value.indexOf('.jpg') !== -1 || item.value.indexOf('.jpeg') !== -1 ||
+                        item.value.indexOf('.png') !== -1 || item.value.indexOf('.svg') !== -1) {
 
                     item_html = '<p><img src="'+filepath+'"></p>'
                 } else {
