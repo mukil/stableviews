@@ -55,12 +55,12 @@ require(['common'], function(common) {
             // --- Loading of DM 4 Username ---
             refresh_user_status(name)
             // --- Loading DM 4 Type Definitions ---
-            controller.loadAllTopicTypes(function(topicTypes) {
+            /** controller.loadAllTopicTypes(function(topicTypes) {
                 console.log("Topic Types", topicTypes)
             })
             controller.loadAllAssocTypes(function(assocTypes) {
                 console.log("Association Types", assocTypes)
-            })
+            }) **/
             // --- Loading of DM 4 Topicmaps ---
             reload_topicmaps()
         }
