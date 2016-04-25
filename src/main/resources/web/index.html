@@ -41,7 +41,7 @@
     </head>
     <body>
 
-        <div class="ui right vertical inverted menu very wide sidebar main">
+        <div class="ui right vertical inverted main menu very wide sidebar">
 
             <button id="close-menu" class="ui basic inverted icon button">
                 <i class="right chevron icon"></i>
@@ -56,10 +56,17 @@
 
             <!-- Topicmap Selector -->
             <div class="ui container">
-                <h4 class="ui header inverted">Other Topicmaps</h4>
+                <h4 class="ui header inverted">Topicmap</h4>
                 <select class="ui topicmaps inverted search dropdown" id="topicmap-selector"></select>
             </div>
 
+            <!-- Workspace Selector -->
+            <div class="ui vertical container inverted">
+                <h4 class="ui header inverted">Workspace</h4>
+                <select class="ui workspace-menu inverted search" id="workspace-selector"></select>
+            </div>
+
+            <!-- Authentication Dialog -->
             <div class="ui login container">
                 <form id="authentication" onsubmit="javascript:return false">
                     <div class="ui input inverted">

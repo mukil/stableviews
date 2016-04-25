@@ -24,6 +24,11 @@ define(['rest_client'], function(restClient, require) {
                 handler(result.items)
             }, null, null)
         },
+        loadAllWorkspaces: function(handler) {
+            restc.fetchByTypeUriChilds("dm4.workspaces.workspace", function (result) {
+                handler(result.items)
+            }, null, null)
+        },
         loadTopicmap: function(id, handler) {
             restc.fetchTopicmapById(id, function (result) {
                 handler(result)

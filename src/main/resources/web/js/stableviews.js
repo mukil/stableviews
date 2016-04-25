@@ -41,6 +41,7 @@ require(['common'], function(common) {
         var show_labels         = true
         var SIDEBAR_COOKIE_NAME = "stableviews_sidebar"
         var DETAILS_COOKIE_NAME = "stableviews_detailwindow"
+        var WORKSPACE_COOKIE_NAME = "dm4_workspace_id"
 
         // --- Initialization Map and Detail Panel ---
 
@@ -63,6 +64,8 @@ require(['common'], function(common) {
             }) **/
             // --- Loading of DM 4 Topicmaps ---
             reload_topicmaps()
+            // --- Loading of DM 4 Workspaces ---
+            reloadWorkspaces()
         }
 
         // --- Setup command line input area ---
@@ -251,7 +254,7 @@ require(['common'], function(common) {
         // --- Top Level Page Handlers / Utilities ---
 
         function set_document_title(message) {
-            window.document.title = message + " - Stableviews 0.3 / DeepaMehta 4.7"
+            window.document.title = message + " - Stableviews 0.4-SNAPSHOT / DeepaMehta 4.7"
         }
 
         function update_topicmap_url() {
@@ -353,6 +356,12 @@ require(['common'], function(common) {
                 selected_topicmap.id = d3.event.target.value // fixme: should use setters/getters
                 console.log("Load Topicmap Selection", selected_topicmap.id)
                 load_selected_topicmap()
+            })
+            // Workspace Selection Menu
+            d3.select('.main.menu .ui.workspace-menu').on('change', function() {
+                var newWorkspaceId = d3.event.target.value // fixme: should use setters/getters
+                console.log("Selected Workspace", newWorkspaceId)
+                set_cookie_value(WORKSPACE_COOKIE_NAME, newWorkspaceId)
             })
         }
 
@@ -502,13 +511,21 @@ require(['common'], function(common) {
             var selectMenu = d3.select('#topicmap-selector')
             // clear menu entries
             d3.selectAll('#topicmap-selector option').remove()
-            // var items = []
-            console.log("Topicmap Selection Menu", selectMenu)
             for (var t in topicmaps) {
-                // items.push({ "name" : topicmaps[t].value, "value": topicmaps[t].id })
                 selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
             }
             $('#topicmap-selector').dropdown({ "fullTextSearch": true }) // jQuery
+        }
+
+        // ### use d3 data (binding) here
+        function refresh_workspace_menu() {
+            var workspaceMenu = d3.select('#workspace-selector')
+            // clear menu entries
+            d3.selectAll('#workspace-selector option').remove()
+            for (var t in workspaces) {
+                workspaceMenu.append('option').attr('value', workspaces[t].id).text(workspaces[t].value)
+            }
+            $('#workspace-selector').dropdown({ "fullTextSearch": true }) // jQuery
         }
 
         // --- Authentication Dialog ---
@@ -631,10 +648,25 @@ require(['common'], function(common) {
 
         // --- Stableviews Client Functionality ---
 
+        function reloadWorkspaces() {
+            controller.loadAllWorkspaces(function(response) {
+                // ### check if workspace cookie still exist and do not override it
+                if (response && response.length > 0) {
+                    workspaces = response
+                    var firstWs = workspaces[0]
+                    console.log("Available Workspaces", response, "Set Workspace", firstWs.value)
+                    set_cookie_value(WORKSPACE_COOKIE_NAME, firstWs.id)
+                    refresh_workspace_menu()
+                } else {
+                    throw Error("Could not load workspaces")
+                }
+            })
+        }
+
         function reload_topicmaps() {
             controller.loadAllTopicmaps(function(response) {
                 topicmaps = response
-                console.log("Loaded Topicmaps", topicmaps)
+                console.log("Available Topicmaps", topicmaps)
                 refresh_topicmap_menu()
                 if (map_id) { // load routed map
                     selected_topicmap = { id: map_id }
