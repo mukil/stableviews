@@ -18,6 +18,11 @@
     
     <dependencies>
         <dependency>
+            <groupId>de.deepamehta</groupId>
+            <artifactId>deepamehta-topicmaps</artifactId>
+            <version>4.7</version>
+        </dependency>
+        <dependency>
             <groupId>org.deepamehta</groupId>
             <artifactId>dm47-littlehelpers</artifactId>
             <version>0.2-SNAPSHOT</version>
@@ -31,6 +36,9 @@
                 <artifactId>maven-bundle-plugin</artifactId>
                 <configuration>
                     <instructions>
+                        <Bundle-Activator>
+                            de.mikromedia.stableviews.StableviewsPlugin
+                        </Bundle-Activator>
                         <Bundle-SymbolicName>
                             de.mikromedia.stableviews
                         </Bundle-SymbolicName>
