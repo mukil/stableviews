@@ -105,7 +105,7 @@ define(['d3'], function(d3, require) {
             fetch('/core/topic/by_type/' + typeUri + '?include_childs=true', handle, fail, true, debug)
         },
         fetchTopicmapById: function(topicmapId, handle, fail, debug) {
-            fetch('/topicmap/' + topicmapId, handle, fail, true, debug)
+            fetch('/stableview/' + topicmapId, handle, fail, true, debug)
         },
         fetchTopicById: function(topicId, handle, fail, debug) {
             fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
