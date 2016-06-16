@@ -6,26 +6,26 @@
 
     <name>DM4 Stableviews UI</name>
     <groupId>de.mikromedia</groupId>
-    <artifactId>dm47-stableviews</artifactId>
+    <artifactId>dm48-stableviews</artifactId>
     <version>0.4-SNAPSHOT</version>
     <packaging>bundle</packaging>
 
     <parent>
         <groupId>de.deepamehta</groupId>
-        <artifactId>deepamehta-plugin-parent</artifactId>
-        <version>4.7</version>
+        <artifactId>deepamehta-plugin</artifactId>
+        <version>4.8</version>
     </parent>
     
     <dependencies>
         <dependency>
             <groupId>de.deepamehta</groupId>
             <artifactId>deepamehta-topicmaps</artifactId>
-            <version>4.7</version>
+            <version>4.8</version>
         </dependency>
         <dependency>
             <groupId>org.deepamehta</groupId>
-            <artifactId>dm47-littlehelpers</artifactId>
-            <version>0.2-SNAPSHOT</version>
+            <artifactId>dm48-littlehelpers</artifactId>
+            <version>0.3-SNAPSHOT</version>
         </dependency>
     </dependencies>
 

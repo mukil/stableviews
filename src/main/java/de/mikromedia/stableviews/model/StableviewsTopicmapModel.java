@@ -1,7 +1,7 @@
 package de.mikromedia.stableviews.model;
 
 import de.deepamehta.core.JSONEnabled;
-import de.deepamehta.plugins.topicmaps.model.TopicmapViewmodel;
+import de.deepamehta.topicmaps.model.TopicmapViewmodel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jettison.json.JSONException;

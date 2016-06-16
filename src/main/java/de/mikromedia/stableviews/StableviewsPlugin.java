@@ -13,8 +13,8 @@ import de.deepamehta.core.Topic;
 import de.deepamehta.core.osgi.PluginActivator;
 import de.deepamehta.core.service.Inject;
 import de.deepamehta.core.service.Transactional;
-import de.deepamehta.plugins.topicmaps.TopicmapsService;
-import de.deepamehta.plugins.topicmaps.model.TopicmapViewmodel;
+import de.deepamehta.topicmaps.TopicmapsService;
+import de.deepamehta.topicmaps.model.TopicmapViewmodel;
 import de.mikromedia.stableviews.model.StableviewsTopicmapModel;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -54,7 +54,7 @@ public class StableviewsPlugin extends PluginActivator {
     @Path("/topicmap/stylesheet/{styleSheetPath}/{id}")
     @Transactional
     public void setTopicmapStylesheet(@PathParam("styleSheetPath") String cssPath, @PathParam("id") long topicmapId) {
-        Topic topicmap = dms.getTopic(topicmapId);
+        Topic topicmap = dm4.getTopic(topicmapId);
         if (topicmap.getTypeUri().equals("dm4.topicmaps.topicmap")) {
             log.info("Set Topicmap Stylesheet on " + topicmap.getSimpleValue());
             topicmap.setProperty(PROP_MAP_STYLESHEET, cssPath, false);
@@ -62,7 +62,7 @@ public class StableviewsPlugin extends PluginActivator {
     }
 
     public void enrichWithCustomStylesheet(StableviewsTopicmapModel topic, long topicmapId) {
-        Topic topicmap = dms.getTopic(topicmapId);
+        Topic topicmap = dm4.getTopic(topicmapId);
         if (topicmap.getTypeUri().equals("dm4.topicmaps.topicmap")) {
             String mapStyleURL = "/de.mikromedia.stableviews/assets/css/custom-graph.css";
             if (topicmap.hasProperty(PROP_MAP_STYLESHEET)) {
