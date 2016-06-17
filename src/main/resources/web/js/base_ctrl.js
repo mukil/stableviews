@@ -21,12 +21,12 @@ define(['rest_client'], function(restClient, require) {
         },
         loadAllTopicmaps: function(handler) {
             restc.fetchByTypeUriChilds("dm4.topicmaps.topicmap", function (result) {
-                handler(result.items)
+                handler(result)
             }, null, null)
         },
         loadAllWorkspaces: function(handler) {
             restc.fetchByTypeUriChilds("dm4.workspaces.workspace", function (result) {
-                handler(result.items)
+                handler(result)
             }, null, null)
         },
         loadTopicmap: function(id, handler) {
@@ -41,7 +41,7 @@ define(['rest_client'], function(restClient, require) {
         },
         searchTopics: function(query, handler) {
             restc.getTopicSuggestions(query, handler, function (e){
-                console.warn("restc.getTopicSuggestuins ", e)
+                console.warn("restc.getTopicSuggestions ", e)
             }, false)
         },
         loadUsername: function(handler, debug) {

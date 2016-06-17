@@ -643,7 +643,17 @@ require(['common'], function(common) {
         }
 
         function set_cookie_value(name, value) {
+            remove_cookie(name)
             document.cookie = name + "=" + value + "; "
+        }
+
+        function remove_cookie(key) {
+            // Note: setting the expire date to yesterday removes the cookie
+            var days = -1
+            var expires = new Date()
+            expires.setTime(expires.getTime() + days * 24 * 60 * 60 * 1000)
+            //
+            document.cookie = key + "=;path=/;expires=" + expires.toGMTString()
         }
 
         // --- Stableviews Client Functionality ---
