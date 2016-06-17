@@ -8,6 +8,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
     var fourteen_days = (2 * a_week) // - (~14 Days)
     var six_weeks = (6 * a_week) // - (~12 Weeks)
     var twelve_weeks = (12 * a_week) // - (~12 Weeks)
+    var twentyfour_weeks = (24 * a_week) // - (~24 Weeks)
 
     var TIMESTAMP_NOW   = new Date()
     var DEFAULT_BACK_TO = TIMESTAMP_NOW.getTime() - fourteen_days
@@ -62,6 +63,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                     if (value === "2w") return fourteen_days
                     if (value === "6w") return six_weeks
                     if (value === "12w") return twelve_weeks
+                    if (value === "24w") return twentyfour_weeks
                 }
             })
         },
@@ -209,7 +211,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             /** var dates = []
             for (var i = 0; i < topics.length; i++) {
                 var topic = topics[i]
-                dates.push(topic.childs['dm4.time.modified'].value)
+                dates.push(topic.childs['dm4.time.created'].value)
             }
             var youngest = new Date(dates[dates.length-1])
             var oldest = new Date(dates[0]) // -1 Day
@@ -259,7 +261,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             // render dotted-item
             var dots = area.selectAll("circle")
                 .data(topics, function (d) {
-                    return new Date(d.childs['dm4.time.modified'].value)
+                    return new Date(d.childs['dm4.time.created'].value)
                 })
                 .enter()
                 .append("circle") // append g and
@@ -305,15 +307,15 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 .append("svg:title")
                 .text(function(d) {
                     if (d.type_uri === "dm4.webbrowser.web_resource") {
-                        return "Web Resource, Modified " + new Date(d.childs['dm4.time.modified'].value)
+                        return "Web Resource, Created " + new Date(d.childs['dm4.time.created'].value)
                     } else if (d.type_uri === "dm4.notes.note") {
-                        return "Note (Modified: " + new Date(d.childs['dm4.time.modified'].value)
+                        return "Note (Created: " + new Date(d.childs['dm4.time.created'].value)
                     } else if (d.type_uri === "dm4.files.file" || d.type_uri === "dm4.files.folder") {
-                        return "File or Folder, Modified " + new Date(d.childs['dm4.time.modified'].value)
+                        return "File or Folder, Created " + new Date(d.childs['dm4.time.created'].value)
                     } else if (d.type_uri === "dm4.contacts.institution") {
-                        return "Institution, Modified " + new Date(d.childs['dm4.time.modified'].value)
+                        return "Institution, Created " + new Date(d.childs['dm4.time.created'].value)
                     } else if (d.type_uri === "dm4.contacts.person") {
-                        return "Person, Modified " + new Date(d.childs['dm4.time.modified'].value)
+                        return "Person, Created " + new Date(d.childs['dm4.time.created'].value)
                     }
                 })
 
@@ -332,7 +334,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             }
 
             function timestamp_sort_ascending(a, b) {
-                var timestampUri = "dm4.time.modified"
+                var timestampUri = "dm4.time.created"
                 var scoreA = 0
                 var scoreB = 0
                 if (a.childs.hasOwnProperty(timestampUri)) scoreA = a.childs[timestampUri].value

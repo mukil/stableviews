@@ -85,6 +85,9 @@
                             <option value="2015">2015</option>
                             <option value="2014">2014</option>
                             <option value="2013">2013</option>
+                            <option value="2012">2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
                         </select>
                         <label for="range">Plus</label>
                         <select id="range">
@@ -94,10 +97,11 @@
                             <option value="2w">14 Days</option>
                             <option value="6w">6 Weeks</option>
                             <option value="12w">12 Weeks</option>
+                            <option value="24w">24 Weeks</option>
                         </select>
                         <select id="timerange-option">
-                            <option value="modified">Modified</option>
                             <option value="created">Created</option>
+                            <option value="modified">Modified</option>
                         </select>
                         <button id="adjust" type="submit">OK</button>
                         <button id="cancel" type="button">Abbrechen</button>
@@ -143,8 +147,8 @@
                         </div>
                         <div class="body"></div>
                         <br/>
-                        <span data-bind="text: 'Zuletzt bearbeitet am '
-                            + new Date($data.childs['dm4.time.modified'].value)" class="timestamp"></span>
+                        <span data-bind="text: 'Erstellt am '
+                            + new Date($data.childs['dm4.time.created'].value)" class="timestamp"></span>
                     </li>
                     <!-- /ko -->
                 
@@ -157,8 +161,8 @@
                         </div>
                         <div class="body"></div>
                         <br/>
-                        <span data-bind="text: 'Zuletzt bearbeitet am '
-                            + new Date($data.childs['dm4.time.modified'].value)" class="timestamp"></span>
+                        <span data-bind="text: 'Erstellt am '
+                            + new Date($data.childs['dm4.time.created'].value)" class="timestamp"></span>
                     </li>
                     <!-- /ko -->
 

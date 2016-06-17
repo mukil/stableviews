@@ -24,7 +24,7 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
     var logged_in_user = ko.observable(undefined)
     //
     var view_states = {
-            timestamp_option: ko.observable("modified")
+            timestamp_option: ko.observable("created")
             /** type_filter: ko.observableArray(
                 ["org.deepamehta.moodle.items", "org.deepamehta.resources.resource", "dm4.tags.tag"]
             ),
