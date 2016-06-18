@@ -10,9 +10,9 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
     var twelve_weeks = (12 * a_week) // - (~12 Weeks)
     var twentyfour_weeks = (24 * a_week) // - (~24 Weeks)
 
-    var TIMESTAMP_NOW   = new Date()
-    var DEFAULT_BACK_TO = TIMESTAMP_NOW.getTime() - fourteen_days
-    var MAX_BACK_TO     = TIMESTAMP_NOW.getTime() - twelve_weeks
+    var TIMESTAMP_NOW   = new Date().getTime()
+    var DEFAULT_BACK_TO = TIMESTAMP_NOW - fourteen_days
+    var MAX_BACK_TO     = TIMESTAMP_NOW - twelve_weeks
     // view model
     var model = restc.get_clientside_model()
 
@@ -22,9 +22,9 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             // 0) initialize timestamps
             model.set_plus_range(twelve_weeks)
             model.set_from_time(DEFAULT_BACK_TO)
-            model.set_to_time(TIMESTAMP_NOW.getTime())
+            model.set_to_time(TIMESTAMP_NOW)
             model.set_max_from_time(MAX_BACK_TO)
-            model.set_max_to_time(TIMESTAMP_NOW.getTime())
+            model.set_max_to_time(TIMESTAMP_NOW)
             // 1) fire query to initialize a defualt timeline, showing contents of the last two eeks
             restc.load_topics_in_range() // rendering is done through knockout observing the model
             // 2) fire query to initialize the query timeline, showing an index of contents of the last 12 weeks
@@ -32,7 +32,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             // 3) set timeline header info label
             tl.render_timestamps()
             tl.render_timestamp_settings()
-            d3.select('#timerange-form').on('click', function() {
+            d3.select('#timerange-form').on('click', function() { // updating the graphical index (right side)
                 if (d3.event.target.localName === "button" && d3.event.target.id === "adjust") {
                     var day = tl.get_selected_option_value('#from-day option')
                     var month = tl.get_selected_option_value('#from-month option')
@@ -48,10 +48,12 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                     model.set_max_from_time(adjusted_from_time)
                     model.set_max_to_time(adjusted_to_time)
                     model.set_timestamp_option(timestamp_option)
+                    model.set_plus_range(range_option)
                     d3.select(".time-axis .loader").classed("hidden", false)
                     restc.load_timerange_index(tl.render_timerange_slider)
                     tl.render_timestamps()
                     tl.toggle_timerange_settings()
+
                 } else if (d3.event.target.localName === "button" && d3.event.target.id === "cancel") {
                     tl.toggle_timerange_settings()
                 }
@@ -88,17 +90,19 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 tl.set_selected_option('#from-year option', max_from_year)
             var range_plus = model.get_plus_range()
                 if (range_plus === a_day) {
-                    tl.set_selected_option('#range option', "1")
+                    tl.set_selected_option('#range option', "1d")
                 } else if (range_plus === three_days) {
-                    tl.set_selected_option('#range option', "3")
+                    tl.set_selected_option('#range option', "3d")
                 } else if (range_plus === a_week) {
-                    tl.set_selected_option('#range option', "7")
+                    tl.set_selected_option('#range option', "7d")
                 } else if (range_plus === fourteen_days) {
                     tl.set_selected_option('#range option', "2w")
                 } else if (range_plus === six_weeks) {
                     tl.set_selected_option('#range option', "6w")
                 } else if (range_plus === twelve_weeks) {
                     tl.set_selected_option('#range option', "12w")
+                } else if (range_plus === twentyfour_weeks) {
+                    tl.set_selected_option('#range option', "24w")
                 }
         },
 
@@ -127,10 +131,10 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             var body = d3.select('#topic-' + item.id + ' .body')
             // allow to toggle details in list
             console.log("Timeline Inline Rendering", item, "Display Style Attr:", body.style("display"))
-            if (body.style("display").indexOf("block") !== -1) {
+            /** if (body.style("display").indexOf("block") !== -1) {
                 body.style("display", "none")
                 return true
-            }
+            } **/
             // build up the html content
             var item_html = ""
             if (item.type_uri === 'dm4.files.file') {
@@ -149,6 +153,8 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 } else {
                     item_html = '<a href="' +filepath+ '" class="command" title="Download">Access File</a>'
                 }
+                body.html(item_html)
+                body.style("display", "block")
 
             } else if (item.type_uri === 'dm4.notes.note') {
 
@@ -156,6 +162,8 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                         + '<div>' + item.childs['dm4.notes.text'].value + '</div>'
                 // var tags = item.childs['dm4.tags.tag']
                 item_html = '<p>' + notes_html + '</p>'
+                body.html(item_html)
+                body.style("display", "block")
                 /** if (selected_item().type_uri === "org.deepamehta.resources.resource") {
                 // Navigating to resource-detail view
                 window.document.location = '/notes/' + selected_item().id
@@ -163,11 +171,17 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
             } else if (item.type_uri === 'dm4.webbrowser.web_resource') {
 
-                item_html =  '<a href="' +item.childs["dm4.webbrowser.url"].value + '" class="command">Open Web Resource</a>'
+                // no custom command for web resources atm
+                // item_html =  '<a href="' +item.childs["dm4.webbrowser.url"].value + '" class="command">Open Web Resource</a>'
+                item_html = '<p>' + item.childs['dm4.webbrowser.web_resource_description'].value + '</p>'
+                body.html(item_html)
+                body.style("display", "block")
 
             } else if (item.type_uri === 'dm4.contacts.person' || item.type_uri === 'dm4.contacts.institution') {
 
                 item_html =  '<p>' + item.value +  '</p>'
+                body.html(item_html)
+                body.style("display", "block")
 
             } else {
                 console.warn("Inline Renderer for Topic Type " + item.type_uri + " NOT YET IMPLEMENTED")
@@ -187,8 +201,6 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 item_html += '</p>'
             } */
             // populate and display element
-            body.html(item_html)
-            body.style("display", "inline-block")
 
         },
 
@@ -242,21 +254,21 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                     .call(yAxis)
             // setup brush control
             // ### use timeline_default-timerange to initiate our slider
-            var brush = d3.svg.brush().y(timescale)
-                // brush.x(50)
-                brush.extent([DEFAULT_BACK_TO, TIMESTAMP_NOW])
+            var brush = d3.svg.brush()
+                brush.y(timescale)
+                // ### extent does not redraw the brush after we've adapted the timerange
+                brush.extent([model.get_from_time(), model.get_to_time()])
                 brush.on("brushend", onbrushmove_end)
             var sliderarea = area.append("g").attr("class", "slider-area")
                 sliderarea.append("g").attr("class", "brush").call(brush)
                     .selectAll("rect")
-                    .attr("x", -75)
-                    .attr("y", 0)
-                    .attr("width", "75")
+                    /** .attr("x", -75)
+                    .attr("y", 0) **/
+                    .attr("width", "90")
                     .attr("fill", "#f1f1f1")
                     .attr("stroke", "#0782C1")
                     .attr("stroke-width", "1")
                     .attr("opacity", ".7")
-
             // ### show x-axis labeles (type-row)
             // render dotted-item
             var dots = area.selectAll("circle")
@@ -319,7 +331,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                     }
                 })
 
-            function onbrushmove_end (e) {
+            function onbrushmove_end(e) {
                 var s = brush.extent();
                 // xScale.domain( s);
                 console.log('on brush move', brush.empty(), s[0],s[1]);
@@ -328,9 +340,6 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 model.set_to_time(new Date(s[1]).getTime())
                 restc.load_topics_in_range()
                 tl.render_timestamps()
-                //
-                // render spinning wheel..
-                //
             }
 
             function timestamp_sort_ascending(a, b) {

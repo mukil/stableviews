@@ -25,7 +25,7 @@ body.eduzen {
 .eduzen .headline {
     z-index: 100;
     width: 100%;
-    min-height: 40px;
+    min-height: 80px;
    /**  border-bottom: 1px solid #FFC700; **/
     position: fixed;
     top: 0px; left: 0px;

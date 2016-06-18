@@ -44,8 +44,9 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
     var date_format = function (timestamp) {
         try {
             var date = new Date(timestamp)
+            var minutes = (date.getMinutes() < 10) ? "0" + date.getMinutes() : date.getMinutes()
             var date_string = '' + date.getDate() + '.' + monthNames[date.getMonth()] + ' '
-                        + date.getFullYear() + ', ' + date.getHours() + ':' + date.getMinutes() + ' Uhr'
+                        + date.getFullYear() + ', ' + date.getHours() + ':' + minutes + ' Uhr'
             return date_string
         } catch (e) {
             throw Error(e)

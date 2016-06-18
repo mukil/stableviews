@@ -45,8 +45,8 @@ define(['modules/model', 'd3'], function(model, d3) {
             load_topics_in_range: function (callback) {
 
                 // update model
-                var since = model.get_from_time(since)
-                var to = model.get_to_time(to)
+                var since = model.get_from_time()
+                var to = model.get_to_time()
                 console.log("Querying Timeline (Left Side) Since", new Date(since), "To", new Date(to))
                 // update gui
                 d3.select('.data-container').style({'display': 'inline-block'})
