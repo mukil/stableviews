@@ -17,12 +17,12 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
         var $link = jQuery('<a href="#stableviews" id="stableviews-link">View with stableviews</a>')
         jQuery('#topicmap-panel').append($link)
         $link.click(function(e) {
-            window.location.assign('/de.mikromedia.stableviews/#' + topicmaps.get_topicmap().get_id())
+            window.location.assign('/stableviews/#' + topicmaps.get_topicmap().get_id())
         })
     }
 
     function go_to_timeline_view() {
-            window.location.assign("/de.mikromedia.stableviews/timeline.html")
+            window.location.assign("/stableviews/timeline")
     }
 
 })

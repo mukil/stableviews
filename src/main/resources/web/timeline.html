@@ -10,13 +10,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/bfi.css"/>
         <!-- Legacy Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/eduzen.css"/>
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/timeline-style.css"/>
         <!-- Semantic UI Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css">
     </head>
-    <body class="eduzen main-timeline">
+    <body class="eduzen main-timeline bfi sans">
         <div class="headline">
 
             <div id="menu">
@@ -25,13 +27,13 @@
                 <div class="about-login"></div>
                 <div class="pages">
                     <a href="#set-timerange" id="set-timerange" data-bind="click: $root.toggle_timerange_dialog"
-                       title="Zeitraum des grafischen Indexes anpassen (Rechts)">Suchzeitraum</a>
-                    <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">zur&uuml;ck zum Webclient</a>
-                    <a href="//github.com/mukil/stableviews/" id="info" title="Source Code">Github</a>
-                    <a href="/de.mikromedia.stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
+                       title="Zeitraum des grafischen Indexes anpassen (Rechts)">Optionen</a>
+                    <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">Topicmaps</a>
+                    <a href="/stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
                 </div>
                 <span class="username"></span>
                 <div class="timerange-settings-dialog hidden" title="Adjust Timerange">
+                    <h3>Anpassen des m&ouml;glichen Suchzeitraums der grafischen Zeitleiste</h3>
                     <form id="timerange-form" onsubmit="return false">
                         <label for="from-day">Ausgehend vom</label>
                         <select id="from-day">
@@ -141,10 +143,14 @@
                     <li class="item web-resource" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Web Resource Icon" class="type-icon" title="Web Resource"/>
+                            <!-- ko if: $data.childs['dm4.webbrowser.url'] -->
                             <a class="name outlink" data-bind="text: $data.value, attr: { href: $data.childs['dm4.webbrowser.url'].value, title: 'Open Web Resource' } "></a>
+                            <!-- /ko -->
+                            <!-- ko if: $data.childs['dm4.webbrowser.web_resource_description'] -->
                             <div class="body visible web-resource">
                                 <p data-bind="html: $data.childs['dm4.webbrowser.web_resource_description'].value"></p>
                             </div>
+                            <!-- /ko -->
                             <div data-bind="text: 'Angelegt am ' + $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></div>
                         </div>
                     </li>
@@ -262,6 +268,17 @@
                 </div>
             </div>
         </div>
+
+        <footer class="copy bright">
+            <div class="attribution">
+                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.<br/>
+                Please help to improve this software through giving <a href="mailto:mail@mikromedia.de">feedback</a> or reporting any <a href="http://github.com/mukil/stableviews">issues</a>
+            </div>
+            <div class="source-code">
+                <a href="https://github.com/mukil/stableviews"
+                   title="Get the source code"><i class="github icon"></i></a>Stableviews is free and open source software &copy; 2014 - 2016, Malte Rei&szlig;ig
+            </div>
+        </footer>
 
     </body>
 </html>

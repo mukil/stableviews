@@ -16,6 +16,7 @@ import de.deepamehta.core.service.Transactional;
 import de.deepamehta.topicmaps.TopicmapsService;
 import de.deepamehta.topicmaps.model.TopicmapViewmodel;
 import de.mikromedia.stableviews.model.StableviewsTopicmapModel;
+import java.io.InputStream;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
@@ -27,7 +28,7 @@ import javax.ws.rs.core.MediaType;
  * @version 0.4-SNAPSHOT - compatible with DM 4.7
  *
  */
-@Path("/stableview")
+@Path("/stableviews")
 @Consumes(MediaType.APPLICATION_JSON)
 @Produces(MediaType.APPLICATION_JSON)
 public class StableviewsPlugin extends PluginActivator {
@@ -43,11 +44,26 @@ public class StableviewsPlugin extends PluginActivator {
 
     @GET
     @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
     public StableviewsTopicmapModel getStyledTopicmap(@PathParam("id") long topicmapId) {
         TopicmapViewmodel topicmapViewModel = tmService.getTopicmap(topicmapId, true);
         StableviewsTopicmapModel svtm = new StableviewsTopicmapModel(topicmapViewModel);
         enrichWithCustomStylesheet(svtm, topicmapViewModel.getId());
         return svtm;
+    }
+
+    @GET
+    @Path("/")
+    @Produces(MediaType.TEXT_HTML)
+    public InputStream getStableviewsIndex() {
+        return getStaticResource("web/index.html");
+    }
+
+    @GET
+    @Path("/timeline")
+    @Produces(MediaType.TEXT_HTML)
+    public InputStream getTimelineView() {
+        return getStaticResource("web/timeline.html");
     }
 
     @POST
