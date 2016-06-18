@@ -95,6 +95,10 @@
     cursor: pointer;
 }
 
+.eduzen li.item .note-container .body a.url {
+    display: inline-block;
+}
+
 .eduzen li.item .username,
 .eduzen li.item .timestamp {
     font-size: .9em;

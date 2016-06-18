@@ -131,15 +131,15 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             var body = d3.select('#topic-' + item.id + ' .body')
             // allow to toggle details in list
             console.log("Timeline Inline Rendering", item, "Display Style Attr:", body.style("display"))
-            /** if (body.style("display").indexOf("block") !== -1) {
+            if (body.style("display").indexOf("block") !== -1) {
                 body.style("display", "none")
                 return true
-            } **/
+            }
             // build up the html content
             var item_html = ""
             if (item.type_uri === 'dm4.files.file') {
 
-                var filepath = '/filerepo/' + item.childs['dm4.files.path'].value
+                var filepath = '/filerepo/' + encodeURIComponent(item.childs['dm4.files.path'].value)
                 if (item.value.indexOf('.pdf') !== -1) {
                     item_html = '<p><object data="'+filepath+'" width="760" height="640" type="application/pdf">'
                         + '</p>'
@@ -158,12 +158,12 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
             } else if (item.type_uri === 'dm4.notes.note') {
 
-                var notes_html = item.value
+                /** var notes_html = item.value
                         + '<div>' + item.childs['dm4.notes.text'].value + '</div>'
                 // var tags = item.childs['dm4.tags.tag']
                 item_html = '<p>' + notes_html + '</p>'
                 body.html(item_html)
-                body.style("display", "block")
+                body.style("display", "block") **/
                 /** if (selected_item().type_uri === "org.deepamehta.resources.resource") {
                 // Navigating to resource-detail view
                 window.document.location = '/notes/' + selected_item().id
@@ -173,15 +173,13 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
                 // no custom command for web resources atm
                 // item_html =  '<a href="' +item.childs["dm4.webbrowser.url"].value + '" class="command">Open Web Resource</a>'
-                item_html = '<p>' + item.childs['dm4.webbrowser.web_resource_description'].value + '</p>'
+                /** item_html = '<p>' + item.childs['dm4.webbrowser.web_resource_description'].value + '</p>'
                 body.html(item_html)
-                body.style("display", "block")
 
             } else if (item.type_uri === 'dm4.contacts.person' || item.type_uri === 'dm4.contacts.institution') {
 
-                item_html =  '<p>' + item.value +  '</p>'
-                body.html(item_html)
-                body.style("display", "block")
+                /** item_html =  '<p>' + item.value +  '</p>'
+                body.html(item_html) **/
 
             } else {
                 console.warn("Inline Renderer for Topic Type " + item.type_uri + " NOT YET IMPLEMENTED")
@@ -200,8 +198,9 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 }
                 item_html += '</p>'
             } */
-            // populate and display element
-
+            // populate  ...
+            // display element
+            body.style("display", "block")
         },
 
         toggle_timerange_settings: function() {
