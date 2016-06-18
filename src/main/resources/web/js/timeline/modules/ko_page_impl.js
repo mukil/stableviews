@@ -11,6 +11,7 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
 
     var timerange = ko.observableArray([])
     var items = ko.observableArray([])
+    var item_count = 0
 
     var selected_item = ko.observable(undefined)
     var current_tags = ko.observableArray([])
@@ -94,7 +95,11 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
         },
         set_items: function(new_items) {
             console.log("Loaded Timeline Topics", new_items)
+            item_count = new_items.length
             items(new_items) // observableArray?
+        },
+        get_item_count: function() {
+            return item_count
         },
         get_items: function() {
             return items

@@ -10,11 +10,10 @@ function require_config () {
         }
     })
 
-    require(['knockout', 'modules/rest_client', 'modules/controller', 'domReady!'],
-    function(ko, restc, notes_route) {
+    require(['knockout', 'modules/rest_client', 'modules/controller', 'domReady!'], function(ko, restc, controller) {
+        console.log("Timeline Client initialized Knockout based Controller and Rest Client", restc, controller)
         ko.applyBindings(restc.get_clientside_model())
-        console.log("Timeline Client initialized Knockout based Controller and Model")
-        notes_route.page_route()
+        controller.page_route()
     });
 
     /**

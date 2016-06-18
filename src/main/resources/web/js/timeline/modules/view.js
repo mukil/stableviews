@@ -26,12 +26,13 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             model.set_max_from_time(MAX_BACK_TO)
             model.set_max_to_time(TIMESTAMP_NOW)
             // 1) fire query to initialize a defualt timeline, showing contents of the last two eeks
-            restc.load_topics_in_range() // rendering is done through knockout observing the model
+            tl.show_topics_in_range()
             // 2) fire query to initialize the query timeline, showing an index of contents of the last 12 weeks
             restc.load_timerange_index(this.render_timerange_slider)
             // 3) set timeline header info label
             tl.render_timestamps()
             tl.render_timestamp_settings()
+            // ### put form handler where it belongs
             d3.select('#timerange-form').on('click', function() { // updating the graphical index (right side)
                 if (d3.event.target.localName === "button" && d3.event.target.id === "adjust") {
                     var day = tl.get_selected_option_value('#from-day option')
@@ -68,6 +69,28 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                     if (value === "24w") return twentyfour_weeks
                 }
             })
+            // check username
+            restc.get_username(function(response) {
+                if (response.length > 0) {
+                    d3.select('#menu .username').text('Angemeldet als ' + response)
+                } else {
+                    d3.select('#menu .username').html('<a href="/de.deepamehta.webclient">Login</a>')
+                }
+            })
+        },
+
+        show_topics_in_range: function() {
+            // rendering is done through knockout observing the model
+            restc.load_topics_in_range(function() {
+                // if done, hide loader
+                tl.hide_list_loader()
+                console.log("Loaded ", model.get_item_count(), " items into timeline")
+                d3.select('.timeline-info .state.items').text(model.get_item_count())
+            })
+        },
+
+        hide_list_loader: function() {
+                d3.select('.data-container').style({'display': 'none'})
         },
 
         render_timestamps: function() {
@@ -126,9 +149,10 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
             }
         },
 
-        render_details_in_list: function (item) {
+        handle_details_in_list: function (item) {
 
             var body = d3.select('#topic-' + item.id + ' .body')
+            if (item.type_uri === "dm4.webbrowser.web_resource") return
             // allow to toggle details in list
             console.log("Timeline Inline Rendering", item, "Display Style Attr:", body.style("display"))
             if (body.style("display").indexOf("block") !== -1) {
@@ -156,33 +180,8 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 body.html(item_html)
                 body.style("display", "block")
 
-            } else if (item.type_uri === 'dm4.notes.note') {
-
-                /** var notes_html = item.value
-                        + '<div>' + item.childs['dm4.notes.text'].value + '</div>'
-                // var tags = item.childs['dm4.tags.tag']
-                item_html = '<p>' + notes_html + '</p>'
-                body.html(item_html)
-                body.style("display", "block") **/
-                /** if (selected_item().type_uri === "org.deepamehta.resources.resource") {
-                // Navigating to resource-detail view
-                window.document.location = '/notes/' + selected_item().id
-                */
-
-            } else if (item.type_uri === 'dm4.webbrowser.web_resource') {
-
-                // no custom command for web resources atm
-                // item_html =  '<a href="' +item.childs["dm4.webbrowser.url"].value + '" class="command">Open Web Resource</a>'
-                /** item_html = '<p>' + item.childs['dm4.webbrowser.web_resource_description'].value + '</p>'
-                body.html(item_html)
-
-            } else if (item.type_uri === 'dm4.contacts.person' || item.type_uri === 'dm4.contacts.institution') {
-
-                /** item_html =  '<p>' + item.value +  '</p>'
-                body.html(item_html) **/
-
             } else {
-                console.warn("Inline Renderer for Topic Type " + item.type_uri + " NOT YET IMPLEMENTED")
+                // console.warn("Inline Renderer for Topic Type " + item.type_uri + " NOT YET IMPLEMENTED")
             }
             // build up tags
             /** if (item.childs.hasOwnProperty('dm4.tags.tag')) {
@@ -258,7 +257,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 // ### extent does not redraw the brush after we've adapted the timerange
                 brush.extent([model.get_from_time(), model.get_to_time()])
                 brush.on("brushend", onbrushmove_end)
-            var sliderarea = area.append("g").attr("class", "slider-area")
+            var sliderarea = area.append("g").attr("class", "slider-area").attr("title", "Zeitfenster: Anpassen mittels Drag & Drop")
                 sliderarea.append("g").attr("class", "brush").call(brush)
                     .selectAll("rect")
                     /** .attr("x", -75)
@@ -337,7 +336,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 // document.getElementById('abc').innerHTML = s[0]+ "     "+s[1];
                 model.set_from_time(new Date(s[0]).getTime())
                 model.set_to_time(new Date(s[1]).getTime())
-                restc.load_topics_in_range()
+                tl.show_topics_in_range()
                 tl.render_timestamps()
             }
 

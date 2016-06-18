@@ -1,7 +1,25 @@
 
-define(['knockout'], function(ko) {
+/** so this "controller" requires our timeline, which in turn depends on restclient, d3 and labels ...*/
+
+define(function() {
 
     return {
+
+        render_item_content: function (item) {
+
+            require(['modules/view'], function (view) { // circular dependency
+                view.handle_details_in_list(item)
+            })
+
+        },
+
+        adjust_timerange: function() {
+
+            require(['modules/view'], function (view) { // circular dependency
+                view.toggle_timerange_settings()
+            })
+
+        },
 
         page_route: function(hello) {
             // parse requested location
@@ -15,7 +33,7 @@ define(['knockout'], function(ko) {
             // additional resource to bootstrap the app
             if (viewId === "timeline") {
 
-                require(['modules/timeline'], function (view) {  // circular dependency
+                require(['modules/view'], function (view) {  // circular dependency
                     view.init()
                 })
 
@@ -23,7 +41,7 @@ define(['knockout'], function(ko) {
             } else if (topicId === undefined || topicId === "") {
 
                 // _this.prepare_index_page(true, false) // load timeline with no filter set
-                require(['modules/timeline'], function (view) {  // circular dependency
+                require(['modules/view'], function (view) {  // circular dependency
                     view.init()
                 })
 
@@ -57,22 +75,6 @@ define(['knockout'], function(ko) {
                 console.log("=> Topic Detail Timeline")
 
             }
-        },
-
-        render_item_content: function (item) {
-
-            require(['modules/timeline'], function (view) { // circular dependency
-                view.render_details_in_list(item)
-            })
-
-        },
-
-        adjust_timerange: function() {
-
-            require(['modules/timeline'], function (view) { // circular dependency
-                view.toggle_timerange_settings()
-            })
-
         }
 
     }

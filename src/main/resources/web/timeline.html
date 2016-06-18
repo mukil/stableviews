@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Timeline View - DeepaMehta 4.7</title>
+        <title>Timeline View - DeepaMehta 4.8</title>
         <script
             data-main="/de.mikromedia.stableviews/js/timeline/require_main"
             src="/de.mikromedia.stableviews/assets/vendor/require.js">
@@ -25,7 +25,7 @@
                 <div class="about-login"></div>
                 <div class="pages">
                     <a href="#set-timerange" id="set-timerange" data-bind="click: $root.toggle_timerange_dialog"
-                       title="Zeitraum des Indexes anpassen (Rechte Seite)">Index anpassen</a>
+                       title="Zeitraum des grafischen Indexes anpassen (Rechts)">Suchzeitraum</a>
                     <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">zur&uuml;ck zum Webclient</a>
                     <a href="//github.com/mukil/stableviews/" id="info" title="Source Code">Github</a>
                     <a href="/de.mikromedia.stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
@@ -33,7 +33,7 @@
                 <span class="username"></span>
                 <div class="timerange-settings-dialog hidden" title="Adjust Timerange">
                     <form id="timerange-form" onsubmit="return false">
-                        <label for="from-day">From</label>
+                        <label for="from-day">Ausgehend vom</label>
                         <select id="from-day">
                             <option value="01">01.</option>
                             <option value="02">02.</option>
@@ -90,17 +90,17 @@
                             <option value="2011">2011</option>
                             <option value="2010">2010</option>
                         </select>
-                        <label for="range">Plus</label>
+                        <label for="range">+</label>
                         <select id="range">
-                            <option value="1d">1 Day</option>
-                            <option value="3d">3 Days</option>
-                            <option value="7d">7 Days</option>
-                            <option value="2w">14 Days</option>
-                            <option value="6w">6 Weeks</option>
-                            <option value="12w">12 Weeks</option>
-                            <option value="24w">24 Weeks</option>
+                            <option value="1d">1 Tag</option>
+                            <option value="3d">3 Tage</option>
+                            <option value="7d">7 Tage</option>
+                            <option value="2w">2 Wochen</option>
+                            <option value="6w">6 Wochen</option>
+                            <option value="12w">3 Monate</option>
+                            <option value="24w">1/2 Jahr</option>
                         </select>
-                        <select id="timerange-option">
+                        <select id="timerange-option" disabled="disabled">
                             <option value="created">Created</option>
                             <option value="modified">Modified</option>
                         </select>
@@ -120,28 +120,25 @@
             <!-- /ko -->
 
             <div class="timeline-info">
-                <span class="label">Zwischen dem</span>
-                <span class="state from">...</span>
-                <span class="label">und dem</span>
-                <span class="state to">...</span>
-                <span class="label">wurden</span>
                 <span class="state items" data-bind="text: get_items().length"></span>
-                <span class="label">Topics</span>
-                <span class="state timestamp-option"></span>.
-                <!-- ko if: get_current_tags().length > 0 -->
-                    <span class="label">Tags</span>
-                    <span class="state tags" data-bind="text: get_current_tags().length"></span>
-                <!-- /ko -->
+                <span class="label">sichtbare Eintr&auml;ge</span><br/>
+                <span class="label">Angezeigtes Zeitfenster</span><br/>
+                <span class="label">Vom</span>
+                <span class="state from">...</span><br/>
+                <span class="label">Bis</span>
+                <span class="state to">...</span><br/>
+                <!--span class="label">wurden</span-->
+                <!--span class="state timestamp-option"></span-->
             </div>
 
         </div>
 
-        <div>
+        <div class="timeline">
             <ul data-bind="foreach: get_items()" class="note-list">
                 
                     <!-- List Item of Web Resources -->
                     <!-- ko if: $data.type_uri === 'dm4.webbrowser.web_resource' -->
-                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <li class="item web-resource" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Web Resource Icon" class="type-icon" title="Web Resource"/>
                             <a class="name outlink" data-bind="text: $data.value, attr: { href: $data.childs['dm4.webbrowser.url'].value, title: 'Open Web Resource' } "></a>
@@ -155,13 +152,13 @@
 
                     <!-- List Item of Note -->
                     <!-- ko if: $data.type_uri == 'dm4.notes.note' -->
-                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <li class="item note" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Notiz Icon" class="type-icon" title="Notiz"/>
                             <span data-bind="text: $data.value" class="name"></span>
                             <div class="body note">
                                 <!-- ko if: $data.childs['dm4.notes.text'] -->
-                                <span data-bind="html: $data.childs['dm4.notes.text'].value" class="text"></span>
+                                <div data-bind="html: $data.childs['dm4.notes.text'].value" class="text"></div>
                                 <!-- /ko -->
                             </div>
                             <div data-bind="text: 'Angelegt am ' + $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></div>
@@ -171,11 +168,11 @@
 
                     <!-- List Item of Person -->
                     <!-- ko if: $data.type_uri === 'dm4.contacts.person' -->
-                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <li class="item person" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Person Icon" class="type-icon" title="Person"/>
                             <span data-bind="text: $data.value" class="name"></span>
-                            <div class="body person">
+                            <div class="body">
                                 <!-- ko if: $data.childs['dm4.contacts.phone_number'] && $data.childs['dm4.contacts.phone_number'].length > 0 -->
                                 <span data-bind="text: $data.childs['dm4.contacts.phone_number'][0].value" class="phone"></span><br/>
                                 <!-- /ko -->
@@ -205,11 +202,11 @@
 
                     <!-- List Item of Institution -->
                     <!-- ko if: $data.type_uri === 'dm4.contacts.institution' -->
-                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <li class="item institution" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Organisation Icon" class="type-icon" title="Organisation"/>
                             <span data-bind="text: $data.value" class="name"></span>
-                            <div class="body institution">
+                            <div class="body">
                                 <!-- ko if: $data.childs['dm4.contacts.notes'] -->
                                 <span data-bind="html: $data.childs['dm4.contacts.notes'].value" class="personal-note"></span><br/>
                                 <!-- /ko -->
@@ -236,7 +233,7 @@
 
                     <!-- List of everything else   -->
                     <!-- ko if: $data.type_uri !== 'dm4.contacts.institution' && $data.type_uri !== 'dm4.webbrowser.web_resource' && $data.type_uri !== 'dm4.contacts.person' && $data.type_uri !== 'dm4.notes.note' -->
-                    <li class="item" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <li class="item topic" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
                             <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="DeepaMehta 4 Type Icon" class="type-icon" title="DeepaMehta Type"/>
                             <span data-bind="text: $data.value" class="name"></span>
@@ -256,7 +253,7 @@
             </div>
         </div>
 
-        <div class="time-axis">
+        <div class="time-axis" title="Zeitfenster: Anpassen mittels Drag & Drop">
             <div class="loader">
                 <div class="loader ui inverted active dimmer">
                     <div class="ui indeterminate text loader">

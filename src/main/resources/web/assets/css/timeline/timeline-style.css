@@ -24,18 +24,17 @@
 }
 
 .eduzen.main-timeline {
-    padding: 40px;
+    padding: 30px;
     font-size: 1em;
 }
 
 .main-timeline .timeline-info {
-    display: none;
     padding: 10px;
-    margin-left: 30px;
-    font-size: 1.2em;
-    position: relative;
-    top: 40px;
-    background-color: #fff;
+    position: fixed;
+    top: 58px;
+    right: 50px;
+    width: 230px;
+    text-align: right;
 }
 
 .main-timeline .timeline-info span.state {
@@ -47,10 +46,14 @@
 }
 
 .timerange-settings-dialog {
-    min-height: 45px;
-    padding: 10px;
+    padding: 5px;
+    padding-left: 40px;
     /** text-align: center; **/
-    border-bottom: 1px solid #0782C1;
+    position: absolute;
+    background-color: #fff;
+    border-bottom: 1px solid #0782C1; 
+    z-index: 100;
+    width: 100%;
 }
 
 .timerange-settings-dialog select,
@@ -78,7 +81,7 @@
 .eduzen ul.note-list {
     margin-left: 0px;
     padding-left: 0px;
-    padding-right: 200px;
+    padding-right: 280px;
     position: relative;
     top: 50px;
 }
@@ -95,8 +98,28 @@
     cursor: pointer;
 }
 
+.eduzen li.item {
+    padding-left: 10px;
+    border-left: 3px solid #fff;
+}
+
+.eduzen li.item.topic:hover,
+.eduzen li.item.institution:hover,
+.eduzen li.item.person:hover,
+.eduzen li.item.note:hover {
+    border-left: 3px solid #0782C1;
+}
+
+.eduzen li.item.web-resource {
+    cursor: auto;
+}
+
 .eduzen li.item .note-container .body a.url {
     display: inline-block;
+}
+
+.eduzen li.item .text {
+    margin-bottom: 10px;
 }
 
 .eduzen li.item .username,
@@ -206,8 +229,8 @@
 
 .eduzen .time-axis {
     position: fixed;
-    top: 90px;
-    right: 30px;
+    top: 140px;
+    right: 20px;
     height: 95%;
     overflow-y: scroll;
 }

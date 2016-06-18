@@ -4,38 +4,39 @@
 body.eduzen {
     margin: 0px;
     font-family: "Helvetica Neue", "Arial", "sans-serif";
+    font-size: 16px;
 }
 
 .eduzen .headline .username {
     position: absolute;
     left: 40px;
     top: 0px;
-    padding-left: 7px;
+    padding: 7px;
     border-top: 1px solid #f1f1f1;
     color: #a9a9a9;
     background-color: #f1f1f1;
-    padding-top: 2px;
+    padding-top: 5px;
 }
 
 .eduzen .headline .username:hover {
     border-top: 1px solid #FFC700;
-
 }
 
 .eduzen .headline {
     z-index: 100;
     width: 100%;
-    min-height: 80px;
-   /**  border-bottom: 1px solid #FFC700; **/
+   /**  border-bottom: 1px solid #FFC700; border-bottom: 1px solid #0782C1; **/
     position: fixed;
     top: 0px; left: 0px;
     background-color: #fff;
-    font-size: 12px;
+    font-size: 1em;
+    min-height: 50px;
 }
 
 .eduzen #menu .pages {
     position: fixed;
     right: 40px;
+    z-index: 3001;
 }
 
 .eduzen #menu .pages a {

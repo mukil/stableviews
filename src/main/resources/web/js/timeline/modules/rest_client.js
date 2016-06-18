@@ -1,5 +1,5 @@
 
-define(['modules/model', 'd3'], function(model, d3) {
+define(['modules/ko_page_impl', 'd3'], function(model, d3) {
 
         return {
 
@@ -23,16 +23,12 @@ define(['modules/model', 'd3'], function(model, d3) {
                 console.log("Querying Topic Index (Right Side) Since", new Date(since), "To", new Date(to))
                 // var now = new Date().getTime()
                 // var since = Date.parse("2015")
-                // update gui
-                d3.select('.data-container').style({'display': 'inline-block'})
                 // issue request
                 var xhr = d3.json('/helpers/timeindex/' + model.get_timestamp_option() + '/' + since + '/' + to)
                     xhr.get()
                     xhr.on('load', function (data) {
                         // update model
                         model.set_timerange(data)
-                        // update gui
-                        d3.select('.data-container').style({'display': 'none'})
                         // callback
                         if (typeof callback !== "undefined") callback(since, to) // fixme
                     })
@@ -54,11 +50,8 @@ define(['modules/model', 'd3'], function(model, d3) {
                 var xhr = d3.json('/helpers/by_time/' + model.get_timestamp_option() + '/' + since + '/' + to)
                     xhr.get()
                     xhr.on('load', function (data) {
+                        // update model
                         model.set_items(data)
-                        // update gui
-                        d3.select('.data-container').style({'display': 'none'})
-                        d3.select('.timeline-info').style({'display': 'inline-block'})
-                        d3.select('.timeline-info .state.items').text(data.length)
                         // callback
                         if (typeof callback !== "undefined") callback()
                     })
@@ -69,17 +62,17 @@ define(['modules/model', 'd3'], function(model, d3) {
 
             },
 
-            is_logged_in: function () {
-                /** ### send synchronous request
-                 *var xhr = d3.json('/accesscontrol/user')
+            get_username: function (callback) {
+                /** ### send synchronous request */
+                var xhr = d3.xhr('/accesscontrol/user', "text/plain")
                     xhr.get()
                     xhr.on('load', function (data) {
-                        console.log(data)
+                        if (callback) callback(data.responseText)
                     })
                     xhr.on('error'), function (error) {
                         console.log("d3.error:: " + error)
                         throw Error("notes_rest_client::is_logged_in " + error)
-                    } **/
+                    }
             },
 
             get_clientside_model: function () {
