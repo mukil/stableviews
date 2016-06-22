@@ -86,6 +86,11 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
                 tl.hide_list_loader()
                 console.log("Loaded ", model.get_item_count(), " items into timeline")
                 d3.select('.timeline-info .state.items').text(model.get_item_count())
+                if (model.get_item_count() <= 0) {
+                    d3.select('ul.no-entries').style({'display': 'block'})
+                } else {
+                    d3.select('ul.no-entries').style({'display': 'none'})
+                }
             })
         },
 

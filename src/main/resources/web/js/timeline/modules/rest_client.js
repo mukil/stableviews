@@ -5,7 +5,7 @@ define(['modules/ko_page_impl', 'd3'], function(model, d3) {
 
             // ### currently un-available on server side
             load_some_notes: function (amount, offset) {
-                var xhr = d3.json('/helpers/fetch/' + amount + '/' + offset)
+                var xhr = d3.json('/littlehelpers/fetch/' + amount + '/' + offset)
                     xhr.get()
                     xhr.on('load', function (data) {
                         model.items.all(data)
@@ -24,7 +24,7 @@ define(['modules/ko_page_impl', 'd3'], function(model, d3) {
                 // var now = new Date().getTime()
                 // var since = Date.parse("2015")
                 // issue request
-                var xhr = d3.json('/helpers/timeindex/' + model.get_timestamp_option() + '/' + since + '/' + to)
+                var xhr = d3.json('/littlehelpers/timeindex/' + model.get_timestamp_option() + '/' + since + '/' + to)
                     xhr.get()
                     xhr.on('load', function (data) {
                         // update model
@@ -47,7 +47,7 @@ define(['modules/ko_page_impl', 'd3'], function(model, d3) {
                 // update gui
                 d3.select('.data-container').style({'display': 'inline-block'})
                 // issue request
-                var xhr = d3.json('/helpers/by_time/' + model.get_timestamp_option() + '/' + since + '/' + to)
+                var xhr = d3.json('/littlehelpers/by_time/' + model.get_timestamp_option() + '/' + since + '/' + to)
                     xhr.get()
                     xhr.on('load', function (data) {
                         // update model

@@ -54,6 +54,16 @@
     margin-bottom: 50px;
     padding: 20px;
     color: #a9a9a9;
+    width: 70%;
+    opacity: .6;
+}
+
+.bfi footer.copy.bright a:hover {
+    text-decoration: underline;
+}
+
+.bfi footer.copy.bright a:hover .icon {
+    text-decoration: none;
 }
 
 .bfi .copy.bright .attribution {

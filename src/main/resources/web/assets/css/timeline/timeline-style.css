@@ -1,11 +1,7 @@
 
 /** ----------------------------------------- Upper Timeline Info Styles -- */
 
-.main-timeline .headline {
-    color: #a9a9a9; /** #3E6D8E; **/
-}
-
-.main-timeline .headline .selected-item {
+/** .main-timeline .headline .selected-item {
     font-size: 1.2em;
     margin-left: 10px;
     margin-top: 10px;
@@ -21,17 +17,21 @@
     border-top: 1px solid #fff;
     padding: 7px;
     margin-left: 10px;
-}
+} */
 
 .eduzen.main-timeline {
     padding: 30px;
     font-size: 1em;
 }
 
+.main-timeline .headline {
+    color: #a9a9a9; /** #3E6D8E; **/
+}
+
 .main-timeline .timeline-info {
     padding: 10px;
     position: fixed;
-    top: 58px;
+    top: 50px;
     right: 50px;
     width: 230px;
     text-align: right;

@@ -10,7 +10,7 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
 
     // adding "Timeline" link to help menu
     dm4c.toolbar.special_menu.add_item({
-        label: "Timeline", handler: go_to_timeline_view
+        label: "Timeline View", handler: go_to_timeline_view
     })
 
     function show_stableviews_link(map_id) {

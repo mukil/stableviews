@@ -111,7 +111,7 @@ define(['d3'], function(d3, require) {
             fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
         },
         getTopicSuggestions: function(query, handle, fail, debug) {
-            fetch('/helpers/suggest/topics/' + query, handle, fail, true, debug)
+            fetch('/littlehelpers/suggest/topics/' + query, handle, fail, true, debug)
         },
         postPayload: function(topicId, payload, handle, fail, debug) {
             post('/test/' + topicId, payload, handle, fail, false, debug)

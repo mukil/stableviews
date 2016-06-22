@@ -136,8 +136,19 @@
         </div>
 
         <div class="timeline">
+
+            <ul class="note-list no-entries hidden">
+                <li class="item message">
+                    <div class="note-container">
+                        <div class="body visible">
+                            <p>F&uuml;r dieses Zeitfenster sind uns keine Eintr&auml;ge bekannt.</p>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+
             <ul data-bind="foreach: get_items()" class="note-list">
-                
+
                     <!-- List Item of Web Resources -->
                     <!-- ko if: $data.type_uri === 'dm4.webbrowser.web_resource' -->
                     <li class="item web-resource" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
@@ -271,7 +282,7 @@
 
         <footer class="copy bright">
             <div class="attribution">
-                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.<br/>
+                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.
                 Please help to improve this software through giving <a href="mailto:mail@mikromedia.de">feedback</a> or reporting any <a href="http://github.com/mukil/stableviews">issues</a>
             </div>
             <div class="source-code">
