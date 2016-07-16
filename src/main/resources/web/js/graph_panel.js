@@ -106,6 +106,12 @@ define(function(require) {
                 .attr("rx", node_edge_r).attr("ry", node_edge_r)
                 .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - node_offset_x })
                 .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - node_offset_y })
+                .attr("style", function(d) {
+                    var fillColorValue = d["view_props"]["dm4.boxrenderer.color"]
+                    console.log("Fill Color Value", fillColorValue)
+                    if (fillColorValue === "hsl(210,100%,90%)") return "fill: #fff;"
+                    return "fill: " + d["view_props"]["dm4.boxrenderer.color"] + ";"
+                })
                 .on("dblclick", function(d) {
                     // ### sourceEvent may be undefined
                     d3.event.sourceEvent.stopPropagation()

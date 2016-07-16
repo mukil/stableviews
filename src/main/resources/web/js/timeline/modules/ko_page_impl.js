@@ -33,7 +33,7 @@ define(["knockout", "modules/controller"], function (ko, page_route) {
         }
     // labels
     var monthNames = [ "Januar", "Februar", "März", "April", "Mai", "Juni",
-        "July", "August", "September", "Oktober", "November", "Dezember" ];
+        "Juli", "August", "September", "Oktober", "November", "Dezember" ];
 
     // --- Private model update methods
 

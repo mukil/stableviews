@@ -121,10 +121,15 @@
     margin-bottom: 10px;
 }
 
-.eduzen li.item .username,
-.eduzen li.item .timestamp {
+
+.eduzen li.item .context-info {
     font-size: .9em;
     color: #a6a6a6;
+}
+
+.eduzen li.item .workspace,
+.eduzen li.item .creator {
+    font-style: italic;
 }
 
 .eduzen li.item .note-container img {
