@@ -46,7 +46,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
     // view model
     var results = []
 
-    var tl = {
+    var view = {
 
         init: function() {
             // load standard type topics to display
@@ -58,9 +58,9 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
                         console.log("Loaded Institutions", inst.length)
                         restc.load_topics_by_type("dm4.webbrowser.web_resource", function(websites) {
                             console.log("Loaded Websites", websites.length)
-                            results = d3.merge([notes, person, inst, websites])
+                            results = d3.merge([websites, notes, person, inst])
                             console.log("Topic Data Count", results.length)
-                            tl.render_hexmap()
+                            view.render_hexmap()
                             d3.select('.data-container').attr("style", "display: none")
                         })
                     })
@@ -180,6 +180,6 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
 
     }
 
-    return tl
+    return view
 
 })

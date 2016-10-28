@@ -33,11 +33,18 @@ define(function() {
             // additional resource to bootstrap the app
             if (viewId === "timeline") {
 
-            
+                require(['modules/view'], function (view) {  // circular dependency
+                    view.init()
+                })
+
             // ### not implemented yet
             } else if (topicId === undefined || topicId === "") {
 
-            
+                // _this.prepare_index_page(true, false) // load timeline with no filter set
+                require(['modules/view'], function (view) {  // circular dependency
+                    view.init()
+                })
+
             // ### not implemented yet (was filtered timeline)
             } else if (topicId === "tagged") {
 
