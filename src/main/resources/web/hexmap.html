@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Hexmap - DeepaMehta 4.8</title>
+        <script
+            data-main="/de.mikromedia.stableviews/js/hexmap/main"
+            src="/de.mikromedia.stableviews/assets/vendor/require.js">
+        </script>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/bfi.css"/>
+        <!-- Legacy Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/eduzen.css"/>
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/timeline-style.css"/>
+        <!-- Semantic UI Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css">
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css">
+        <style>
+            path.hexagon:hover {
+                stroke-width: 3px;
+                stroke: #999;
+                z-index: 2016;
+            }
+            path.hexagon {
+                stroke: #232323;
+                stroke-width: 1px;
+                cursor: pointer;
+                z-index: 1001;
+            }
+        </style>
+    </head>
+    <body class="eduzen main-timeline bfi sans">
+        <div class="headline">
+
+            <div id="menu">
+                <!-- a class="btn sort" id="most-popular">Sortierung nach Bewertung</a-->
+                <!-- a class="btn" id="new">Neuen Inhalt hinzuf&uuml;gen</a-->
+                <div class="about-login"></div>
+                <div class="pages">
+                    <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">Topicmaps</a>
+                    <a href="/stableviews/timeline" id="stableviews" title="Stableviews UI">Timeline</a>
+                    <a href="/stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
+                </div>
+                <span class="username"></span>
+            </div>
+
+            <!--div class="timeline-info">
+                <span class="state items" data-bind="text: get_items().length"></span>
+                <span class="label">sichtbare Eintr&auml;ge</span><br/>
+                <span class="label">Angezeigtes Zeitfenster</span><br/>
+                <span class="label">Vom</span>
+            </div-->
+
+        </div>
+
+        <div class="timeline">
+
+            <div class="data-container">
+                <div class="loader ui inverted active dimmer">
+                    <div class="ui indeterminate text loader">
+                        Loading Hexmap
+                    </div>
+                </div>
+            </div>
+
+            <div id="hexmap"></div>
+
+        </div>
+
+        <footer class="copy bright">
+            <div class="attribution">
+                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.
+                Please help to improve this software through giving <a href="mailto:mail@mikromedia.de">feedback</a> or reporting any <a href="http://github.com/mukil/stableviews">issues</a>
+            </div>
+            <div class="source-code">
+                <a href="https://github.com/mukil/stableviews"
+                   title="Get the source code"><i class="github icon"></i></a>Stableviews is free and open source software &copy; 2014 - 2016, Malte Rei&szlig;ig
+            </div>
+        </footer>
+
+    </body>
+</html>

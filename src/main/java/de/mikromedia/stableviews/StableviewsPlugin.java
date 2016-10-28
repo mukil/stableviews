@@ -66,6 +66,13 @@ public class StableviewsPlugin extends PluginActivator {
         return getStaticResource("web/timeline.html");
     }
 
+    @GET
+    @Path("/hexmap")
+    @Produces(MediaType.TEXT_HTML)
+    public InputStream getHexmapView() {
+        return getStaticResource("web/hexmap.html");
+    }
+
     @POST
     @Path("/topicmap/stylesheet/{styleSheetPath}/{id}")
     @Transactional

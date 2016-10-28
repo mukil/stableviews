@@ -12,6 +12,10 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
     dm4c.toolbar.special_menu.add_item({
         label: "Timeline View", handler: go_to_timeline_view
     })
+    // adding "Hexmap" link to help menu
+    dm4c.toolbar.special_menu.add_item({
+        label: "Hexagon View", handler: go_to_hexagon_view()
+    })
 
     function show_stableviews_link(map_id) {
         var $link = jQuery('<a href="#stableviews" id="stableviews-link">View with stableviews</a>')
@@ -23,6 +27,10 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
 
     function go_to_timeline_view() {
             window.location.assign("/stableviews/timeline")
+    }
+
+    function go_to_hexagon_view() {
+            window.location.assign("/stableviews/hexmap")
     }
 
 })
