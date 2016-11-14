@@ -108,7 +108,6 @@ define(function(require) {
                 .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - node_offset_y })
                 .attr("style", function(d) {
                     var fillColorValue = d["view_props"]["dm4.boxrenderer.color"]
-                    console.log("Fill Color Value", fillColorValue)
                     if (fillColorValue === "hsl(210,100%,90%)") return "fill: #fff;"
                     return "fill: " + d["view_props"]["dm4.boxrenderer.color"] + ";"
                 })

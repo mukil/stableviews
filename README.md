@@ -9,15 +9,18 @@ This plugin currently bundles three type of _views_ for content authored in Topi
  - Timeline Browser - Think twitter but without any "customer magic".
  - Advanced Search - Presenting fulltext search results with their context.
 
-Each of these three user dialog are still under heavy development and work in progress. Feel free to provide me some feedback in the Issues section of this page.
+Feel free to provide me some feedback in the Issues section of this page.
 
 #### Getting Started
 
- - Install [DeepaMehta **4.7**](http://github.com/jri/deepamehta)
- - Install [dm47-littlehelpers-0.2-SNAPSHOT](http://github.com/mukil/dm4-littlehelpers)
- - Install [dm47-stableviews-0.4-SNAPSHOT](http://github.com/mukil/stableviews)
+ - Install [DeepaMehta **4.8**](http://github.com/jri/deepamehta)
 
-You can find the most recent builds of DeepaMehta **4.7** and the two required modules/plugins on [http://download.deepamehta.de](http://download.deepamehta.de).
+Note: Each of the beforementioend user dialogs are still under heavy development, sometimes do not even work at all and are just work in progress.
+
+ - Install [dm48-littlehelpers-0.3-SNAPSHOT](http://github.com/mukil/dm4-littlehelpers)
+ - Install [dm48-stableviews-0.4-SNAPSHOT](http://github.com/mukil/stableviews)
+
+You can find the most recent builds of DeepaMehta **4.8** and the two required plugins at [http://download.deepamehta.de/nightly/](https://download.deepamehta.de/nightly/).
 
 After working in and having created a DeepaMehta 4 Topicmap you can use the ``View in stableviews'' button in the lower left corner of the Webclient. Clicking on it you'll open the current map in the stableviews ui.
 
