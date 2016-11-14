@@ -9,7 +9,7 @@ require(['common'], function(common) {
         // authenticated staff only stuff
         var username = undefined            //
         var workspaces = undefined          //
-        var jQuery = jQuery
+        var jQuery = (typeof $ === undefined)
 
         // topic map and selection stuff
         var topicmaps = undefined           //
