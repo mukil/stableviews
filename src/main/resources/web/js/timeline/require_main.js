@@ -6,7 +6,7 @@ function require_config () {
             knockout: '../../assets/vendor/timeline/knockout-3.1.0',
             d3: '../../assets/vendor/d3.min',
             domReady: '../../assets/vendor/timeline/domReady',
-            labels: '../../js/label_dict'
+            lang: '../../js/label_dict_de'
         }
     })
 

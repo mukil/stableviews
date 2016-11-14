@@ -1,5 +1,5 @@
 
-define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
+define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
 
     // setup default values for our time range queries
     var a_day = 86400000
@@ -100,7 +100,7 @@ define(['d3', 'modules/rest_client', 'labels'], function(d3, restc, labels) {
 
         render_timestamps: function() {
             var timestamp_option = model.get_timestamp_option()
-            d3.select('.timestamp-option').text(get_label(timestamp_option))
+            d3.select('.timestamp-option').text(labels.get_label(timestamp_option))
             d3.select('.state.from').text(model.format_date(new Date(model.get_from_time())))
             d3.select('.state.to').text(model.format_date(new Date(model.get_to_time())))
         },
