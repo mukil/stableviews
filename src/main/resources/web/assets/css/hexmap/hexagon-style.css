@@ -1,0 +1,26 @@
+
+.main {
+    padding: 30px;
+    font-size: 1em;
+}
+
+.main .headline {
+    color: #a9a9a9; /** #3E6D8E; **/
+}
+
+.main .hexagon-info {
+    padding: 10px;
+    position: fixed;
+    top: 50px;
+    right: 50px;
+    width: 230px;
+    text-align: right;
+}
+
+.main .hexagon-info span.state {
+    color: #0782C1;
+}
+
+.hidden {
+    display: none;
+}

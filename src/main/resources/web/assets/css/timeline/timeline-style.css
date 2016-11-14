@@ -24,6 +24,10 @@
     font-size: 1em;
 }
 
+.eduzen.main-timeline .data-container {
+    width: 90%;
+}
+
 .main-timeline .headline {
     color: #a9a9a9; /** #3E6D8E; **/
 }

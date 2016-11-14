@@ -58,7 +58,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
                         console.log("Loaded Institutions", inst.length)
                         restc.load_topics_by_type("dm4.webbrowser.web_resource", function(websites) {
                             console.log("Loaded Websites", websites.length)
-                            results = d3.merge([websites, notes, person, inst])
+                            results = d3.merge([notes, websites, person, inst])
                             console.log("Topic Data Count", results.length)
                             view.render_hexmap()
                             d3.select('.data-container').attr("style", "display: none")
@@ -78,12 +78,18 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
 
         render_hexmap:  function () {
             
-            var margin = {top: 20, right: 50, bottom: 20, left: 50 },
+            var margin = {top: 20, right: 30, bottom: 0, left: 30 },
                 width = (window.innerWidth - 75) - margin.left - margin.right,
                 height = window.innerHeight - margin.top - margin.bottom;
 
-            var randomX = d3.random.normal(width/2, 150, 0.1),
-                randomY = d3.random.normal(height/2, 150, 0.1),
+            var RANGE_END = 150
+            var STEPS = 0.5
+            var HEX_RADIUS = 10
+            var CENTER_X = width/2
+            var CENTER_Y = height/2
+
+            var randomX = d3.random.normal(CENTER_X, RANGE_END, STEPS),
+                randomY = d3.random.normal(CENTER_Y, RANGE_END, STEPS),
                 points = d3.range(results.length)
                     .map(function() {
                         return [randomX(), randomY()];
@@ -99,7 +105,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
             var hexagonCount = 0; 
             var hexbin = d3.hexbin()
                 .size([width, height])
-                .radius(15);
+                .radius(HEX_RADIUS);
 
             var svg = d3.select("#hexmap").append("svg")
                     .attr("width", width + margin.left + margin.right)
@@ -121,6 +127,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
                     .attr("class", "hexagon")
                     .attr("d", hexbin.hexagon())
                     .attr("transform", function(d) {
+                        hexagonCount++
                         return "translate(" + d.x + "," + d.y + ")";
                     })
                     .style("fill", function(d) {
@@ -143,7 +150,11 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
                         var pointData = d[0]
                         var topic = pointData[pointData.length-1]
                         console.log("Topic Selected", topic)
-                        window.document.location.assign("/stableviews/topic/" + topic.id)
+                        if (topic.type_uri === "dm4.webbrowser.web_resource") {
+                            window.document.location.assign(topic.value)
+                        } else {
+                            window.document.location.assign("/stableviews/topic/" + topic.id)
+                        }
                     })
                     .attr("data-type-uri", function(d) {
                         var pd = d[0]
@@ -162,6 +173,8 @@ define(['d3', 'd3hexbin', 'modules/rest_client', '../../label_dict'], function(d
             // var topics = model.get_timerange()
             console.log("Loaded ", results.length, "topics, Hexagons rendered", hexagonCount, ", Nr. of random Points", points.length)
             // topics.sort(timestamp_sort_ascending)
+            d3.select('.hexagon-info .state').text(hexagonCount + " Topics")
+            d3.select('.hexagon-info .parameter').text(RANGE_END + " Range End, Steps " + STEPS + ", Hex Radius " + HEX_RADIUS)
 
             function timestamp_sort_ascending(a, b) {
                 var timestampUri = "dm4.time.created"

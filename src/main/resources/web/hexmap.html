@@ -6,14 +6,16 @@
             data-main="/de.mikromedia.stableviews/js/hexmap/main"
             src="/de.mikromedia.stableviews/assets/vendor/require.js">
         </script>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width">
+
+        <meta charset="utf-8" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/bfi.css"/>
         <!-- Legacy Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/eduzen.css"/>
-        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/timeline/timeline-style.css"/>
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/hexmap/hexagon-style.css"/>
         <!-- Semantic UI Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css">
         <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css">
@@ -31,7 +33,7 @@
             }
         </style>
     </head>
-    <body class="eduzen main-timeline bfi sans">
+    <body class="eduzen main bfi sans">
         <div class="headline">
 
             <div id="menu">
@@ -46,12 +48,10 @@
                 <span class="username"></span>
             </div>
 
-            <!--div class="timeline-info">
-                <span class="state items" data-bind="text: get_items().length"></span>
-                <span class="label">sichtbare Eintr&auml;ge</span><br/>
-                <span class="label">Angezeigtes Zeitfenster</span><br/>
-                <span class="label">Vom</span>
-            </div-->
+            <div class="hexagon-info">
+                <span class="state items"></span>
+                <span class="parameter"></span>
+            </div>
 
         </div>
 
@@ -64,21 +64,9 @@
                     </div>
                 </div>
             </div>
-
             <div id="hexmap"></div>
 
         </div>
-
-        <footer class="copy bright">
-            <div class="attribution">
-                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.
-                Please help to improve this software through giving <a href="mailto:mail@mikromedia.de">feedback</a> or reporting any <a href="http://github.com/mukil/stableviews">issues</a>
-            </div>
-            <div class="source-code">
-                <a href="https://github.com/mukil/stableviews"
-                   title="Get the source code"><i class="github icon"></i></a>Stableviews is free and open source software &copy; 2014 - 2016, Malte Rei&szlig;ig
-            </div>
-        </footer>
 
     </body>
 </html>
