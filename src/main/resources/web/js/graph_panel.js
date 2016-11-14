@@ -3,7 +3,7 @@ define(function(require) {
 
     require('stableviews_ctrl')
     require('common')
-    require('label_dict')
+    var lang = require('label_dict_de')
 
     var view_state      = ""
     var svg_panel       = undefined
@@ -96,7 +96,7 @@ define(function(require) {
         node_sel.enter()
             .append("rect") // operations for new elements
                 .attr("id", function(d) { return d.id })
-                .attr("title", function(d) { return get_label(d.type_uri) + ": " + d.value})
+                .attr("title", function(d) { return lang.get_label(d.type_uri) + ": " + d.value})
                 .attr("alt", function(d) { return "A circle representing " + d.value})
                 .attr("data-view-prop-visibility", function(d) { return d.view_props['dm4.topicmaps.visibility'] })
                 .attr("data-type-uri", function(d) { return d.type_uri })
@@ -157,7 +157,7 @@ define(function(require) {
                 .attr("title", function (d) { return d.value })
                 .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - text_offset_x })
                 .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - text_offset_y })
-                .attr("class", function(d) { return (d.view_props['dm4.topicmaps.visibility']) ? '' : 'hide' })
+                .attr("class", function(d) { return (d.view_props['dm4.topicmaps.visibility']) ? 'default' : 'hide' })
                 .text(function (d) { return d.value })
         text_sel.exit().remove()
         setup_zoom_and_drag_control()

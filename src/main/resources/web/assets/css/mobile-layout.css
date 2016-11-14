@@ -221,11 +221,11 @@ div.show-inline {
 /** General Semantic UI Overrides **/
 
 .ui.checkbox input {
-	cursor: pointer;
+    cursor: pointer;
 }
 
 .ui.input #search {
-	min-width: 140px;
+    min-width: 140px;
 }
 
 .ui.input #search:focus {
@@ -233,7 +233,7 @@ div.show-inline {
 }
 
 .ui.primary.button {
-	margin-left: 15px; margin-right: 15px;
+    margin-left: 15px; margin-right: 15px;
 }
 
 .ui.inverted.menu.main {
@@ -291,6 +291,10 @@ div.show-inline {
 
 .sidebar .login button {
     display: block;
+}
+
+.sidebar .login input {
+    font-size: 1.1em;
 }
 
 .main.menu .ui.container {

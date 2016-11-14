@@ -13,9 +13,14 @@ text {
 .topics rect.selected {
     stroke: #444;
     stroke-width: 4;
-    -webkit-filter: drop-shadow( 1px 1px 4px #343434 );
-            filter: drop-shadow( 1px 1px 4px #343434 );
     z-index: 4001;
+}
+
+/** As of chromium 53, the following filter attribute makes our SVG circle element disappear */
+@-moz-document url-prefix() {
+    .topics rect.selected {
+        filter: drop-shadow( 1px 1px 4px #343434 );
+    }
 }
 
 .links line.backdrop,

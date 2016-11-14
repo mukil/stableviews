@@ -5,7 +5,7 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
 
     dm4c.add_listener("init_3", function() {
         topicmaps = dm4c.get_plugin("de.deepamehta.topicmaps")
-        show_stableviews_link(topicmaps.get_topicmap().get_id())
+        show_stableviews_link()
     })
 
     // adding "Timeline" link to help menu
@@ -14,15 +14,22 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
     })
     // adding "Hexmap" link to help menu
     dm4c.toolbar.special_menu.add_item({
-        label: "Hexagon View", handler: go_to_hexagon_view()
+        label: "Hexagon View", handler: go_to_hexagon_view
     })
 
-    function show_stableviews_link(map_id) {
+    function show_stableviews_link() {
         var $link = jQuery('<a href="#stableviews" id="stableviews-link">View with stableviews</a>')
         jQuery('#topicmap-panel').append($link)
         $link.click(function(e) {
-            window.location.assign('/stableviews/#' + topicmaps.get_topicmap().get_id())
+            if (topicmaps.get_topicmap()) {
+                window.location.assign('/stableviews/#' + topicmaps.get_topicmap().get_id())   
+            } else {
+                console.log("Topicmaps Plugin getTopicmap: ", topicmaps.get_topicmap())
+            }
         })
+        if (!topicmaps.get_topicmap()) {
+            console.log("Topicmaps Plugin getTopicmap: ", topicmaps.get_topicmap())
+        }
     }
 
     function go_to_timeline_view() {

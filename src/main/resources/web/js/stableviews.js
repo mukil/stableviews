@@ -2,7 +2,7 @@
 // Load common code that includes config, then load the app logic for the stableviews main page.
 require(['common'], function(common) {
 
-    require(['graph_panel', 'stableviews_ctrl', 'label_dict'], function(graph_panel, controller, en) {
+    require(['graph_panel', 'stableviews_ctrl', 'label_dict_de'], function(graph_panel, controller, lang) {
 
         // --- Stableviews Client Side Model ---
 
@@ -297,7 +297,7 @@ require(['common'], function(common) {
                 d3.event.stopPropagation()
                 graph_panel.zoom_out()
             })
-            d3.select("#reset").html(get_label("Reset"))
+            d3.select("#reset").html(lang.get_label("Reset"))
             d3.select("#reset").on('click', function(e) {
                 d3.event.preventDefault()
                 d3.event.stopPropagation()
@@ -586,7 +586,7 @@ require(['common'], function(common) {
                         .html('&ldquo;' + result.topic.value+'&rdquo;')
                     if (result.workspace.id > -1) { // search result is NOT part of this map
                         reveal_link.attr("id", "load-" + result.topic.id)
-                        item.append('span').html(' &ndash; <b>' + get_label(result.topic.type_uri) + '</b>'
+                        item.append('span').html(' &ndash; <b>' + lang.get_label(result.topic.type_uri) + '</b>'
                             + ' in Workspace <em>' +result.workspace.value+ ' &ndash; '+result.workspace_mode+'</em>')
                     }
                     if (result.topic.type_uri === "dm4.topicmaps.topicmap") { // hack action into element id
