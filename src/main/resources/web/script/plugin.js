@@ -5,7 +5,7 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
 
     dm4c.add_listener("init_3", function() {
         topicmaps = dm4c.get_plugin("de.deepamehta.topicmaps")
-        show_stableviews_link()
+        show_stableviews_links()
     })
 
     // adding "Timeline" link to help menu
@@ -17,19 +17,22 @@ dm4c.add_plugin('de.mikromedia.stableviews', function() {
         label: "Hexagon View", handler: go_to_hexagon_view
     })
 
-    function show_stableviews_link() {
-        var $link = jQuery('<a href="#stableviews" id="stableviews-link">View with stableviews</a>')
-        jQuery('#topicmap-panel').append($link)
-        $link.click(function(e) {
-            if (topicmaps.get_topicmap()) {
-                window.location.assign('/stableviews/#' + topicmaps.get_topicmap().get_id())   
-            } else {
-                console.log("Topicmaps Plugin getTopicmap: ", topicmaps.get_topicmap())
-            }
-        })
-        if (!topicmaps.get_topicmap()) {
-            console.log("Topicmaps Plugin getTopicmap: ", topicmaps.get_topicmap())
-        }
+    function show_stableviews_links() {
+        var $linkArea = jQuery('<div id="stableviews-link">')
+        var $standardLink = jQuery('<a href="#stableviews">View with Stableviews</a>')
+            $standardLink.click(function(e) {
+                if (topicmaps.get_topicmap()) {
+                    window.location.assign('/stableviews/#' + topicmaps.get_topicmap().get_id())
+                }
+            })
+        var $memexLink = jQuery('<a href="#memex">Memex Style</a>')
+            $memexLink.click(function(e) {
+                if (topicmaps.get_topicmap()) {
+                    window.location.assign('/stableviews/memex/#' + topicmaps.get_topicmap().get_id())
+                }
+            })
+        $linkArea.append($standardLink).append($memexLink)
+        jQuery('#topicmap-panel').append($linkArea)
     }
 
     function go_to_timeline_view() {

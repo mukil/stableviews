@@ -7,28 +7,46 @@ define(function(require) {
 
     var view_state      = ""
     var svg_panel       = undefined
+    var shiftKey, ctrlKey
 
-    var width           = window.innerWidth, // - (window.innerWidth / 10),
-        height          = window.innerHeight - parseInt(d3.select('.lower.sidebar').style('height')),
-        shiftKey, ctrlKey
+    var height          = window.innerHeight
+    var width           = window.innerWidth // - (window.innerWidth / 10)
+    var lowerSidebar    = d3.select('.lower.sidebar')
+    if (lowerSidebar[0][0] !== null) { // Modern Stableviews Style
+        height          = window.innerHeight - parseInt(lowerSidebar.style('height'))
+    } else {  // Memex DOM Style/Related
+        width           = width - 20
+        height          = height - 115
+    }
 
     var map_topic, all_nodes, all_edges = undefined
 
     var node_offset_x   = 20
     var node_offset_y   = 10
-    //
-    var text_offset_x   = 40
+
+    // Modern Stableviews (Circular Nodes)
+    /** var text_offset_x   = 40
     var text_offset_y   = 15
-    //
+
     var node_circle_w   = 50
+    var node_circle_h   = 50
     var node_edge_r     = 25
-    var node_link_y_off = 12
+    var node_link_y_off = 12 */
+
+    // Old School Stableviews (Rectangular Nodes)
+    var node_circle_w   = 70
+    var node_circle_h   = 20
+    var node_edge_r     = 2
+    var node_link_y_off = 5
+
+    var text_offset_x   = 50
+    var text_offset_y   = 17
 
     var zoom_control    = undefined
     var zoom_out_stop   = 0.1
     var zoom_in_stop    = 1.8
 
-    var svg_graph, vis, link, node = undefined
+    var svg_graph, vis, link_sel, node_sel = undefined
 
     var xScale = d3.scale.linear().domain([0,width]).range([0,width])
     var yScale = d3.scale.linear().domain([0,height]).range([0, height])
@@ -61,8 +79,15 @@ define(function(require) {
     }
 
     function resize_viewport() {
-        var width           = window.innerWidth, // - (window.innerWidth / 10),
-            height          = window.innerHeight - parseInt(d3.select('.lower.sidebar').style('height'))
+        var width           = window.innerWidth
+        var height          = window.innerHeight
+        var lowerSidebar    = d3.select('.lower.sidebar')
+        if (lowerSidebar[0][0] !== null) { // Modern Stableviews Style
+            height          = window.innerHeight - parseInt(lowerSidebar.style('height'))
+        } else { // Memex DOM Style/Related
+            width           = width - 20
+            height          = height - 115
+        }
         if (svg_panel) svg_panel.attr('width', width).attr('height', height)
     }
 
@@ -101,9 +126,10 @@ define(function(require) {
                 .attr("data-view-prop-visibility", function(d) { return d.view_props['dm4.topicmaps.visibility'] })
                 .attr("data-type-uri", function(d) { return d.type_uri })
                 .attr("data-type-label", function(d) { return d.value })
-                // ### make unique .attr("tabindex", 100)
-                .attr("width", node_circle_w).attr("height", node_circle_w)
-                .attr("rx", node_edge_r).attr("ry", node_edge_r)
+                // ### give unique .attr("tabindex", 100)?
+                // Chromium Webkit 53. makes no problems when setting these SVG Attributes via CSS properties
+                .attr("width", node_circle_w).attr("height", node_circle_h) // Firefox 47.0 on Linux does not allow setting this solely via CSS
+                .attr("rx", node_edge_r).attr("ry", node_edge_r) // Firefox 47.0 on Linux does not allow setting this solely via CSS
                 .attr("x", function(d) { return parseInt(d.view_props['dm4.topicmaps.x']) - node_offset_x })
                 .attr("y", function(d) { return parseInt(d.view_props['dm4.topicmaps.y']) - node_offset_y })
                 .attr("style", function(d) {
@@ -113,7 +139,7 @@ define(function(require) {
                 })
                 .on("dblclick", function(d) {
                     // ### sourceEvent may be undefined
-                    d3.event.sourceEvent.stopPropagation()
+                    if (d3.event.sourceEvent) d3.event.sourceEvent.stopPropagation()
                 })
                 .on("click", function(d) {
                     if (!shiftKey) {

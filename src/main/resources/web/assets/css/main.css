@@ -2,29 +2,17 @@
 /** Stableviews Page Design Definition */
 
 body {
-    background-color: rgb(83, 71, 65);
+    background-color: #e8e8e2;
     padding: 0px; margin: 0px;
     font-family: sans-serif;
-    margin-left: 10%;
-    margin-right: 10%;
+    margin: 1em 0em;
 }
 
 /** Areas */
 
-.user-dialog {
-    position: fixed;
-    left: 0px;
-    bottom: 35px;
-    width: 10%;
-    background-color: #fff;
-    color: rgb(83, 71, 65);
-    padding: 10px;
-    text-align: center;
-}
-
 .container {
     position: relative;
-    background-color: #f5e9d9;
+    background-color: #e8e8e2;
     margin-top: -20px;
     padding: 0px;
     box-shadow: 0 0 10px rgba(0,0,0,.5);
@@ -37,7 +25,7 @@ body {
 
 #map-panel {
     display: block;
-    background-color: #f5e9d9;
+    background-color: #e8e8e2;
     color: #fff;
     width: 100%;
     position: relative;
@@ -45,33 +33,17 @@ body {
 
 #map-panel text {
     cursor: pointer;
+    overflow: hidden;
+    overflow-style: panner;
+    max-width: 120px;
 }
 
 #map-panel g {
     cursor: pointer;
 }
 
-footer {
-    text-align: center;
-    padding-left: 5px;
-    padding-right: 5px;
-}
-
-.copy {
-    position: fixed;
-    bottom: 0px;
-    background-color: rgb(83, 71, 65);;
-    color: #fff;
-    width: 100%;
-    left: 0px;
-}
-
-#textinput {
-    padding: 5px;
-    width: 100%;
-    padding-left: 10%;
-    padding-right: 10%;
-    margin-left: -10px;
+svg:focus {
+    border: 1px solid #0071bc;
 }
 
 .title {
@@ -87,15 +59,13 @@ footer {
     min-height: 40px;
 }
 
-.text {
+.details {
     display: none;
-    text-align: center;
     margin-left: 100px;
     margin-right: 100px;
     font-size: 1.4em;
     font-weight: 200;
-    padding: 10px;
-    background-color: #f5e9d9;
+    padding: 1em;
 }
 
 div .textblock {
@@ -116,6 +86,8 @@ div .textblock {
     fill: #e8e8e2;
     stroke: #0071bc;
     stroke-width: 3;
+    width: 70px; height: 20px; /** Sadly, has no effect in Firefox 47.0 **/
+    rx: 2px; ry: 2px; /** Sadly, has no effect in Firefox 47.0 **/
 }
 
 .topics rect.selected {
@@ -123,7 +95,7 @@ div .textblock {
 }
 
 .links line {
-    stroke: #a9a9a9;
+    stroke: #0071bc;
     stroke-width: 3;
 }
 
@@ -148,4 +120,28 @@ div.show-inline {
     fill-opacity: .1;
     stroke: #fff;
     shape-rendering: crispEdges;
+}
+
+
+footer {
+    text-align: center;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.copy {
+    position: fixed;
+    bottom: 0px;
+    background-color: rgb(83, 71, 65);;
+    color: #fff;
+    width: 100%;
+    left: 0px;
+}
+
+#todoinput {
+    padding: 5px;
+    width: 100%;
+    padding-left: 10%;
+    padding-right: 10%;
+    margin-left: -10px;
 }

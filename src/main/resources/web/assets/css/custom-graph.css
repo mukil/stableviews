@@ -8,6 +8,8 @@ text {
     stroke: #40B0E2;
     stroke-width: 2;
     z-index: 2001;
+    width: 50px; height: 50px; /** Sadly, has no effect in Firefox 47.0 **/
+    rx: 25px; ry: 25px; /** Sadly, has no effect in Firefox 47.0 **/
 }
 
 .topics rect.selected {

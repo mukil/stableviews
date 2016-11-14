@@ -55,8 +55,15 @@ public class StableviewsPlugin extends PluginActivator {
     @GET
     @Path("/")
     @Produces(MediaType.TEXT_HTML)
-    public InputStream getStableviewsIndex() {
-        return getStaticResource("web/index.html");
+    public InputStream getStableviewsStandardStyle() {
+        return getStaticResource("web/standard.html");
+    }
+
+    @GET
+    @Path("/memex")
+    @Produces(MediaType.TEXT_HTML)
+    public InputStream getStableviewsMemexStyle() {
+        return getStaticResource("web/memex.html");
     }
 
     @GET

@@ -3,11 +3,15 @@
     position: fixed;
     bottom: 1em;
     left: 1em;
+}
+
+#stableviews-link a {
     font-size: 60%;
     color: #444;
     text-decoration: none;
+    margin-right: 1em;
 }
 
-#stableviews-link:hover {
+#stableviews-link a:hover {
     text-decoration: underline;
 }
