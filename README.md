@@ -5,10 +5,10 @@ A DeepaMehta 4 plugin delivering alternate user interfaces to present work done 
 
 This bundle currently comes with three type of _views_ for content authored in DeepaMehta:
 
- - Topicmaps Reader Standard Style - Think of nodes, edges, labels and details (SVG Circles)
- - Topicmaps Reader Memex Style - Think of nodes, edges, labels and details memex style (SVG Rectangles)
- - Timeline Browser - This is actually quite useful already. Think of twitter without any "customer magic" but with the raw power of time range queries over all your _Notes_, _Contacts_, _Bookmarks_ and _Files_.
- - Hexagon Frontpage View - Think of a random startup screen visualizing your personal information for further investigation, not useful at all (yet).
+ - **Topicmaps Reader Standard Style** - Think of nodes, edges, labels and details (SVG Circles)
+ - **Topicmaps Reader Memex Style** - Think of nodes, edges, labels and details memex style (SVG Rectangles)
+ - **Timeline Search & Browser** - This is actually quite useful already. Think of twitter without any "customer magic" but with the raw power of time range queries over all your _Notes_, _Contacts_, _Bookmarks_ and _Files_.
+ - **Hexagon Frontpage** - Think of a random startup screen visualizing your personal information for further investigation, not useful at all (yet).
 
 Note: Please keep in mind that this software is under heavy development and the screens and dialogs might not always work at all or as expected Therefore i appreciate any help and feedback though.
 

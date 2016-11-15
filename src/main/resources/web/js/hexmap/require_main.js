@@ -6,7 +6,7 @@ function require_config () {
             d3: '../../assets/vendor/d3.min',
             d3hexbin: '../../assets/vendor/d3-plugins/hexbin/hexbin',
             domReady: '../../assets/vendor/timeline/domReady',
-            lang: '../label_dict_de'
+            lang: '../../js/modules/label_dict_de'
         }
     })
 

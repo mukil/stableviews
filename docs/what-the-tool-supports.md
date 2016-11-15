@@ -1,6 +1,17 @@
 
 ## What this tool currently can and can't do:
 
+
+ * Loading and selecting your `Topicmaps`
+ * Loading and switching between your `Workspaces`
+ * Displaying descriptions of your _Notes_ and _Contacts_
+ * Starting and stopping an authenticated session at DeepaMehta 4 (`Login` and `Logout`)
+ * Multiple selection on nodes in the graph (but moves, evne if logged in, are not saved/persisted yet)
+ * Zooming the graph in and out
+ * `Hide` and `Show` all _Associations_, all _Item Titles_, all _Hidden Topics_
+
+### Outdated docs
+
 To become an alternate, command-line controllable presentation layer...
 
 Current & former features include:

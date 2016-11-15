@@ -9,7 +9,10 @@ require(['common'], function(common) {
         // authenticated staff only stuff
         var username = undefined            //
         var workspaces = undefined          //
-        var jQuery = (typeof $ === undefined)
+        var jQueryAvailable = false
+        try {
+            jQueryAvailable = $;
+        } catch (e) {}
 
         // topic map and selection stuff
         var topicmaps = undefined           //
@@ -342,7 +345,7 @@ require(['common'], function(common) {
                 if (graph_panel) graph_panel.resize()
             })
             // initiate "display options" menu
-            if (jQuery) $('.ui.tertiary ').dropdown() // jQuery here, check for memex.html
+            if (jQueryAvailable) $('.ui.tertiary ').dropdown() // jQuery here, check for memex.html
             // initiate sidebar handler
             d3.select('#menu-button').on('click', function() {
                 set_cookie_value(SIDEBAR_COOKIE_NAME, true)
@@ -515,7 +518,7 @@ require(['common'], function(common) {
             for (var t in topicmaps) {
                 selectMenu.append('option').attr('value', topicmaps[t].id).text(topicmaps[t].value)
             }
-            if (jQuery) $('#topicmap-selector').dropdown({ "fullTextSearch": true }) // jQuery check for memex.html
+            if (jQueryAvailable) $('#topicmap-selector').dropdown({ "fullTextSearch": true }) // jQuery check for memex.html
         }
 
         // ### use d3 data (binding) here
@@ -526,7 +529,7 @@ require(['common'], function(common) {
             for (var t in workspaces) {
                 workspaceMenu.append('option').attr('value', workspaces[t].id).text(workspaces[t].value)
             }
-            if (jQuery) $('#workspace-selector').dropdown({ "fullTextSearch": true }) // jQuery check for memex.html
+            if (jQueryAvailable) $('#workspace-selector').dropdown({ "fullTextSearch": true }) // jQuery check for memex.html
         }
 
         // --- Authentication Dialog ---
