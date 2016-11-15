@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html class="no-js">
+
+    <head>
+        <title>Stableviews - DeepaMehta 4.8</title>
+        <meta charset="utf-8" />
+        <meta name="description" content="" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/css/mobile-layout.css" />
+
+        <!-- Semantic UI Assets -->
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/loader.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/sidebar.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/search.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/button.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/icon.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/input.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/menu.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/item.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/dropdown.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/header.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/transition.min.css" />
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/divider.min.css" />
+        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/form.min.css"-->
+        <!--link rel="stylesheet" href="/de.mikromedia.stableviews/assets/vendor/checkbox.min.css"-->
+
+        <!-- Semantic UI Script Dependencies -->
+        <script src="/de.mikromedia.stableviews/assets/vendor/jquery/jquery-2.1.4.min.js"></script>
+        <!--script src="/de.mikromedia.stableviews/assets/vendor/semantic.min.js"></script-->
+        <script src="/de.deepamehta.webclient/script/util/js_utils.js"></script>
+        <script src="/de.deepamehta.webclient/script/util/rest_client.js"></script>
+        <script src="/de.deepamehta.webclient/script/util/gui_toolkit.js"></script>
+        <script src="/de.deepamehta.webclient/script/util/render_helper.js"></script>
+        <script src="/de.deepamehta.webclient/script/util/type_cache.js"></script>
+        <script src="/de.deepamehta.webclient/script/model/topic.js"></script>
+        <script src="/de.deepamehta.webclient/script/model/association.js"></script>
+        <script src="/de.deepamehta.webclient/script/model/type.js"></script>
+        <script src="/de.deepamehta.webclient/script/model/topic_type.js"></script>
+        <script src="/de.deepamehta.webclient/script/model/association_type.js"></script>
+        <script src="/de.deepamehta.webclient/script/renderers/page_renderers/page_model/page_model.js"></script>
+
+        <!-- Improvised "just give me some information" script -->
+        <script type="text/javascript">
+
+            $(document).ready(function(e) {
+                var topic_id = document.location.href.slice(document.location.href.lastIndexOf("/")+1)
+                console.log("Topic,", topic_id)
+                var topic = dm4c.restc.get_topic_by_id(topic_id)
+                var render_mode = dm4c.render.page_model.mode.INFO
+                var page_model = create_page_model(topic, render_mode)
+                render_page_model(page_model, render_mode)
+
+                /**
+                 * @param   render_mode     this.mode.INFO or this.mode.FORM (object). ### FIXDOC
+                 */
+                function create_page_model(topic, render_mode) {
+                    return dm4c.render.page_model.create_page_model(topic, undefined, "", render_mode)
+                }
+
+                /**
+                 * @param   page_model      the page model to render. If undefined nothing is rendered.
+                 * @param   render_mode     this.mode.INFO or this.mode.FORM (object). ### FIXDOC
+                 */
+                function render_page_model(page_model, render_mode) {
+                    dm4c.render.page_model.render_page_model(page_model, $("#page"), render_mode, 0)
+                }
+            })
+
+        </script>
+
+    </head>
+    <body>
+
+        <div class="ui lower very wide sidebar visible bottom">
+
+            <div class="topic-commands"><ul></ul></div>
+            <div class="selection-commands"><ul></ul></div>
+
+            <h2 class="title"></h2>
+
+            <div class="search-controls">
+                <div class="ui icon input inline">
+                    <input class="prompt" id="search" placeholder="Search ..." type="text"/>
+                    <i class="search icon"></i>
+                </div>
+                <!--button class="ui primary button">Suchen</button-->
+            </div>
+
+            <div id="page" class="details show"></div>
+
+        </div>
+
+        <!--footer class="copy" action="do">
+            <!--input type="text" id="textinput" tabindex="2" placeholder="..." />
+            <input type="button" id="search" tabindex="3" value="Search" />
+            <!--input type="button" id="login" tabindex="4" value="Login" /-->
+            <!-- span>&hearts; mikromedia.de 2015</span-->
+            <!--div class="user-dialog"></div-->
+            <!--div class="source-code">
+                <a href="https://github.com/mukil/stableviews"
+                   title="Stableviews is free software - Please contribute" class="ion-social-github"></a>
+            </div>
+        </footer-->
+
+    </body>
+
+</html>

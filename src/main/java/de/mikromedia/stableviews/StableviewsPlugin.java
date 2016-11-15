@@ -56,28 +56,28 @@ public class StableviewsPlugin extends PluginActivator {
     @Path("/")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getStableviewsStandardStyle() {
-        return getStaticResource("web/standard.html");
+        return getStaticResource("web/standard-graph.html");
     }
 
     @GET
     @Path("/memex")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getStableviewsMemexStyle() {
-        return getStaticResource("web/memex.html");
+        return getStaticResource("web/memex-graph.html");
     }
 
     @GET
     @Path("/timeline")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getTimelineView() {
-        return getStaticResource("web/timeline.html");
+        return getStaticResource("web/timeline-view.html");
     }
 
     @GET
     @Path("/hexmap")
     @Produces(MediaType.TEXT_HTML)
     public InputStream getHexmapView() {
-        return getStaticResource("web/hexmap.html");
+        return getStaticResource("web/hexagon-view.html");
     }
 
     @POST

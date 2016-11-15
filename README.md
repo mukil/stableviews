@@ -1,15 +1,22 @@
 
 ### Stableviews UI
 
-Alternate user interfaces for work done in _Topicmaps_, my freestyle project with DeepaMehta 4.
+A DeepaMehta 4 plugin delivering alternate user interfaces to present work done in _Topicmaps_. My freestyle project for DeepaMehta 4.
 
-This plugin currently bundles three type of _views_ for content authored in Topicmaps:
+This bundle currently comes with three type of _views_ for content authored in DeepaMehta:
 
- - SVG Graph Browser - Think nodes, edges, labels and details
- - Timeline Browser - Think twitter but without any "customer magic".
+ - Topicmaps Reader Standard Style - Think of nodes, edges, labels and details (SVG Circles)
+ - Topicmaps Reader Memex Style - Think of nodes, edges, labels and details memex style (SVG Rectangles)
+ - Timeline Browser - This is actually quite useful already. Think of twitter without any "customer magic" but with the raw power of time range queries over all your _Notes_, _Contacts_, _Bookmarks_ and _Files_.
+ - Hexagon Frontpage View - Think of a random startup screen visualizing your personal information for further investigation, not useful at all (yet).
+
+Note: Please keep in mind that this software is under heavy development and the screens and dialogs might not always work at all or as expected Therefore i appreciate any help and feedback though.
+
+Yet unavailable:
+
  - Advanced Search - Presenting fulltext search results with their context.
 
-Feel free to provide me some feedback in the Issues section of this page.
+Feel free to provide me some feedback in the [Issues](https://github.com/mukil/stableviews/issues) section of this repo.
 
 #### Getting Started
 
@@ -24,45 +31,24 @@ You can find the most recent builds of DeepaMehta **4.8** and the two required p
 
 After working in and having created a DeepaMehta 4 Topicmap you can use the ``View in stableviews'' button in the lower left corner of the Webclient. Clicking on it you'll open the current map in the stableviews ui.
 
-#### Development Roadmap (Initially, Partially Outdated)
+In DeepaMehta's `Help` menu you'll find the links to the `Hexago View` and `Timeline View`.
 
-To become an alternate, command-line controllable presentation layer...
+#### Development
 
-Current & former features include:
- * Load a Topicmap via `open <name>`
- * Free placement and panning (allowing to interact with the loaded topic map without persistence)
- * Multiple selection of topics using the `SHIFT` key with (offering event handling for the controller)
- * Zooming in and out of the presented network (graph panel)
- * `hide` and `show assocs` command for toggling the display of all associations
- * `hide` and `show assocs` command for toggling the display of all topics of a certain  _type_ - (not yet implemented)
- * Full text search across the complete databse with selection between all results to reveal/load a hidden topic into the loaded _Topicmap_ - (not yet implemented)
+For setting up our development please follow the description outlined in this [PluginDevelopmentGuide](https://trac.deepamehta.de/wiki/PluginDevelopmentGuide).
 
-The aim is (as always) that this becomes an easy extendable codebase for developers and that it is maximal customizable for designers.
+```
+cd dm4-stableviews
+mvn clean package
+```
 
-Writing back and persisting the re-arrangements, as well as writing changes in view configuration for single topics, persisting a more complex view state or being able to create simple note topics is all "future is unknown" stuff.
-
-Ideal, differing from the more general approach of the dm4-webclient, this presentation layer will try to deliver satisfaction for information processing tasks, including (but not limited to):
- * _iterative refinement_ for finding existing topics (or expand on what became known as _faceted browsing_ allowing for combination of parameters/facets),
- * _comparison_ of "details" (just topics for now but later) of elements in your personal graph-like dataset
- * feel of _immediacy_ for users when re-arranging their view should always be maintained
-
-For a more detailed explanation see section "Details on differences" further down.
-
-Similar to the original dm4-webclient module this codebase aims at:
- * DONE - load & edit maps: load stable_views for users of any known dm/x platform (focusing on free placement)
- * presentation & action: let users search, visualize _and_ explore elements of their personal graph-data database
- * DONE - modular architecture: in terms of the JavaScript AMD definition (e.g. requirejs.org)
- * become extendable: allow for JavaScript plugins to take over rendering
- * OK - stay cusomizable: allow designers for as much CSS customizations as possible
- * target bigger-screen devices: no smaller then tablet-sized screens will be targeted
-
+To instruct `mvn` where to copy your new build to you could point out the `bundle-deploy` directory of your DeepaMehta installation through adding a `dm4.deploy.dir` property into the `pom.xml`. Once copied DeepaMehta will then "hot-deploy" the new version.
 
 ### Inspiration
 
 The _Topicmaps UI_ by Jörg Richter (@jri).
 
-With this interface we draw upon the knowledge on humans  _visual_ and _spatial memory_. Furthermore we think that an item "is" or "is best described" through the relations to other items, its relation it is "seen" (or understood) in. To be able do meaningful research with this cognitive tool we believe that this user interface needs to allow users of _free placement_ and needs to provide _stable geometries_.
-
+With this interface we draw upon the knowledge on humans  _visual memory_ ("... the blue bar at the top there") and _situative memory_ ("... as i was meeting Ben for the first time."). Furthermore we think that an item "is" or "is best described" through its relations to other items. And those relations can represent _context_. To be able do meaningful research with this tool we believe that this user interface needs to allow users of _free placement_ of items and it needs to persist those visual structures (_stable geometries_).
 
 ### Challenges
 
@@ -104,13 +90,12 @@ The difference and focus of UI research in this code repository regarding the dm
 
 * Tiling areas in a map? How would you imagine?<br/>
 
-### Installation
-
-After cloning, packaging and installing this DeepaMehta 4 bundle you need to browse `/de.mikromedia.stableviews` on your DeepaMehta 4 installation to start loading your existing topicmaps into this interface via the `open <Nr>`-commands.
 
 ### Addendum
 
-I am curious and still want to get to know more about the limits of visual sense-making. To be able to get there i would like to develop this GUI in a highly connective and collaborative way. I herewith seek for your help in making this possible. Please help to think through some of the details and please think about contributing anything from sketches, requirements or wishes up to code or styles.
+I am curious and still want to get to know more about the limits of visual sense-making. For example, we know (from studies in 2008 and 2009) that creating manually arranged graph layouts is promising when we do so focussing on designing touch- or pen-based interactions. At least much more promising than focussing on delivering this UI for pointer-based interactions. Nonetheless, this graph aims to be (to some degree) controllable by keyboard interactions, too.
+
+To be able to get there i would like to develop this GUI in a highly connective and collaborative way. I herewith seek for your help in making this possible. Please help to think through some of the details and please think about contributing anything from sketches, requirements or wishes up to code or styles.
 
 Everyone is welcome!
 
