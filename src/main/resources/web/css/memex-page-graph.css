@@ -52,6 +52,7 @@ svg:focus {
     border-bottom: 1px solid #353535;
     padding-top: 20px;
     padding-bottom: 10px;
+    margin-bottom: 5px;
     margin-left: 100px;
     margin-right: 100px;
     text-transform: uppercase;
@@ -97,6 +98,44 @@ div .textblock {
 .links line {
     stroke: #0071bc;
     stroke-width: 3;
+}
+
+/** Topic Commands Styles **/
+
+.commands {
+    margin-left: 100px;
+    margin-right: 100px;
+    font-family: sans-serif;
+    text-transform: uppercase;
+}
+
+.selection-commands li,
+.topic-commands li {
+    list-style-type: none;
+    display: inline-block;
+}
+
+.selection-commands li a,
+.topic-commands li a {
+    color: #383838;
+    text-decoration: none;
+    padding: 5px;
+    padding-left: 10px; padding-right: 10px;
+    background-color: white;
+    cursor: pointer;
+}
+
+.selection-commands li a:hover,
+.topic-commands li a:hover {
+    background-color: #343434;
+    color: #fefefe;
+}
+
+.selection-commands ul,
+.topic-commands ul {
+    padding: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 div.show {

@@ -3,7 +3,7 @@
 
 A DeepaMehta 4 plugin delivering alternate user interfaces to present work done in _Topicmaps_. My freestyle project for DeepaMehta 4.
 
-This bundle currently comes with three type of _views_ for content authored in DeepaMehta:
+This bundle currently comes with four alternative _views_ for information created and organized with DeepaMehta 4:
 
  - **Topicmaps Reader Standard Style** - Think of nodes, edges, labels and details (SVG Circles)
  - **Topicmaps Reader Memex Style** - Think of nodes, edges, labels and details memex style (SVG Rectangles)
@@ -29,9 +29,9 @@ Note: Each of the beforementioend user dialogs are still under heavy development
 
 You can find the most recent builds of DeepaMehta **4.8** and the two required plugins at [http://download.deepamehta.de/nightly/](https://download.deepamehta.de/nightly/).
 
-After working in and having created a DeepaMehta 4 Topicmap you can use the ``View in stableviews'' button in the lower left corner of the Webclient. Clicking on it you'll open the current map in the stableviews ui.
+After working in and having created a DeepaMehta 4 Topicmap you can use the `View in stableviews` button in the lower left corner of the Webclient. Clicking on it you'll open the current map in the stableviews ui.
 
-In DeepaMehta's `Help` menu you'll find the links to the `Hexago View` and `Timeline View`.
+In DeepaMehta's `Help` menu you'll addtionally find the links to the `Hexagon View` and `Timeline View`.
 
 #### Development
 
@@ -48,7 +48,7 @@ To instruct `mvn` where to copy your new build to you could point out the `bundl
 
 The _Topicmaps UI_ by Jörg Richter (@jri).
 
-With this interface we draw upon the knowledge on humans  _visual memory_ ("... the blue bar at the top there") and _situative memory_ ("... as i was meeting Ben for the first time."). Furthermore we think that an item "is" or "is best described" through its relations to other items. And those relations can represent _context_. To be able do meaningful research with this tool we believe that this user interface needs to allow users of _free placement_ of items and it needs to persist those visual structures (_stable geometries_).
+With this interface we draw upon the knowledge on humans  _visual memory_ ("... the blue bar at the top there") and _situative memory_ ("... as i was meeting Ben for the first time.") (p. 3, [Richter, 2012](http://demo.deepamehta.de:8080/topicmap/2249/topic/3359), Presentation at Größenwahn). In DeepaMehta people think that an item "is" or "is best described" through its relations to other items. And those relations can represent _context_. To be able do meaningful research with this tool we believe that this user interface needs to allow users of _free placement_ of items and it needs to persist those visual structures (_stable geometries_).
 
 ### Challenges
 
