@@ -64,7 +64,7 @@ define(['modules/ko_page_impl', 'd3'], function(model, d3) {
 
             get_username: function (callback) {
                 /** ### send synchronous request */
-                var xhr = d3.xhr('/accesscontrol/user', "text/plain")
+                var xhr = d3.xhr('/access-control/user', "text/plain")
                     xhr.get()
                     xhr.on('load', function (data) {
                         if (callback) callback(data.responseText)

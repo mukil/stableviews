@@ -144,7 +144,7 @@ require(['common'], function(common) {
                     var user_input = d3.event.target.value.trim()
                     for (var t in selected_topicmap.topics) {
                         var topic_name = selected_topicmap.topics[t].value.toLowerCase()
-                        // var topic_type = selected_topicmap.topics[t].type_uri.toLowerCase()
+                        // var topic_type = selected_topicmap.topics[t].typeUri.toLowerCase()
                         if (topic_name.indexOf(user_input) !== -1) {
                             search_results.push({
                                 topic: selected_topicmap.topics[t],
@@ -155,7 +155,7 @@ require(['common'], function(common) {
                     }
                     for (var e in selected_topicmap.assocs) {
                         var assoc_name = selected_topicmap.assocs[e].value.toLowerCase()
-                        // var assoc_type = selected_topicmap.assocs[t].type_uri.toLowerCase()
+                        // var assoc_type = selected_topicmap.assocs[t].typeUri.toLowerCase()
                         if (assoc_name.indexOf(user_input) !== -1) {
                             search_results.push({
                                 topic: selected_topicmap.assocs[e],
@@ -262,7 +262,7 @@ require(['common'], function(common) {
         }
 
         function update_topicmap_url() {
-            window.location.hash = "#" + selected_topicmap.info.id
+            window.location.hash = "#" + selected_topicmap.topic.id
         }
 
         function setup_page_listeners() {
@@ -401,8 +401,8 @@ require(['common'], function(common) {
                 search_results = []
                 render_search_results()
                 // set window title
-                set_document_title(selected_topicmap.info.value)
-                set_page_title(selected_topicmap.info.value)
+                set_document_title(selected_topicmap.topic.value)
+                set_page_title(selected_topicmap.topic.value)
                 // ### hide loader dummy
                 d3.select(".loader").classed("hide", true)
                 d3.select("#map-commands").attr("style", "display: block;")
@@ -438,19 +438,21 @@ require(['common'], function(common) {
                 graph_panel.highlight_topic(selected_topic.id)
                 // render page title
                 set_page_title(topic.value)
-                set_page_class(topic.type_uri.substr(topic.type_uri.lastIndexOf('.') + 1))
+                set_page_class(topic.typeUri.substr(topic.typeUri.lastIndexOf('.') + 1))
 
                 // render "Note" details
-                if (selected_topic.type_uri === "dm4.notes.note") {
-                    set_page_details(selected_topic.childs['dm4.notes.text'].value)
-                } else if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {
-                    if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.web_resource_description')) {
-                        set_page_details(selected_topic.childs['dm4.webbrowser.web_resource_description'].value)}
+                if (selected_topic.typeUri === "dmx.notes.note") {
+                    set_page_details(selected_topic.children['dmx.notes.text'].value)
+                } else if (selected_topic.typeUri === "dmx.bookmarks.bookmark") {
+                    if (selected_topic.children.hasOwnProperty('dmx.bookmarks.description')) {
+                        set_page_details(selected_topic.children['dmx.bookmarks.description'].value)}
                     }
-                else if (selected_topic.type_uri === "dm4.contacts.person" ||
-                         selected_topic.type_uri === "dm4.contacts.institution") {
-                    if (selected_topic.childs.hasOwnProperty('dm4.contacts.notes')) {
-                        set_page_details(selected_topic.childs['dm4.contacts.notes'].value)
+                else if (selected_topic.typeUri === "dmx.contacts.person" ||
+                         selected_topic.typeUri === "dmx.contacts.organization") {
+                    if (selected_topic.children.hasOwnProperty('dmx.contacts.person_description')) {
+                        set_page_details(selected_topic.children['dmx.contacts.person_description'].value)
+                    } else if (selected_topic.children.hasOwnProperty('dmx.contacts.organization_description')) {
+                        set_page_details(selected_topic.children['dmx.contacts.organization_description'].value)
                     }
                 } else {
                     set_page_details('')
@@ -482,16 +484,16 @@ require(['common'], function(common) {
             d3.selectAll(".topic-commands ul li").remove()
             d3.select(".topic-commands").classed('hide', false)
 
-            if (selected_topic.type_uri === "dm4.webbrowser.web_resource") {    // -- Web Resource Commands
+            if (selected_topic.typeUri === "dmx.bookmarks.bookmark") {    // -- Web Resource Commands
                 render_webbrowser_url_child(selected_topic)
-            } else if (selected_topic.type_uri === "dm4.files.file") {          // -- File Topic Commands
-                var filepath = selected_topic.childs["dm4.files.path"].value
-                var file_title = selected_topic.childs["dm4.files.media_type"].value
-                    + ", Size: " + selected_topic.childs["dm4.files.size"].value / 1024 + " KByte"
+            } else if (selected_topic.typeUri === "dmx.files.file") {          // -- File Topic Commands
+                var filepath = selected_topic.children["dmx.files.path"].value
+                var file_title = selected_topic.children["dmx.files.media_type"].value
+                    + ", Size: " + selected_topic.children["dmx.files.size"].value / 1024 + " KByte"
                 d3.select(".topic-commands ul").append("li").append("a").attr("title", file_title)
-                    .attr("href", "/filerepo/" + filepath).text("Access File")
-            } else if (selected_topic.type_uri === "dm4.contacts.institution" ||
-                       selected_topic.type_uri === "dm4.contacts.person") {     // --- Contact Topic Commands
+                    .attr("href", "/files/file/" + filepath + '?download').text("Access File")
+            } else if (selected_topic.typeUri === "dmx.contacts.organization" ||
+                       selected_topic.typeUri === "dmx.contacts.person") {     // --- Contact Topic Commands
                 render_webbrowser_url_child(selected_topic)
             } else {
                 d3.select(".topic-commands").classed('hide', true)
@@ -501,8 +503,8 @@ require(['common'], function(common) {
 
         function render_webbrowser_url_child(selected_topic) {
             // if a webbrowser.url value is set, append a "link" button into the toolbar
-            if (selected_topic.childs.hasOwnProperty('dm4.webbrowser.url')) {
-                var url = selected_topic.childs['dm4.webbrowser.url'].value
+            if (selected_topic.children.hasOwnProperty('dmx.base.url')) {
+                var url = selected_topic.children['dmx.base.url'].value
                 if (url && url != "") {
                     d3.select(".topic-commands ul").append("li").append("a").attr("title", "Open URL " + url)
                         .attr("href", url).text("Open Webpage")
@@ -536,6 +538,7 @@ require(['common'], function(common) {
 
         function refresh_user_status(name) {
             controller.loadUsername(function(response) {
+                console.log("refresh_user_status", response)
                 if (typeof response === "object") {
                     username = undefined
                 } else if (response !== "") {
@@ -585,15 +588,15 @@ require(['common'], function(common) {
                 var item = results_list.append('li')
                     // ### we hack an internal action command into the search results element id
                     var reveal_link = item.append('a').attr('href',
-                            "#" + selected_topicmap.info.id + '/#' + result.topic.id)
+                            "#" + selected_topicmap.topic.id + '/#' + result.topic.id)
                         .attr('class', "reveal-item").attr("id", "show-" + result.topic.id)
                         .html('&ldquo;' + result.topic.value+'&rdquo;')
                     if (result.workspace.id > -1) { // search result is NOT part of this map
                         reveal_link.attr("id", "load-" + result.topic.id)
-                        item.append('span').html(' &ndash; <b>' + lang.get_label(result.topic.type_uri) + '</b>'
+                        item.append('span').html(' &ndash; <b>' + lang.get_label(result.topic.typeUri) + '</b>'
                             + ' in Workspace <em>' +result.workspace.value+ ' &ndash; '+result.workspace_mode+'</em>')
                     }
-                    if (result.topic.type_uri === "dm4.topicmaps.topicmap") { // hack action into element id
+                    if (result.topic.typeUri === "dmx.topicmaps.topicmap") { // hack action into element id
                         reveal_link.attr("id", "tmap-" + result.topic.id) // search result is of type TOPICMAP
                     }
                     reveal_link.on('click', function() {
@@ -625,7 +628,7 @@ require(['common'], function(common) {
                 if (selected_topic) { // ## may not be set, selected_topicmap could be set here then
                     set_page_title(selected_topic.value)
                 } else {
-                    set_page_title(selected_topicmap.info.value)
+                    set_page_title(selected_topicmap.topic.value)
                 }
                 d3.select('.search-results').classed("hide", true)
             } else {
@@ -683,7 +686,7 @@ require(['common'], function(common) {
                 console.log("Available Topicmaps", topicmaps)
                 refresh_topicmap_menu()
                 if (map_id) { // load routed map
-                    selected_topicmap = { id: map_id }
+                    selected_topicmap = { topic : { id: map_id } }
                 } else { // load first map we get
                     selected_topicmap = topicmaps[0]
                 }
@@ -695,8 +698,8 @@ require(['common'], function(common) {
             if (!selected_topicmap) return
             if (!selected_topicmap.hasOwnProperty("id")) {
                 // fixme: a selected_topicmap should always be the same type of object
-                console.warn("Correcting Selected Topicmap ID", selected_topicmap.info)
-                selected_topicmap = selected_topicmap.info
+                console.warn("Correcting Selected Topicmap ID", selected_topicmap.topic)
+                selected_topicmap = selected_topicmap.topic
             }
             // prepare/cleanup
             graph_panel.clear()

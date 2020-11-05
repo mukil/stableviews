@@ -8,7 +8,7 @@ define(['modules/model', 'd3'], function(model, d3) {
                 // update gui
                 d3.select('.data-container').style({'display': 'inline-block'})
                 // issue request
-                var xhr = d3.json('/core/topic/by_type/' + typeUri)
+                var xhr = d3.json('/core/topics/type/' + typeUri)
                     xhr.get()
                     xhr.on('load', function (data) {
                         // update model
@@ -25,7 +25,7 @@ define(['modules/model', 'd3'], function(model, d3) {
 
             get_username: function (callback) {
                 /** ### send synchronous request */
-                var xhr = d3.xhr('/accesscontrol/user', "text/plain")
+                var xhr = d3.xhr('/access-control/user', "text/plain")
                     xhr.get()
                     xhr.on('load', function (data) {
                         if (callback) callback(data.responseText)

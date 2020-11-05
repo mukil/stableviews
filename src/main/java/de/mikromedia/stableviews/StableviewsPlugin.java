@@ -2,24 +2,25 @@ package de.mikromedia.stableviews;
 
 
 
+import de.mikromedia.stableviews.model.StableviewsTopicmapModel;
 import java.util.logging.Logger;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Consumes;
 
-import de.deepamehta.core.Topic;
 
-import de.deepamehta.core.osgi.PluginActivator;
-import de.deepamehta.core.service.Inject;
-import de.deepamehta.core.service.Transactional;
-import de.deepamehta.topicmaps.TopicmapsService;
-import de.deepamehta.topicmaps.model.TopicmapViewmodel;
-import de.mikromedia.stableviews.model.StableviewsTopicmapModel;
 import java.io.InputStream;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.core.MediaType;
+import systems.dmx.core.Topic;
+import systems.dmx.core.osgi.PluginActivator;
+import systems.dmx.core.service.Inject;
+import systems.dmx.core.service.Transactional;
+import static systems.dmx.topicmaps.Constants.TOPICMAP;
+import systems.dmx.topicmaps.Topicmap;
+import systems.dmx.topicmaps.TopicmapsService;
 
 
 /**
@@ -46,9 +47,9 @@ public class StableviewsPlugin extends PluginActivator {
     @Path("/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     public StableviewsTopicmapModel getStyledTopicmap(@PathParam("id") long topicmapId) {
-        TopicmapViewmodel topicmapViewModel = tmService.getTopicmap(topicmapId, true);
-        StableviewsTopicmapModel svtm = new StableviewsTopicmapModel(topicmapViewModel);
-        enrichWithCustomStylesheet(svtm, topicmapViewModel.getId());
+        Topicmap topicmap = tmService.getTopicmap(topicmapId, true);
+        StableviewsTopicmapModel svtm = new StableviewsTopicmapModel(topicmap);
+        enrichWithCustomStylesheet(svtm, topicmap.getId());
         return svtm;
     }
 
@@ -84,16 +85,16 @@ public class StableviewsPlugin extends PluginActivator {
     @Path("/topicmap/stylesheet/{styleSheetPath}/{id}")
     @Transactional
     public void setTopicmapStylesheet(@PathParam("styleSheetPath") String cssPath, @PathParam("id") long topicmapId) {
-        Topic topicmap = dm4.getTopic(topicmapId);
-        if (topicmap.getTypeUri().equals("dm4.topicmaps.topicmap")) {
+        Topic topicmap = dmx.getTopic(topicmapId);
+        if (topicmap.getTypeUri().equals(TOPICMAP)) {
             log.info("Set Topicmap Stylesheet on " + topicmap.getSimpleValue());
             topicmap.setProperty(PROP_MAP_STYLESHEET, cssPath, false);
         }
     }
 
     public void enrichWithCustomStylesheet(StableviewsTopicmapModel topic, long topicmapId) {
-        Topic topicmap = dm4.getTopic(topicmapId);
-        if (topicmap.getTypeUri().equals("dm4.topicmaps.topicmap")) {
+        Topic topicmap = dmx.getTopic(topicmapId);
+        if (topicmap.getTypeUri().equals(TOPICMAP)) {
             String mapStyleURL = "/de.mikromedia.stableviews/assets/css/custom-graph.css";
             if (topicmap.hasProperty(PROP_MAP_STYLESHEET)) {
                 mapStyleURL = (String) topicmap.getProperty(PROP_MAP_STYLESHEET);

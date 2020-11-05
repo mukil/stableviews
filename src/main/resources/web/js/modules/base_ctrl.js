@@ -20,12 +20,12 @@ define(['rest_client'], function(restClient, require) {
             }, null, null)
         },
         loadAllTopicmaps: function(handler) {
-            restc.fetchByTypeUriChilds("dm4.topicmaps.topicmap", function (result) {
+            restc.fetchByTypeUriChilds("dmx.topicmaps.topicmap", function (result) {
                 handler(result)
             }, null, null)
         },
         loadAllWorkspaces: function(handler) {
-            restc.fetchByTypeUriChilds("dm4.workspaces.workspace", function (result) {
+            restc.fetchByTypeUriChilds("dmx.workspaces.workspace", function (result) {
                 handler(result)
             }, null, null)
         },

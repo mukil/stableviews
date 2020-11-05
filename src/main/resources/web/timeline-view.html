@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Timeline View - DeepaMehta 4.8</title>
+        <title>Timeline View - DMX</title>
         <script
             data-main="/de.mikromedia.stableviews/js/timeline/require_main"
             src="/de.mikromedia.stableviews/assets/vendor/require.js">
@@ -13,6 +13,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
         <link rel="stylesheet" href="/de.mikromedia.stableviews/css/buero-fuer-informationsarbeit.css"/>
+        <link rel="stylesheet" href="/de.mikromedia.stableviews/css/font-awesome-4.7.css"/>
         <!-- Legacy Assets -->
         <link rel="stylesheet" href="/de.mikromedia.stableviews/css/timeline/eduzen.css"/>
         <link rel="stylesheet" href="/de.mikromedia.stableviews/css/timeline/timeline-style.css"/>
@@ -30,7 +31,7 @@
                 <div class="pages">
                     <a href="#set-timerange" id="set-timerange" data-bind="click: $root.toggle_timerange_dialog"
                        title="Zeitraum des grafischen Indexes anpassen (Rechts)">Optionen</a>
-                    <a href="/de.deepamehta.webclient/" id="webclient" title="DeepaMehta 4 Webclient">Topicmaps</a>
+                    <a href="/systems.dmx.webclient/" id="webclient" title="DeepaMehta 4 Webclient">Topicmaps</a>
                     <a href="/stableviews/" id="stableviews" title="Stableviews UI">Stableviews</a>
                     <a href="/stableviews/hexmap/" id="hexmaps" title="Stableviews UI">Hexagon View</a>
                 </div>
@@ -87,6 +88,7 @@
                             <option value="11">Dec</option>
                         </select>
                         <select id="from-year">
+                            <option value="2022">2022</option>
                             <option value="2021">2021</option>
                             <option value="2020">2020</option>
                             <option value="2019">2019</option>
@@ -157,21 +159,23 @@
 
             <ul data-bind="foreach: get_items()" class="note-list">
 
-                    <!-- List Item of Web Resources -->
-                    <!-- ko if: $data.type_uri === 'dm4.webbrowser.web_resource' -->
+                    <!-- List Item of Bookmark -->
+                    <!-- ko if: $data.typeUri === 'dmx.bookmarks.bookmark' -->
                     <li class="item web-resource" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
-                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Web Resource Icon" class="type-icon" title="Web Resource"/>
-                            <!-- ko if: $data.childs['dm4.webbrowser.url'] -->
-                            <a class="name outlink" data-bind="text: $data.value, attr: { href: $data.childs['dm4.webbrowser.url'].value, title: 'Open Web Resource' } "></a>
+                            <div class="type-icon" alt="Bookmark Icon" title="Bookmark">
+                              <i class="bookmark icon"></i>
+                            </div>
+                            <!-- ko if: $data.children['dmx.base.url'] -->
+                            <a class="name outlink" data-bind="text: $data.value, attr: { href: $data.children['dmx.base.url'].value, title: 'Open Web Resource' } "></a>
                             <!-- /ko -->
-                            <!-- ko if: $data.childs['dm4.webbrowser.web_resource_description'] -->
+                            <!-- ko if: $data.children['dmx.bookmarks.description-->
                             <div class="body visible web-resource">
-                                <p data-bind="html: $data.childs['dm4.webbrowser.web_resource_description'].value"></p>
+                                <p data-bind="html: $data.children['dmx.bookmarks.description'].value"></p>
                             </div>
                             <!-- /ko -->
                             <div class="context-info">
-                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></span>
+                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.children['dmx.timestamps.created'].value))" class="timestamp"></span>
                                 von <span data-bind="text: $data['creator']" class="creator"></span>
                                 in <span data-bind="text: '' + $data['workspace']" class="workspace"></span>
                             </div>
@@ -180,18 +184,20 @@
                     <!-- /ko -->
 
                     <!-- List Item of Note -->
-                    <!-- ko if: $data.type_uri == 'dm4.notes.note' -->
+                    <!-- ko if: $data.typeUri == 'dmx.notes.note' -->
                     <li class="item note" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
-                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Notiz Icon" class="type-icon" title="Notiz"/>
+                            <div alt="Note Icon" class="type-icon" title="Note">
+                                <i class="circle icon"></i>
+                            </div>
                             <span data-bind="text: $data.value" class="name"></span>
                             <div class="body note">
-                                <!-- ko if: $data.childs['dm4.notes.text'] -->
-                                <div data-bind="html: $data.childs['dm4.notes.text'].value" class="text"></div>
+                                <!-- ko if: $data.children['dmx.notes.text'] -->
+                                <div data-bind="html: $data.children['dmx.notes.text'].value" class="text"></div>
                                 <!-- /ko -->
                             </div>
                             <div class="context-info">
-                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></span>
+                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.children['dmx.timestamps.created'].value))" class="timestamp"></span>
                                 von <span data-bind="text: $data['creator']" class="creator"></span>
                                 in <span data-bind="text: '' + $data['workspace']" class="workspace"></span>
                             </div>
@@ -200,36 +206,39 @@
                     <!-- /ko -->
 
                     <!-- List Item of Person -->
-                    <!-- ko if: $data.type_uri === 'dm4.contacts.person' -->
+                    <!-- ko if: $data.typeUri === 'dmx.contacts.person' -->
                     <li class="item person" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
-                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Person Icon" class="type-icon" title="Person"/>
+                            <!--img data-bind="attr: { src: $data.children['dmx.webclient.icon'].value} " alt="Person Icon" class="type-icon" title="Person"/-->
+                            <div alt="Person Icon" class="type-icon" title="Person">
+                              <i class="user icon"></i>
+                            </div>
                             <span data-bind="text: $data.value" class="name"></span>
                             <div class="body">
-                                <!-- ko if: $data.childs['dm4.contacts.phone_number'] && $data.childs['dm4.contacts.phone_number'].length > 0 -->
-                                <span data-bind="text: $data.childs['dm4.contacts.phone_number'][0].value" class="phone"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.phone_number'] && $data.children['dmx.contacts.phone_number'].length > 0 -->
+                                <span data-bind="text: $data.children['dmx.contacts.phone_number'][0].value" class="phone"></span><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.email_address'] && $data.childs['dm4.contacts.email_address'].length > 0 -->
-                                <a class="name url" data-bind="text: $data.childs['dm4.contacts.email_address'][0].value, attr: { href: 'mailto:' + $data.childs['dm4.contacts.email_address'][0].value, title: 'Open Mailclient' } "></a><br/>
+                                <!-- ko if: $data.children['dmx.contacts.email_address'] && $data.children['dmx.contacts.email_address'].length > 0 -->
+                                <a class="name url" data-bind="text: $data.children['dmx.contacts.email_address'][0].value, attr: { href: 'mailto:' + $data.children['dmx.contacts.email_address'][0].value, title: 'Open Mailclient' } "></a><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.webbrowser.url'] && $data.childs['dm4.webbrowser.url'].length > 0 -->
-                                <a class="name url" data-bind="text: $data.childs['dm4.webbrowser.url'][0].value, attr: { href: $data.childs['dm4.webbrowser.url'][0].value, title: 'Go to Webpage' } "></a><br/>
-                                <!--div data-bind="foreach: { data: $data.childs['dm4.webbrowser.url'], as: 'wepbage' }" class="webpages">
+                                <!-- ko if: $data.children['dmx.base.url'] && $data.children['dmx.base.url'].length > 0 -->
+                                <a class="name url" data-bind="text: $data.children['dmx.base.url'][0].value, attr: { href: $data.children['dmx.base.url'][0].value, title: 'Go to Webpage' } "></a><br/>
+                                <!--div data-bind="foreach: { data: $data.children['dmx.webbrowser.url'], as: 'wepbage' }" class="webpages">
                                     <a class="name url" data-bind="text: webpage.value, attr: { href: webpage.value, title: 'Go to Webpage' } "></a>
                                 <div-->
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.address#dm4.contacts.address_entry'] && $data.childs['dm4.contacts.address#dm4.contacts.address_entry'].length > 0-->
-                                <span data-bind="text: $data.childs['dm4.contacts.address#dm4.contacts.address_entry'][0].value" class="address"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.address#dmx.contacts.address_entry'] && $data.children['dmx.contacts.address#dmx.contacts.address_entry'].length > 0-->
+                                <span data-bind="text: $data.children['dmx.contacts.address#dmx.contacts.address_entry'][0].value" class="address"></span><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.datetime.date#dm4.contacts.date_of_birth'] -->
-                                <span data-bind="html: $data.childs['dm4.datetime.date#dm4.contacts.date_of_birth'].value" class="birthdate"></span><br/>
+                                <!-- ko if: $data.children['dmx.datetime.date#dmx.contacts.date_of_birth'] -->
+                                <span data-bind="html: $data.children['dmx.datetime.date#dmx.contacts.date_of_birth'].value" class="birthdate"></span><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.notes'] -->
-                                <span data-bind="html: $data.childs['dm4.contacts.notes'].value" class="personal-note"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.person_description'] -->
+                                <span data-bind="html: $data.children['dmx.contacts.person_description'].value" class="personal-note"></span><br/>
                                 <!-- /ko -->
                             </div>
                             <div class="context-info">
-                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></span>
+                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.children['dmx.timestamps.created'].value))" class="timestamp"></span>
                                 von <span data-bind="text: $data['creator']" class="creator"></span>
                                 in <span data-bind="text: '' + $data['workspace']" class="workspace"></span>
                             </div>
@@ -238,33 +247,36 @@
                     <!-- /ko -->
 
                     <!-- List Item of Institution -->
-                    <!-- ko if: $data.type_uri === 'dm4.contacts.institution' -->
-                    <li class="item institution" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
+                    <!-- ko if: $data.typeUri === 'dmx.contacts.organization' -->
+                    <li class="item organization" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
-                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="Organisation Icon" class="type-icon" title="Organisation"/>
+                            <!--img data-bind="attr: { src: $data.children['dmx.webclient.icon'].value} " alt="Organisation Icon" class="type-icon" title="Organisation"/-->
+                            <div alt="Organization Icon" class="type-icon" title="Organization">
+                              <i class="building icon"></i>
+                            </div>
                             <span data-bind="text: $data.value" class="name"></span>
                             <div class="body">
-                                <!-- ko if: $data.childs['dm4.contacts.notes'] -->
-                                <span data-bind="html: $data.childs['dm4.contacts.notes'].value" class="personal-note"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.organization_description'] -->
+                                <span data-bind="html: $data.children['dmx.contacts.organization_description'].value" class="personal-note"></span><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.phone_number'] && $data.childs['dm4.contacts.phone_number'].length > 0 -->
-                                <span data-bind="text: $data.childs['dm4.contacts.phone_number'][0].value" class="phone"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.phone_number'] && $data.children['dmx.contacts.phone_number'].length > 0 -->
+                                <span data-bind="text: $data.children['dmx.contacts.phone_number'][0].value" class="phone"></span><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.email_address'] && $data.childs['dm4.contacts.email_address'].length > 0 -->
-                                <a class="name url" data-bind="text: $data.childs['dm4.contacts.email_address'][0].value, attr: { href: 'mailto:' + $data.childs['dm4.contacts.email_address'][0].value, title: 'Open Mailclient' } "></a><br/>
+                                <!-- ko if: $data.children['dmx.contacts.email_address'] && $data.children['dmx.contacts.email_address'].length > 0 -->
+                                <a class="name url" data-bind="text: $data.children['dmx.contacts.email_address'][0].value, attr: { href: 'mailto:' + $data.children['dmx.contacts.email_address'][0].value, title: 'Open Mailclient' } "></a><br/>
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.webbrowser.url'] && $data.childs['dm4.webbrowser.url'].length > 0 -->
-                                <a class="name url" data-bind="text: $data.childs['dm4.webbrowser.url'][0].value, attr: { href: $data.childs['dm4.webbrowser.url'][0].value, title: 'Go to Webpage' } "></a><br/>
-                                <!--div data-bind="foreach: { data: $data.childs['dm4.webbrowser.url'], as: 'wepbage' }" class="webpages">
+                                <!-- ko if: $data.children['dmx.base.url'] && $data.children['dmx.base.url'].length > 0 -->
+                                <a class="name url" data-bind="text: $data.children['dmx.base.url'][0].value, attr: { href: $data.children['dmx.base.url'][0].value, title: 'Go to Webpage' } "></a><br/>
+                                <!--div data-bind="foreach: { data: $data.children['dmx.base.url'], as: 'wepbage' }" class="webpages">
                                     <a class="name url" data-bind="text: webpage.value, attr: { href: webpage.value, title: 'Go to Webpage' } "></a>
                                 <div-->
                                 <!-- /ko -->
-                                <!-- ko if: $data.childs['dm4.contacts.address#dm4.contacts.address_entry'] && $data.childs['dm4.contacts.address#dm4.contacts.address_entry'].length > 0-->
-                                <span data-bind="text: $data.childs['dm4.contacts.address#dm4.contacts.address_entry'][0].value" class="address"></span><br/>
+                                <!-- ko if: $data.children['dmx.contacts.address#dmx.contacts.address_entry'] && $data.children['dmx.contacts.address#dmx.contacts.address_entry'].length > 0-->
+                                <span data-bind="text: $data.children['dmx.contacts.address#dmx.contacts.address_entry'][0].value" class="address"></span><br/>
                                 <!-- /ko -->
                             </div>
                             <div class="context-info">
-                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></span>
+                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.children['dmx.timestamps.created'].value))" class="timestamp"></span>
                                 von <span data-bind="text: $data['creator']" class="creator"></span>
                                 in <span data-bind="text: '' + $data['workspace']" class="workspace"></span>
                             </div>
@@ -273,14 +285,18 @@
                     <!-- /ko -->
 
                     <!-- List of other items .. (unkown which type exactly.. ) -->
-                    <!-- ko if: $data.type_uri !== 'dm4.contacts.institution' && $data.type_uri !== 'dm4.webbrowser.web_resource' && $data.type_uri !== 'dm4.contacts.person' && $data.type_uri !== 'dm4.notes.note' -->
+                    <!-- ko if: $data.typeUri !== 'dmx.contacts.organization' && $data.typeUri !== 'dmx.bookmarks.bookmark' && $data.typeUri !== 'dmx.contacts.person' && $data.typeUri !== 'dmx.notes.note' -->
                     <li class="item topic" id="" data-bind="click: $root.click_list_item, attr: { id: 'topic-' + $data.id }">
                         <div class="note-container">
-                            <img data-bind="attr: { src: $data.childs['dm4.webclient.icon'].value} " alt="DeepaMehta 4 Type Icon" class="type-icon" title="DeepaMehta Type"/>
+                            <!-- img data-bind="attr: { src: $data.children['dmx.webclient.icon'].value} " alt="DMX Type Icon" class="type-icon" title="DMX Type"/-->
+                            <div alt="Type Icon" class="type-icon" title="DMX Type">
+                              <i class="circle outline icon"></i>
+                            </div>
                             <span data-bind="text: $data.value" class="name"></span>
+                            <span data-bind="text: ' (' + $data.typeUri + ')'" class="name"></span>
                             <div class="body"></div>
                             <div class="context-info">
-                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.childs['dm4.time.created'].value))" class="timestamp"></span>
+                                Angelegt am <span data-bind="text: $root.format_date(new Date($data.children['dmx.timestamps.created'].value))" class="timestamp"></span>
                                 von <span data-bind="text: $data['creator']" class="creator"></span>
                                 in <span data-bind="text: '' + $data['workspace']" class="workspace"></span>
                             </div>
@@ -310,7 +326,7 @@
 
         <footer class="copy bright">
             <div class="attribution">
-                This is a development snapshot of stableviews <b>0.4</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.
+                This is stableviews-<b>0.5-SNAPSHOT</b>. Its development is driven by lots of &hearts;, fresh air, bread & butter, water &amp; coffee at <a href="http://mikromedia.de">B&uuml;ro f&uuml;r Informationsarbeit</a>.
                 Please help to improve this software through giving <a href="mailto:mail@mikromedia.de">feedback</a> or reporting any <a href="http://github.com/mukil/stableviews">issues</a>
             </div>
             <div class="source-code">

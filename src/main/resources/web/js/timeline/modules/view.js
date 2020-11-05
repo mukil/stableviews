@@ -71,10 +71,11 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
             })
             // check username
             restc.get_username(function(response) {
+                console.log("Username Logged in", response)
                 if (response.length > 0) {
                     d3.select('#menu .username').text('Angemeldet als ' + response)
                 } else {
-                    d3.select('#menu .username').html('<a href="/de.deepamehta.webclient">Login</a>')
+                    d3.select('#menu .username').html('<a href="/systems.dmx.webclient/#">Login</a>')
                 }
             })
         },
@@ -157,7 +158,7 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
         handle_details_in_list: function (item) {
 
             var body = d3.select('#topic-' + item.id + ' .body')
-            if (item.type_uri === "dm4.webbrowser.web_resource") return
+            if (item.typeUri === "dmx.bookmarks.bookmark") return
             // allow to toggle details in list
             console.log("Timeline Inline Rendering", item, "Display Style Attr:", body.style("display"))
             if (body.style("display").indexOf("block") !== -1) {
@@ -166,9 +167,9 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
             }
             // build up the html content
             var item_html = ""
-            if (item.type_uri === 'dm4.files.file') {
+            if (item.typeUri === 'dmx.files.file') {
 
-                var filepath = '/filerepo/' + encodeURIComponent(item.childs['dm4.files.path'].value)
+                var filepath = '/files/file/' + encodeURIComponent(item.children['dmx.files.path'].value + '?download')
                 if (item.value.indexOf('.pdf') !== -1) {
                     item_html = '<p><object data="'+filepath+'" width="760" height="640" type="application/pdf">'
                         + '</p>'
@@ -186,11 +187,11 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
                 body.style("display", "block")
 
             } else {
-                // console.warn("Inline Renderer for Topic Type " + item.type_uri + " NOT YET IMPLEMENTED")
+                // console.warn("Inline Renderer for Topic Type " + item.typeUri + " NOT YET IMPLEMENTED")
             }
             // build up tags
-            /** if (item.childs.hasOwnProperty('dm4.tags.tag')) {
-                var list_of_tags = item.childs['dm4.tags.tag']
+            /** if (item.children.hasOwnProperty('dmx.tags.tag')) {
+                var list_of_tags = item.children['dmx.tags.tag']
                 item_html += '<p><span class="label">Tagged:</span>'
                 for (var tag_idx in list_of_tags) {
                     var tag_item = list_of_tags[tag_idx]
@@ -226,7 +227,7 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
             /** var dates = []
             for (var i = 0; i < topics.length; i++) {
                 var topic = topics[i]
-                dates.push(topic.childs['dm4.time.created'].value)
+                dates.push(topic.children['dmx.timestamps.created'].value)
             }
             var youngest = new Date(dates[dates.length-1])
             var oldest = new Date(dates[0]) // -1 Day
@@ -276,7 +277,7 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
             // render dotted-item
             var dots = area.selectAll("circle")
                 .data(topics, function (d) {
-                    return new Date(d.childs['dm4.time.created'].value)
+                    return new Date(d.children['dmx.timestamps.created'].value)
                 })
                 .enter()
                 .append("circle") // append g and
@@ -285,33 +286,33 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
                     return 4
                 })
                 .attr("cx", function (d) {
-                    if (d.type_uri === "dm4.webbrowser.web_resource") {
+                    if (d.typeUri === "dmx.bookmarks.bookmark") {
                         return -10
-                    } else if (d.type_uri === "dm4.notes.note") {
+                    } else if (d.typeUri === "dmx.notes.note") {
                         return -22
-                    } else if (d.type_uri === "dm4.files.file" || d.type_uri === "dm4.files.folder") {
+                    } else if (d.typeUri === "dmx.files.file" || d.typeUri === "dmx.files.folder") {
                         return -35
-                    } else if (d.type_uri === "dm4.contacts.institution") {
+                    } else if (d.typeUri === "dmx.contacts.organization") {
                         return -48
-                    } else if (d.type_uri === "dm4.contacts.person") {
+                    } else if (d.typeUri === "dmx.contacts.person") {
                         return -60
                     } else {
                         return -70
                     }
                 })
                 .attr("cy", function (d) {
-                    return timescale(d.childs['dm4.time.created'].value)
+                    return timescale(d.children['dmx.timestamps.created'].value)
                 })
                 .attr("fill", function (d) {
-                    if (d.type_uri === "dm4.webbrowser.web_resource") {
+                    if (d.typeUri === "dmx.bookmarks.bookmark") {
                         return "#4095f6"
-                    } else if (d.type_uri === "dm4.notes.note") {
+                    } else if (d.typeUri === "dmx.notes.note") {
                         return "#faeb5b"
-                    } else if (d.type_uri === "dm4.files.file" || d.type_uri === "dm4.files.folder") {
+                    } else if (d.typeUri === "dmx.files.file" || d.typeUri === "dmx.files.folder") {
                         return "#999999"
-                    } else if (d.type_uri === "dm4.contacts.institution") {
+                    } else if (d.typeUri === "dmx.contacts.organization") {
                         return "#c10000"
-                    } else if (d.type_uri === "dm4.contacts.person") {
+                    } else if (d.typeUri === "dmx.contacts.person") {
                         return "#343434"
                     } else {
                         return "#666666"
@@ -321,16 +322,16 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
                 // d3-tip https://github.com/caged/d3-tip like http://bl.ocks.org/Caged/6476579
                 .append("svg:title")
                 .text(function(d) {
-                    if (d.type_uri === "dm4.webbrowser.web_resource") {
-                        return "Web Resource, Created " + new Date(d.childs['dm4.time.created'].value)
-                    } else if (d.type_uri === "dm4.notes.note") {
-                        return "Note (Created: " + new Date(d.childs['dm4.time.created'].value)
-                    } else if (d.type_uri === "dm4.files.file" || d.type_uri === "dm4.files.folder") {
-                        return "File or Folder, Created " + new Date(d.childs['dm4.time.created'].value)
-                    } else if (d.type_uri === "dm4.contacts.institution") {
-                        return "Institution, Created " + new Date(d.childs['dm4.time.created'].value)
-                    } else if (d.type_uri === "dm4.contacts.person") {
-                        return "Person, Created " + new Date(d.childs['dm4.time.created'].value)
+                    if (d.typeUri === "dmx.bookmarks.bookmark") {
+                        return "Web Resource, Created " + new Date(d.children['dmx.timestamps.created'].value)
+                    } else if (d.typeUri === "dmx.notes.note") {
+                        return "Note (Created: " + new Date(d.children['dmx.timestamps.created'].value)
+                    } else if (d.typeUri === "dmx.files.file" || d.typeUri === "dmx.files.folder") {
+                        return "File or Folder, Created " + new Date(d.children['dmx.timestamps.created'].value)
+                    } else if (d.typeUri === "dmx.contacts.organization") {
+                        return "Institution, Created " + new Date(d.children['dmx.timestamps.created'].value)
+                    } else if (d.typeUri === "dmx.contacts.person") {
+                        return "Person, Created " + new Date(d.children['dmx.timestamps.created'].value)
                     }
                 })
 
@@ -346,11 +347,11 @@ define(['d3', 'modules/rest_client', 'lang'], function(d3, restc, labels) {
             }
 
             function timestamp_sort_ascending(a, b) {
-                var timestampUri = "dm4.time.created"
+                var timestampUri = "dmx.timestamps.created"
                 var scoreA = 0
                 var scoreB = 0
-                if (a.childs.hasOwnProperty(timestampUri)) scoreA = a.childs[timestampUri].value
-                if (b.childs.hasOwnProperty(timestampUri)) scoreB = b.childs[timestampUri].value
+                if (a.children.hasOwnProperty(timestampUri)) scoreA = a.children[timestampUri].value
+                if (b.children.hasOwnProperty(timestampUri)) scoreB = b.children[timestampUri].value
                 if (scoreA > scoreB) // sort string descending
                   return -1
                 if (scoreA < scoreB)

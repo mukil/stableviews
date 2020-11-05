@@ -37,7 +37,7 @@
     position: fixed;
     top: 50px;
     right: 50px;
-    width: 230px;
+    width: 250px;
     text-align: right;
     background-color: #fff;
 }
@@ -96,6 +96,10 @@
     margin-top: 0px;
 }
 
+.eduzen li.item.note .type-icon {
+    color: rgb(255, 230, 81);
+}
+
 .eduzen li.item .note-container {
     color: #343434;
     cursor: pointer;
@@ -107,10 +111,18 @@
 }
 
 .eduzen li.item.topic:hover,
-.eduzen li.item.institution:hover,
+.eduzen li.item.organization:hover,
 .eduzen li.item.person:hover,
 .eduzen li.item.note:hover {
     border-left: 3px solid #0782C1;
+}
+
+.eduzen li.item.organization .type-icon {
+    color: rgb(193, 0, 0);
+}
+
+.eduzen li.item.web-resource .type-icon {
+    color: rgb(64, 149, 246);
 }
 
 .eduzen li.item.web-resource {
@@ -125,6 +137,9 @@
     margin-bottom: 10px;
 }
 
+.eduzen li.item.topic .type-icon {
+    color: rgba(125, 125, 125, 0.8);
+}
 
 .eduzen li.item .context-info {
     font-size: .9em;
@@ -141,10 +156,8 @@
     float: left;
 }
 
-.eduzen li.item .note-container img.type-icon {
-    height: 20px;
-    vertical-align: bottom;
-    /** padding-right: 10px; **/
+.eduzen li.item .type-icon {
+    display: inline-block;
 }
 
 .eduzen li.item .name {
@@ -179,6 +192,7 @@
     background: #f1f1f1;
     margin-right: 10px;
     word-break: break-all;
+    line-height: 1.7em;
 }
 
 .eduzen li.item .body a:hover {

@@ -65,7 +65,7 @@ define(['d3'], function(d3, require) {
     }
 
     function authenticate(username, passwd, handle, fail, debug) {
-        var xhr = d3.xhr('/accesscontrol/login')
+        var xhr = d3.xhr('/access-control/login')
         var auth_code = authorization()
             xhr.header('Content-Type', "application/json")
             xhr.header('Authorization', auth_code)
@@ -90,7 +90,7 @@ define(['d3'], function(d3, require) {
     restClient.prototype = {
 
         fetchUsername: function(handle, debug) {
-            fetch('/accesscontrol/user', handle, undefined, false, debug)
+            fetch('/access-control/user', handle, undefined, false, debug)
         },
         fetchAllTopicTypes: function(handle, fail, debug) {
             fetch('/core/topictype/all', handle, fail, true, debug)
@@ -99,16 +99,16 @@ define(['d3'], function(d3, require) {
             fetch('/core/assoctype/all', handle, fail, true, debug)
         },
         fetchByTypeUri: function(typeUri, handle, fail, debug) {
-            fetch('/core/topic/by_type/' + typeUri, handle, fail, true, debug)
+            fetch('/core/topics/type/' + typeUri, handle, fail, true, debug)
         },
         fetchByTypeUriChilds: function(typeUri, handle, fail, debug) {
-            fetch('/core/topic/by_type/' + typeUri + '?include_childs=true', handle, fail, true, debug)
+            fetch('/core/topics/type/' + typeUri + '?include_children=true', handle, fail, true, debug)
         },
         fetchTopicmapById: function(topicmapId, handle, fail, debug) {
             fetch('/stableviews/' + topicmapId, handle, fail, true, debug)
         },
         fetchTopicById: function(topicId, handle, fail, debug) {
-            fetch('/core/topic/' + topicId + '?include_childs=true', handle, fail, true, debug)
+            fetch('/core/topic/' + topicId + '?include_children=true', handle, fail, true, debug)
         },
         getTopicSuggestions: function(query, handle, fail, debug) {
             fetch('/littlehelpers/suggest/topics/' + query, handle, fail, true, debug)

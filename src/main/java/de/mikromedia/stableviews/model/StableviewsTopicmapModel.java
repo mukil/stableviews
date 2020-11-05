@@ -1,17 +1,17 @@
 package de.mikromedia.stableviews.model;
 
-import de.deepamehta.core.JSONEnabled;
-import de.deepamehta.topicmaps.model.TopicmapViewmodel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
+import systems.dmx.core.JSONEnabled;
+import systems.dmx.topicmaps.Topicmap;
 
 public class StableviewsTopicmapModel implements JSONEnabled {
     
     JSONObject json = new JSONObject();
 
-    public StableviewsTopicmapModel(TopicmapViewmodel topicmapViewmodel) {
+    public StableviewsTopicmapModel(Topicmap topicmapViewmodel) {
         json = topicmapViewmodel.toJSON();
     }
     

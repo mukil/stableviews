@@ -11,14 +11,14 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
 
         init: function() {
             // load standard type topics to display
-            restc.load_topics_by_type("dm4.notes.note", function(notes) {
+            restc.load_topics_by_type("dmx.notes.note", function(notes) {
                 console.log("Loaded Notes", notes.length)
-                restc.load_topics_by_type("dm4.contacts.person", function(person) {
+                restc.load_topics_by_type("dmx.contacts.person", function(person) {
                     console.log("Loaded Persons", person.length)
-                    restc.load_topics_by_type("dm4.contacts.institution", function(inst) {
+                    restc.load_topics_by_type("dmx.contacts.organization", function(inst) {
                         console.log("Loaded Institutions", inst.length)
-                        restc.load_topics_by_type("dm4.webbrowser.web_resource", function(websites) {
-                            console.log("Loaded Websites", websites.length)
+                        restc.load_topics_by_type("dmx.bookmarks.bookmark", function(websites) {
+                            console.log("Loaded Bookmarks", websites.length)
                             results = d3.merge([notes, websites, person, inst])
                             console.log("Topic Data Count", results.length)
                             view.render_hexmap()
@@ -32,7 +32,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
                 if (response.length > 0) {
                     d3.select('#menu .username').text('Angemeldet als ' + response)
                 } else {
-                    d3.select('#menu .username').html('<a href="/de.deepamehta.webclient">Login</a>')
+                    d3.select('#menu .username').html('<a href="/systems.dmx.webclient/#">Login</a>')
                 }
             })
         },
@@ -92,16 +92,16 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
                         return "translate(" + d.x + "," + d.y + ")";
                     })
                     .style("fill", function(d) {
-                        var typeUri = d[0][d[0].length-1].type_uri
-                        if (typeUri === "dm4.notes.note") {
+                        var typeUri = d[0][d[0].length-1].typeUri
+                        if (typeUri === "dmx.notes.note") {
                             return "#ffe651";    
-                        } else if (typeUri === "dm4.contacts.person") {
+                        } else if (typeUri === "dmx.contacts.person") {
                             return "#343434";
-                        } else if (typeUri === "dm4.contacts.institution") {
+                        } else if (typeUri === "dmx.contacts.organization") {
                             return "#c10000";
-                        } else if (typeUri === "dm4.webbrowser.web_resource") {
+                        } else if (typeUri === "dmx.bookmarks.bookmark") {
                             return "#4095f6";
-                        } else if (typeUri === "dm4.files.file" || d.type_uri === "dm4.files.folder") {
+                        } else if (typeUri === "dmx.files.file" || d.typeUri === "dmx.files.folder") {
                             return "#999999";
                         } else {
                             return "#666666";
@@ -111,7 +111,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
                         var pointData = d[0]
                         var topic = pointData[pointData.length-1]
                         console.log("Topic Selected", topic)
-                        if (topic.type_uri === "dm4.webbrowser.web_resource") {
+                        if (topic.typeUri === "dmx.bookmarks.bookmark") {
                             window.document.location.assign(topic.value)
                         } else {
                             window.document.location.assign("/stableviews/topic/" + topic.id)
@@ -119,7 +119,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
                     })
                     .attr("data-type-uri", function(d) {
                         var pd = d[0]
-                        return pd[pd.length-1].type_uri
+                        return pd[pd.length-1].typeUri
                     })
                     .attr("alt", function(d) {
                         var pd = d[0]
@@ -127,7 +127,7 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
                     })
                     .append("svg:title").text(function(d) {
                         var pd = d[0]
-                        var typeUri = pd[pd.length-1].type_uri
+                        var typeUri = pd[pd.length-1].typeUri
                         return pd[pd.length-1].value + " ("+labels.get_label(typeUri)+")"
                     })
 
@@ -138,11 +138,11 @@ define(['d3', 'd3hexbin', 'modules/rest_client', 'lang'], function(d3, d3hexbin,
             d3.select('.hexagon-info .parameter').text(RANGE_END + " Range End, Steps " + STEPS + ", Hex Radius " + HEX_RADIUS)
 
             function timestamp_sort_ascending(a, b) {
-                var timestampUri = "dm4.time.created"
+                var timestampUri = "dmx.timestamps.created"
                 var scoreA = 0
                 var scoreB = 0
-                if (a.childs.hasOwnProperty(timestampUri)) scoreA = a.childs[timestampUri].value
-                if (b.childs.hasOwnProperty(timestampUri)) scoreB = b.childs[timestampUri].value
+                if (a.children.hasOwnProperty(timestampUri)) scoreA = a.children[timestampUri].value
+                if (b.children.hasOwnProperty(timestampUri)) scoreB = b.children[timestampUri].value
                 if (scoreA > scoreB) // sort string descending
                   return -1
                 if (scoreA < scoreB)

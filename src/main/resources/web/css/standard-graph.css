@@ -37,19 +37,19 @@ text {
     z-index: 1001;
 }
 
-.topics rect[data-type-uri="dm4.notes.note"] {
+.topics rect[data-type-uri="dmx.notes.note"] {
     stroke: #f9e100;
 }
 
-.topics rect[data-type-uri="dm4.contacts.institution"] {
+.topics rect[data-type-uri="dmx.contacts.organization"] {
     stroke: #c10101;
 }
 
-.topics rect[data-type-uri="dm4.contacts.person"] {
+.topics rect[data-type-uri="dmx.contacts.person"] {
     stroke: #2b2d28;
 }
 
-.topics rect[data-type-uri="dm4.webbrowser.web_resource"] {
+.topics rect[data-type-uri="dmx.bookmarks.bookmark"] {
     stroke: #4272c9;
 }
 
