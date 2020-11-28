@@ -108,10 +108,10 @@ define(function(require) {
         link_sel.enter().append("line")
                 .attr("id", function(d) { return d.id })
                 .attr("data-type-uri", function(d) { return d.typeUri })
-                .attr("x1", function(d) { return d.source.view_props['dmx.topicmaps.x'] })
-                .attr("y1", function(d) { return d.source.view_props['dmx.topicmaps.y'] + node_link_y_off })
-                .attr("x2", function(d) { return d.target.view_props['dmx.topicmaps.x'] })
-                .attr("y2", function(d) { return d.target.view_props['dmx.topicmaps.y'] + node_link_y_off })
+                .attr("x1", function(d) { return d.source.viewProps['dmx.topicmaps.x'] })
+                .attr("y1", function(d) { return d.source.viewProps['dmx.topicmaps.y'] + node_link_y_off })
+                .attr("x2", function(d) { return d.target.viewProps['dmx.topicmaps.x'] })
+                .attr("y2", function(d) { return d.target.viewProps['dmx.topicmaps.y'] + node_link_y_off })
         link_sel.exit().remove()
 
         node_group = vis.append("g").attr("class", "topics")
@@ -123,19 +123,19 @@ define(function(require) {
                 .attr("id", function(d) { return d.id })
                 .attr("title", function(d) { return lang.get_label(d.typeUri) + ": " + d.value})
                 .attr("alt", function(d) { return "A circle representing " + d.value})
-                .attr("data-view-prop-visibility", function(d) { return d.view_props['dmx.topicmaps.visibility'] })
+                .attr("data-view-prop-visibility", function(d) { return d.viewProps['dmx.topicmaps.visibility'] })
                 .attr("data-type-uri", function(d) { return d.typeUri })
                 .attr("data-type-label", function(d) { return d.value })
                 // ### give unique .attr("tabindex", 100)?
                 // Chromium Webkit 53. makes no problems when setting these SVG Attributes via CSS properties
                 .attr("width", node_circle_w).attr("height", node_circle_h) // Firefox 47.0 on Linux does not allow setting this solely via CSS
                 .attr("rx", node_edge_r).attr("ry", node_edge_r) // Firefox 47.0 on Linux does not allow setting this solely via CSS
-                .attr("x", function(d) { return parseInt(d.view_props['dmx.topicmaps.x']) - node_offset_x })
-                .attr("y", function(d) { return parseInt(d.view_props['dmx.topicmaps.y']) - node_offset_y })
+                .attr("x", function(d) { return parseInt(d.viewProps['dmx.topicmaps.x']) - node_offset_x })
+                .attr("y", function(d) { return parseInt(d.viewProps['dmx.topicmaps.y']) - node_offset_y })
                 .attr("style", function(d) {
-                    var fillColorValue = d["view_props"]["dm4.boxrenderer.color"]
+                    var fillColorValue = d["viewProps"]["dm4.boxrenderer.color"]
                     if (fillColorValue === "hsl(210,100%,90%)") return "fill: #fff;"
-                    return "fill: " + d["view_props"]["dm4.boxrenderer.color"] + ";"
+                    return "fill: " + d["viewProps"]["dm4.boxrenderer.color"] + ";"
                 })
                 .on("dblclick", function(d) {
                     // ### sourceEvent may be undefined
@@ -180,9 +180,9 @@ define(function(require) {
             .append("text")
                 .attr("id", function(d) { return 'label-' + d.id })
                 .attr("title", function (d) { return d.value })
-                .attr("x", function(d) { return parseInt(d.view_props['dmx.topicmaps.x']) - text_offset_x })
-                .attr("y", function(d) { return parseInt(d.view_props['dmx.topicmaps.y']) - text_offset_y })
-                .attr("class", function(d) { return (d.view_props['dmx.topicmaps.visibility']) ? 'default' : 'hide' })
+                .attr("x", function(d) { return parseInt(d.viewProps['dmx.topicmaps.x']) - text_offset_x })
+                .attr("y", function(d) { return parseInt(d.viewProps['dmx.topicmaps.y']) - text_offset_y })
+                .attr("class", function(d) { return (d.viewProps['dmx.topicmaps.visibility']) ? 'default' : 'hide' })
                 .text(function (d) { return d.value })
         text_sel.exit().remove()
         setup_zoom_and_drag_control()
@@ -196,7 +196,7 @@ define(function(require) {
 
         var drag_started = {x: 0, y: 0}
         function drag_node_start(d) {
-            drag_started = {x: d.view_props['dmx.topicmaps.x'], y: d.view_props['dmx.topicmaps.y']}
+            drag_started = {x: d.viewProps['dmx.topicmaps.x'], y: d.viewProps['dmx.topicmaps.y']}
             d3.event.sourceEvent.stopPropagation() // ###
             if (!d.selected && !shiftKey) {
                 // if this node isn't selected, then we have to unselect every other node
@@ -209,7 +209,7 @@ define(function(require) {
         }
  
         function drag_node_end(d) {
-            var drag_ended = {x: d.view_props['dmx.topicmaps.x'], y: d.view_props['dmx.topicmaps.y']}
+            var drag_ended = {x: d.viewProps['dmx.topicmaps.x'], y: d.viewProps['dmx.topicmaps.y']}
             var topic = { id: d.id, diff: { x: (drag_started.x - drag_ended.x) * -1, y: (drag_started.y - drag_ended.y) * (-1) }}
             fire_topic_translation(topic)
         }
@@ -221,27 +221,27 @@ define(function(require) {
         function move(dx, dy) { // ### maybe adapt to new selection mechanics
             // label data join
             text_sel.filter(function(d) { return d.selected })
-                .attr("x", function(d) { return parseInt(d.view_props['dmx.topicmaps.x']) - text_offset_x })
-                .attr("y", function(d) { return parseInt(d.view_props['dmx.topicmaps.y']) - text_offset_y })
+                .attr("x", function(d) { return parseInt(d.viewProps['dmx.topicmaps.x']) - text_offset_x })
+                .attr("y", function(d) { return parseInt(d.viewProps['dmx.topicmaps.y']) - text_offset_y })
             // topics data join
             node_sel.filter(function(d) { return d.selected })
                 .attr("x", function(d) {
-                    var new_val = parseInt(d.view_props['dmx.topicmaps.x']) + dx
-                    d.view_props['dmx.topicmaps.x'] = new_val
+                    var new_val = parseInt(d.viewProps['dmx.topicmaps.x']) + dx
+                    d.viewProps['dmx.topicmaps.x'] = new_val
                     return new_val - node_offset_x
                 })
                 .attr("y", function(d) {
-                    var new_val = parseInt(d.view_props['dmx.topicmaps.y']) + dy
-                    d.view_props['dmx.topicmaps.y'] = new_val
+                    var new_val = parseInt(d.viewProps['dmx.topicmaps.y']) + dy
+                    d.viewProps['dmx.topicmaps.y'] = new_val
                     return new_val - node_offset_y
                 })
             // association data join
             link_sel.filter(function(d) { return d.source.selected })
-                .attr("x1", function(d) { return d.source.view_props['dmx.topicmaps.x'] })
-                .attr("y1", function(d) { return d.source.view_props['dmx.topicmaps.y'] + node_link_y_off })
+                .attr("x1", function(d) { return d.source.viewProps['dmx.topicmaps.x'] })
+                .attr("y1", function(d) { return d.source.viewProps['dmx.topicmaps.y'] + node_link_y_off })
             link_sel.filter(function(d) { return d.target.selected })
-                .attr("x2", function(d) { return d.target.view_props['dmx.topicmaps.x'] })
-                .attr("y2", function(d) { return d.target.view_props['dmx.topicmaps.y'] + node_link_y_off })
+                .attr("x2", function(d) { return d.target.viewProps['dmx.topicmaps.x'] })
+                .attr("y2", function(d) { return d.target.viewProps['dmx.topicmaps.y'] + node_link_y_off })
         }
 
     }
@@ -335,8 +335,8 @@ define(function(require) {
         var topic = get_topic_by_id(id)
         if (topic) {
             var viewport = get_viewport_size()
-            var x = topic.view_props['dmx.topicmaps.x'],
-                y = topic.view_props['dmx.topicmaps.y']
+            var x = topic.viewProps['dmx.topicmaps.x'],
+                y = topic.viewProps['dmx.topicmaps.y']
             if (x < 0 || x >= viewport.width || y < 0 || y >= viewport.height) {
                 var dx = (viewport.width / 2 - x)
                 var dy = (viewport.height / 2 - y)
