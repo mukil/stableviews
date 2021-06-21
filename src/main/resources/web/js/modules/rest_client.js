@@ -102,13 +102,13 @@ define(['d3'], function(d3, require) {
             fetch('/core/topics/type/' + typeUri, handle, fail, true, debug)
         },
         fetchByTypeUriChilds: function(typeUri, handle, fail, debug) {
-            fetch('/core/topics/type/' + typeUri + '?include_children=true', handle, fail, true, debug)
+            fetch('/core/topics/type/' + typeUri + '?children=true', handle, fail, true, debug)
         },
         fetchTopicmapById: function(topicmapId, handle, fail, debug) {
             fetch('/stableviews/' + topicmapId, handle, fail, true, debug)
         },
         fetchTopicById: function(topicId, handle, fail, debug) {
-            fetch('/core/topic/' + topicId + '?include_children=true', handle, fail, true, debug)
+            fetch('/core/topic/' + topicId + '?children=true', handle, fail, true, debug)
         },
         getTopicSuggestions: function(query, handle, fail, debug) {
             fetch('/littlehelpers/suggest/topics/' + query, handle, fail, true, debug)

@@ -99,8 +99,8 @@ define(function(require) {
 
         // prepare association view-model (get coordinates from topics)
         all_edges.forEach(function(d) {
-            d.source = get_topic_by_id(d.role_1.topic_id)
-            d.target = get_topic_by_id(d.role_2.topic_id)
+            d.source = get_topic_by_id(d.player1.topicId)
+            d.target = get_topic_by_id(d.player2.topicId)
         })
     
         link_group = vis.append("g").attr("class", "links")
@@ -306,6 +306,7 @@ define(function(require) {
     // --- Graph Renderer Helper Methods
 
     function get_topic_by_id(topicId) {
+        console.log("All nodes", all_nodes)
         for (var idx in all_nodes) {
             if (topicId == all_nodes[idx].id) {
                 return all_nodes[idx]
@@ -351,8 +352,10 @@ define(function(require) {
 
     function graph_translation_keep_zoom(coordinatePair) {
         if (!coordinatePair[0] || !coordinatePair[1]) {
-            console.warn("Coordinate Pair for Map Translation is Invalud", coordinatePair)
+            console.warn("Coordinate pair indicating topicmap pan is invalid", coordinatePair, "setting to [0,0]")
             // would break our zoom_control behaviour if passed through
+            vis.attr("transform", "translate(" + [0,0] + ") scale(" + zoom_control.scale() + ")")
+            zoom_control.translate([0, 0])
         } else {
             vis.attr("transform", "translate(" + coordinatePair + ") scale(" + zoom_control.scale() + ")")
             // set d3 zoom control
